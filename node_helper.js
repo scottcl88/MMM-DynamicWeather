@@ -32,18 +32,20 @@ module.exports = NodeHelper.create({
             // Check to see if we are error free and got an OK response
             if (!error && response.statusCode == 200) {
                 // Let's get the weather data for right now
+                that.nowCode = result.data[0].weather.code;
                 that.nowIcon = result.data[0].weather.icon;
                 that.nowWeather = result.data[0].weather.description;
                 that.nowTemp = result.data[0].app_temp;
             } else {
                 // In all other cases it's some other error
+                that.nowCode = '0';
                 that.nowIcon = 'blank';
                 that.nowWeather = 'Error getting data';
                 that.nowTemp = '--';
                 }
 
             // We have the response figured out so lets fire off the notifiction
-            that.sendSocketNotification('GOT-WEATHER-NOW', {'url': that.url, 'nowIcon': that.nowIcon, 'nowWeather': that.nowWeather, 'nowTemp': that.nowTemp});
+            that.sendSocketNotification('GOT-WEATHER-NOW', {'url': that.url, 'nowCode': that.nowCode, 'nowIcon': that.nowIcon, 'nowWeather': that.nowWeather, 'nowTemp': that.nowTemp});
             });
         },
 

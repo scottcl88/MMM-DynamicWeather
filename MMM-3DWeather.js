@@ -14,8 +14,8 @@ Module.register("MMM-3DWeather", {
     flakeCount: 100,
     theme: "winter", // pick from themes map below, i.e. winter, love
     api_key: "c5cf8af3d17140838bfcec85c2467d3b",
-    lat: 0.0,
-    lon: 0.0,
+    lat: 39.822948,
+    lon: -84.017937,
     units: "M",
     lang: "en",
     interval: 900000, // Every 15 mins
@@ -39,6 +39,7 @@ Module.register("MMM-3DWeather", {
       this.config.units +
       "&lang=" +
       this.config.lang;
+    this.nowCode = "";
     this.nowIcon = "";
     this.nowWeather = "";
     this.nowTemp = "";
@@ -74,8 +75,14 @@ Module.register("MMM-3DWeather", {
   },
 
   getDom: function () {
-	// var themeSettings = this.themes[this.config.theme];
-	var themeSettings = this.themes["winter"];
+    // var themeSettings = this.themes[this.config.theme];
+    var theme = "water";
+    if (this.nowCode == "804") {
+      theme = "winter";
+    } else if (this.nowCode == "800") {
+      theme = "love";
+    }
+    var themeSettings = this.themes[theme];
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
@@ -129,6 +136,7 @@ Module.register("MMM-3DWeather", {
     if (notification === "GOT-WEATHER-NOW" && payload.url === this.url) {
       // we got some data so set the flag, stash the data to display then request the dom update
       this.loaded = true;
+      this.nowCode = payload.nowCode;
       this.nowIcon = payload.nowIcon;
       this.nowWeather = payload.nowWeather;
       this.nowTemp = payload.nowTemp;
