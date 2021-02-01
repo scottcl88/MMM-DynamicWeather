@@ -1,7 +1,7 @@
 /* Magic Mirror
- * Module: MMM-Snow
+ * Module: MMM-3DWeather
  *
- * By Michael Teeuw http://michaelteeuw.nl
+ * By Scott Lewis
  * MIT Licensed.
  * 
  * Comment on terminology: a 'flake' is any moving item being shown on the mirror, while
@@ -9,7 +9,7 @@
  * file names and css class names.
  */
 
-Module.register("MMM-Snow",{
+Module.register("MMM-3DWeather",{
 
 	defaults: {
 		flakeCount: 100,
@@ -35,7 +35,7 @@ Module.register("MMM-Snow",{
 	},
 
 	getStyles: function() {
-		return [ "MMM-Snow.css" ]
+		return [ "MMM-3DWeather.css" ]
 	},
 
 	getDom: function() {

@@ -1,4 +1,4 @@
-# Module: MMM-Snow
+# Module: MMM-3DWeather
 Inspired by [NHubbard's Snow Plugin](https://github.com/nhubbard/MagicPlugins/tree/master/snow) I created a little more realistic snow plugin to improve your winter experience! 
 
 The module supports themes. Current themes are *winter* and *love*. The first one let's it snow while the latter conjurs hearts on your mirror.  

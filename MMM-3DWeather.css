@@ -1,18 +1,18 @@
-.MMM-Snow .flake-downwards {
+.MMM-3DWeather .flake-downwards {
     position: absolute;
     top: -50px;
     animation-name: flake-downwards;
     animation-iteration-count: infinite;
 }
 
-.MMM-Snow .flake-upwards {
+.MMM-3DWeather .flake-upwards {
     position: absolute;
     top: -50px;
     animation-name: flake-upwards;
     animation-iteration-count: infinite;
 }
 
-.MMM-Snow *[class|="flake"] div {
+.MMM-3DWeather *[class|="flake"] div {
     width: 20px;
     height: 20px;
 
@@ -23,14 +23,14 @@
     animation-iteration-count: infinite;
 }
 
-.MMM-Snow .snow1 {background-image: url('images/snow1.png');}
-.MMM-Snow .snow2 {background-image: url('images/snow2.png');}
-.MMM-Snow .snow3 {background-image: url('images/snow3.png');}
+.MMM-3DWeather .snow1 {background-image: url('images/snow1.png');}
+.MMM-3DWeather .snow2 {background-image: url('images/snow2.png');}
+.MMM-3DWeather .snow3 {background-image: url('images/snow3.png');}
 
-.MMM-Snow .heart1 {background-image: url('images/heart1.png');}
-.MMM-Snow .heart2 {background-image: url('images/heart2.png');}
+.MMM-3DWeather .heart1 {background-image: url('images/heart1.png');}
+.MMM-3DWeather .heart2 {background-image: url('images/heart2.png');}
 
-.MMM-Snow .bubble1 {background-image: url('images/bubble1.png');}
+.MMM-3DWeather .bubble1 {background-image: url('images/bubble1.png');}
 
 @keyframes flake-downwards {
     from {transform: translateY(0vh)}
