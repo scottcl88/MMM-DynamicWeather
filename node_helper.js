@@ -1,60 +1,43 @@
-/* Magic Mirror Module: MMM-Weather-Now helper
- * Version: 1.0.0
+ /* Magic Mirror
+ * Module: MMM-3DWeather
  *
- * By Nigel Daniels https://github.com/nigel-daniels/
+ * By Scott Lewis - https://github.com/scottcl88/MMM-3DWeather
  * MIT Licensed.
+ *
+ * Extension helper module to call an API
  */
 
-var NodeHelper = require('node_helper');
-var request = require('request');
+var NodeHelper = require("node_helper");
+var request = require("request");
 
 module.exports = NodeHelper.create({
+  start: function () {
+    this.weatherCode = "";
+  },
 
-    start: function () {
-        console.log('MMM-Weather-Now helper, started...');
+  callApi: function (payload) {
+    var that = this;
+    this.url = payload;
 
-        // Set up the local values
-        this.nowIcon = '';
-        this.nowWeather = '';
-        this.nowTemp = '';
-        },
+    request({ url: this.url, method: "GET" }, function (error, response, body) {
+      var result = JSON.parse(body);
+      if (!error && response.statusCode == 200) {
+        that.weatherCode = result.data[0].weather.code;
+      } else {
+        that.weatherCode = "0";
+        console.error("Failed getting api: ", error, response);
+      }
 
-
-    getWeatherData: function(payload) {
-
-        var that = this;
-        this.url = payload;
-
-        request({url: this.url, method: 'GET'}, function(error, response, body) {
-            // Lets convert the body into JSON
-            var result = JSON.parse(body);
-
-            // Check to see if we are error free and got an OK response
-            if (!error && response.statusCode == 200) {
-                // Let's get the weather data for right now
-                that.nowCode = result.data[0].weather.code;
-                that.nowIcon = result.data[0].weather.icon;
-                that.nowWeather = result.data[0].weather.description;
-                that.nowTemp = result.data[0].app_temp;
-            } else {
-                // In all other cases it's some other error
-                that.nowCode = '0';
-                that.nowIcon = 'blank';
-                that.nowWeather = 'Error getting data';
-                that.nowTemp = '--';
-                }
-
-            // We have the response figured out so lets fire off the notifiction
-            that.sendSocketNotification('GOT-WEATHER-NOW', {'url': that.url, 'nowCode': that.nowCode, 'nowIcon': that.nowIcon, 'nowWeather': that.nowWeather, 'nowTemp': that.nowTemp});
-            });
-        },
-
-
-    socketNotificationReceived: function(notification, payload) {
-        // Check this is for us and if it is let's get the weather data
-        if (notification === 'GET-WEATHER-NOW') {
-            this.getWeatherData(payload);
-            }
-        }
-
+      that.sendSocketNotification("API-Received", {
+        url: that.url,
+        result: result,
+      });
     });
+  },
+
+  socketNotificationReceived: function (notification, payload) {
+    if (notification === "API-Fetch") {
+      this.callApi(payload);
+    }
+  },
+});

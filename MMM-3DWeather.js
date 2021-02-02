@@ -1,31 +1,23 @@
 /* Magic Mirror
  * Module: MMM-3DWeather
  *
- * By Scott Lewis
+ * By Scott Lewis - https://github.com/scottcl88/MMM-3DWeather
  * MIT Licensed.
  *
- * Comment on terminology: a 'flake' is any moving item being shown on the mirror, while
- * the specific themed items are called 'snow' or 'heart'. This applies to variable names
- * file names and css class names.
+ * A simple module to display different images based on current weather
  */
 
 Module.register("MMM-3DWeather", {
   defaults: {
     flakeCount: 100,
-    theme: "winter", // pick from themes map below, i.e. winter, love
+    theme: "winter",
     api_key: "c5cf8af3d17140838bfcec85c2467d3b",
     lat: 39.822948,
     lon: -84.017937,
-    units: "M",
-    lang: "en",
-    interval: 900000, // Every 15 mins
-    tableView: false,
+    interval: 13500000, // Every 1 hour
   },
 
   start: function () {
-    Log.log("Starting module: " + this.name);
-
-    // Set up the local values, here we construct the request url to use
     this.units = this.config.units;
     this.loaded = false;
     this.url =
@@ -34,19 +26,11 @@ Module.register("MMM-3DWeather", {
       "&lat=" +
       this.config.lat +
       "&lon=" +
-      this.config.lon +
-      "&units=" +
-      this.config.units +
-      "&lang=" +
-      this.config.lang;
-    this.nowCode = "";
-    this.nowIcon = "";
-    this.nowWeather = "";
-    this.nowTemp = "";
-    this.tableView = this.config.tableView;
+      this.config.lon
+    this.weatherCode = "";
 
     // Trigger the first request
-    this.getWeatherData(this);
+    this.getWeatherAPI(this);
   },
 
   themes: {
@@ -125,21 +109,17 @@ Module.register("MMM-3DWeather", {
     return wrapper;
   },
 
-  getWeatherData: function (_this) {
-    // Make the initial request to the helper then set up the timer to perform the updates
-    _this.sendSocketNotification("GET-WEATHER-NOW", _this.url);
+  getWeatherAPI: function (_this) {
+    _this.sendSocketNotification("API-Fetch", _this.url);
     setTimeout(_this.getWeatherData, _this.config.interval, _this);
   },
 
   socketNotificationReceived: function (notification, payload) {
-    // check to see if the response was for us and used the same url
-    if (notification === "GOT-WEATHER-NOW" && payload.url === this.url) {
-      // we got some data so set the flag, stash the data to display then request the dom update
-      this.loaded = true;
-      this.nowCode = payload.nowCode;
-      this.nowIcon = payload.nowIcon;
-      this.nowWeather = payload.nowWeather;
-      this.nowTemp = payload.nowTemp;
+    if (notification === "API-Received" && payload.url === this.url) {
+	  this.loaded = true;
+	  
+	  this.weatherCode = payload.result.data[0].weather.code;
+    //   this.weatherCode = payload.weatherCode;
       this.updateDom(1000);
     }
   },
