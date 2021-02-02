@@ -1,0 +1,24 @@
+{
+  "name": "mmm-dynamicweather",
+  "version": "1.0.0",
+  "description": "A MagicMirror Module to display different animations based on current weather.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottcl88/MMM-DynamicWeather.git"
+  },
+  "keywords": [
+    "magic mirror",
+    "module",
+    "weather"
+  ],
+  "author": "Scott Lewis",
+  "license": "MIT",
+  "bugs": {
+    "url": "git+https://github.com/scottcl88/MMM-DynamicWeather/issues"
+  },
+  "homepage": "git+https://github.com/scottcl88/MMM-DynamicWeather#readme",
+  "main": "MMM-DynamicWeather.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
