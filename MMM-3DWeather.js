@@ -6,6 +6,8 @@
  *
  * A simple module to display different images based on current weather
  */
+var jquery = require('jquery');
+var $ = jquery.create();
 
 Module.register("MMM-3DWeather", {
   defaults: {
@@ -61,16 +63,23 @@ Module.register("MMM-3DWeather", {
   getDom: function () {
     // var themeSettings = this.themes[this.config.theme];
     var theme = "water";
-    if (this.nowCode == "804") {
+    if (this.weatherCode == "802") {
       theme = "winter";
-    } else if (this.nowCode == "800") {
+    } else if (this.weatherCode == "800") {
       theme = "love";
-    }
-    var themeSettings = this.themes[theme];
+	}
+	
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
-    var flake, jiggle, size;
+	this.showSnow(wrapper, theme);
+    
+    return wrapper;
+  },
+  
+  showSnow: function(wrapper, theme){
+	var themeSettings = this.themes[theme];
+	var flake, jiggle, size;
 
     for (var i = 0; i < this.config.flakeCount; i++) {
       size = themeSettings.sizeFactor * (Math.random() * 0.75) + 0.25;
@@ -106,7 +115,6 @@ Module.register("MMM-3DWeather", {
 
       wrapper.appendChild(flake);
     }
-    return wrapper;
   },
 
   getWeatherAPI: function (_this) {
