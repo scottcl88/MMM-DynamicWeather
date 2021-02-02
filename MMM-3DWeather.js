@@ -6,8 +6,8 @@
  *
  * A simple module to display different images based on current weather
  */
-var jquery = require('jquery');
-var $ = jquery.create();
+// var jquery = require('jquery');
+// var $ = jquery.create();
 
 Module.register("MMM-3DWeather", {
   defaults: {
@@ -55,6 +55,9 @@ Module.register("MMM-3DWeather", {
       sizeFactor: 2,
     }, // adapt size of flakes to your liking, we like bigger bubbles
   },
+  getScripts: function () {
+    return ["https://code.jquery.com/jquery-3.5.1.slim.min.js"];
+  },
 
   getStyles: function () {
     return ["MMM-3DWeather.css"];
@@ -71,8 +74,10 @@ Module.register("MMM-3DWeather", {
 	
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
-
-	this.showSnow(wrapper, theme);
+	var test = $(document).length;
+	if(test){
+		this.showSnow(wrapper, theme);
+	}
     
     return wrapper;
   },
