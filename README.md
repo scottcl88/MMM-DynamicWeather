@@ -25,7 +25,7 @@ Configure the module in your `config.js` file.
 
 **Note:** After starting the Mirror, it will take a few seconds before any effects may show. If its clear skies, nothing will be seen unless its February 14 (which shows hearts).
 
-### Updating
+## Updating
 Go to the DynamicWeather module
 ````
 cd ~/MagicMirror/modules/MMM-DynamicWeather
@@ -48,7 +48,7 @@ modules: [
 			lat: "38.907192",
 			lon: "-77.036873"
 		}
-	}
+	},
 ]
 ````
 
