@@ -3,11 +3,11 @@ Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I add
 
 **Rain**
 
-![](.github/rain.png)
+![](rain.png)
 
 **Cloudy**
 
-![](.github/cloudy.png)
+![](cloudy.png)
 
 ## Installation
 
