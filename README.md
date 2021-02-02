@@ -23,7 +23,7 @@ git clone https://github.com/scottcl88/MMM-DynamicWeather.git
 
 Configure the module in your `config.js` file.
 
-**Note:** After starting the Mirror, it will take a few seconds before any effects may show. If its clear skies, nothing will be seen unless its February 14.
+**Note:** After starting the Mirror, it will take a few seconds before any effects may show. If its clear skies, nothing will be seen unless its February 14 (which shows hearts).
 
 ## Using the module
 
@@ -53,4 +53,4 @@ The following properties can be configured:
 |`lon`|This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
 |`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues.<br><br>**Type:** `integer`<br>**Default value:** `100`|
-|`alwaysDisplay`|Set this to always display the specified effect.<br><br>**Options:** `love`, `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** ``|
+|`alwaysDisplay`|Set this to always display the specified effect.<br><br>**Options:** `love`, `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** `null`|
