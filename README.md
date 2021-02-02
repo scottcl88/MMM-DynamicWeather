@@ -54,3 +54,4 @@ The following properties can be configured:
 |`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
 |`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues.<br><br>**Type:** `integer`<br>**Default value:** `100`|
 |`alwaysDisplay`|Set this to always display the specified effect.<br><br>**Options:** `love`, `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** `null`|
+|`zIndex`|Sets the z-index of the module's wrapper, in case of other elements being blocked.<br><br>**Type:** `number`<br>**Default value:** `99`|
