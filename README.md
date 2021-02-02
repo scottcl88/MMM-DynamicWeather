@@ -25,6 +25,16 @@ Configure the module in your `config.js` file.
 
 **Note:** After starting the Mirror, it will take a few seconds before any effects may show. If its clear skies, nothing will be seen unless its February 14 (which shows hearts).
 
+### Updating
+Go to the DynamicWeather module
+````
+cd ~/MagicMirror/modules/MMM-DynamicWeather
+````
+Run NPM Install
+````
+npm install mmm-dynamicweather
+````
+
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
