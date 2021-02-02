@@ -1,21 +1,13 @@
 # Module: MMM-DynamicWeather
 Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I added rain and clouds as well as automatically toggling the effects based on the current weather and date.
 
-**Snowing**
-
-![](.github/example-winter.png)
-
 **Rain**
 
-![](.github/example-water.png)
+![](.github/rain.png)
 
-**Clouds**
+**Cloudy**
 
-![](.github/example-water.png)
-
-**Valentine's Day**
-
-![](.github/example-love.png)
+![](.github/cloudy.png)
 
 ## Installation
 
@@ -59,5 +51,6 @@ The following properties can be configured:
 |`api_key`|**Required** This is the API key you need to use to request weather data from the WeatherBit site.  Details on how to request an API key can be found [here](https://www.weatherbit.io/account/create)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`lat`|This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`lon`|This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
-|`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 15 minutes`|
-|`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues. <br>**Default value:** `100`|
+|`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
+|`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues.<br><br>**Type:** `integer`<br>**Default value:** `100`|
+|`alwaysDisplay`|Set this to always display the specified effect.<br><br>**Options:** `love`, `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** ``|
