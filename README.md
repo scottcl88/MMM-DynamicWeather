@@ -60,4 +60,4 @@ The following properties can be configured:
 |`lat`|This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`lon`|This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 15 minutes`|
-|`flakeCount`|The number of particles to show for each effect. Higher counts may cause performance issues. <br>**Default value:** `100`|
+|`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues. <br>**Default value:** `100`|
