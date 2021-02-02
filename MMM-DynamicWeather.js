@@ -27,7 +27,10 @@ Module.register("MMM-DynamicWeather", {
       "&lon=" +
       this.config.lon;
     this.weatherCode = 0;
-    this.getWeatherAPI(this);
+
+    if (!this.config.alwaysDisplay) {
+      this.getWeatherAPI(this);
+    }
   },
 
   themes: {
@@ -144,20 +147,35 @@ Module.register("MMM-DynamicWeather", {
 
       increment += randoFiver;
 
-      let drop = document.createElement("div");
-      drop.classList.add("drop");
-      drop.style.left = increment + "%";
-      drop.style.bottom = randoFiver + randoFiver - 1 + 100 + "%";
-      drop.style.animationDelay = "0." + randoHundo + "s";
-      drop.style.animationDuration = "0.5" + randoHundo + "s";
+      let frontDrop = document.createElement("div");
+      frontDrop.classList.add("drop");
+      frontDrop.style.left = increment + "%";
+      frontDrop.style.bottom = randoFiver + randoFiver - 1 + 100 + "%";
+      frontDrop.style.animationDelay = "1." + randoHundo + "s";
+      frontDrop.style.animationDuration = "1.5" + randoHundo + "s";
 
-      let stem = document.createElement("div");
-      stem.classList.add("stem");
-      stem.style.animationDelay = "0." + randoHundo + "s";
-      stem.style.animationDuration = "0.5" + randoHundo + "s";
-      drop.appendChild(stem);
+      let frontStem = document.createElement("div");
+      frontStem.classList.add("stem");
+      frontStem.style.animationDelay = "1." + randoHundo + "s";
+      frontStem.style.animationDuration = "1.5" + randoHundo + "s";
+      frontDrop.appendChild(frontStem);
 
-      wrapper.appendChild(drop);
+      let backDrop = document.createElement("div");
+      backDrop.classList.add("drop");
+      backDrop.style.opacity = "0.5";
+      backDrop.style.right = increment + "%";
+      backDrop.style.bottom = randoFiver + randoFiver - 1 + 100 + "%";
+      backDrop.style.animationDelay = "1." + randoHundo + "s";
+      backDrop.style.animationDuration = "1.5" + randoHundo + "s";
+
+      let backStem = document.createElement("div");
+      backStem.classList.add("stem");
+      backStem.style.animationDelay = "1." + randoHundo + "s";
+      backStem.style.animationDuration = "1.5" + randoHundo + "s";
+      backDrop.appendChild(backStem);
+
+      wrapper.appendChild(backDrop);
+      wrapper.appendChild(frontDrop);
     }
   },
 
