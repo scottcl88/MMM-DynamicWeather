@@ -1,4 +1,4 @@
- /* Magic Mirror
+/* Magic Mirror
  * Module: MMM-3DWeather
  *
  * By Scott Lewis - https://github.com/scottcl88/MMM-3DWeather
@@ -21,10 +21,7 @@ module.exports = NodeHelper.create({
 
     request({ url: this.url, method: "GET" }, function (error, response, body) {
       var result = JSON.parse(body);
-      if (!error && response.statusCode == 200) {
-        that.weatherCode = result.data[0].weather.code;
-      } else {
-        that.weatherCode = "0";
+      if (error || response.statusCode !== 200) {
         console.error("Failed getting api: ", error, response);
       }
 

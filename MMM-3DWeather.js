@@ -6,21 +6,17 @@
  *
  * A simple module to display different images based on current weather
  */
-// var jquery = require('jquery');
-// var $ = jquery.create();
-
 Module.register("MMM-3DWeather", {
   defaults: {
     flakeCount: 100,
-    theme: "winter",
     api_key: "c5cf8af3d17140838bfcec85c2467d3b",
     lat: 39.822948,
     lon: -84.017937,
-    interval: 13500000, // Every 1 hour
+    interval: 600000, // Every 10 minutes
   },
 
   start: function () {
-    this.units = this.config.units;
+    this.initialized = false;
     this.loaded = false;
     this.url =
       "https://api.weatherbit.io/v2.0/current?key=" +
@@ -28,10 +24,8 @@ Module.register("MMM-3DWeather", {
       "&lat=" +
       this.config.lat +
       "&lon=" +
-      this.config.lon
-    this.weatherCode = "";
-
-    // Trigger the first request
+      this.config.lon;
+    this.weatherCode = 0;
     this.getWeatherAPI(this);
   },
 
@@ -48,15 +42,6 @@ Module.register("MMM-3DWeather", {
       downwards: false, // direction of flake movements, hearts raise upwards
       sizeFactor: 2,
     }, // adapt size of flakes to your liking, we like bigger hearts
-    water: {
-      flakePrefix: "bubble", // prefix of css name, e.g. bubble1
-      imagesCount: 1, // number of images in this theme, here:  bubble1
-      downwards: false, // direction of flake movements, bubbles raise upwards
-      sizeFactor: 2,
-    }, // adapt size of flakes to your liking, we like bigger bubbles
-  },
-  getScripts: function () {
-    return ["https://code.jquery.com/jquery-3.5.1.slim.min.js"];
   },
 
   getStyles: function () {
@@ -64,27 +49,28 @@ Module.register("MMM-3DWeather", {
   },
 
   getDom: function () {
-    // var themeSettings = this.themes[this.config.theme];
-    var theme = "water";
-    if (this.weatherCode == "802") {
-      theme = "winter";
-    } else if (this.weatherCode == "800") {
-      theme = "love";
-	}
-	
+    var now = new Date();
+    if (now.getMonth() == 2 && now.getDate() == 14) {
+      this.showEffect(wrapper, "love");
+    }
+
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
-	var test = $(document).length;
-	if(test){
-		this.showSnow(wrapper, theme);
-	}
-    
+
+    if (this.weatherCode >= 600 && this.weatherCode <= 623) {
+      this.showEffect(wrapper, "snow");
+    } else if (this.weatherCode >= 200 && this.weatherCode <= 522) {
+      this.makeItRain(wrapper);
+    } else if (this.weatherCode >= 801 && this.weatherCode <= 804) {
+      this.makeItCloudy(wrapper);
+    }
+
     return wrapper;
   },
-  
-  showSnow: function(wrapper, theme){
-	var themeSettings = this.themes[theme];
-	var flake, jiggle, size;
+
+  showEffect: function (wrapper, theme) {
+    var themeSettings = this.themes[theme];
+    var flake, jiggle, size;
 
     for (var i = 0; i < this.config.flakeCount; i++) {
       size = themeSettings.sizeFactor * (Math.random() * 0.75) + 0.25;
@@ -122,6 +108,52 @@ Module.register("MMM-3DWeather", {
     }
   },
 
+  makeItRain: function (wrapper) {
+    var increment = 0;
+    while (increment < 100) {
+      var randoHundo = Math.floor(Math.random() * (98 - 1 + 1) + 1); //random number between 98 and 1
+      var randoFiver = Math.floor(Math.random() * (5 - 2 + 1) + 2);
+
+      increment += randoFiver;
+
+      let drop = document.createElement("div");
+      drop.classList.add("drop");
+      drop.style.left = increment + "%";
+      drop.style.bottom = randoFiver + randoFiver - 1 + 100 + "%";
+      drop.style.animationDelay = "0." + randoHundo + "s";
+      drop.style.animationDuration = "0.5" + randoHundo + "s";
+
+      let stem = document.createElement("div");
+      stem.classList.add("stem");
+      stem.style.animationDelay = "0." + randoHundo + "s";
+      stem.style.animationDuration = "0.5" + randoHundo + "s";
+      drop.appendChild(stem);
+
+      wrapper.appendChild(drop);
+    }
+  },
+
+  makeItCloudy: function (wrapper) {
+    var increment = 0;
+    while (increment < 50) {
+      var randNum = Math.floor(Math.random() * (5 - 2 + 1) + 2); //random number between 5 and 2
+      var speed = Math.floor(Math.random() * (35 - 15 + 1) + 15);
+      var size = Math.floor(Math.random() * (60 - 3 + 1) + 3);
+
+      increment += randNum;
+
+      let cloudBase = document.createElement("div");
+      cloudBase.style.animation = "animateCloud " + speed + "s linear infinite";
+      cloudBase.style.transform = "scale(0." + size + ")";
+
+      let cloud = document.createElement("div");
+      cloud.classList.add("cloud");
+      cloudBase.appendChild(cloud);
+
+      wrapper.appendChild(cloudBase);
+    }
+  },
+
   getWeatherAPI: function (_this) {
     _this.sendSocketNotification("API-Fetch", _this.url);
     setTimeout(_this.getWeatherData, _this.config.interval, _this);
@@ -129,10 +161,8 @@ Module.register("MMM-3DWeather", {
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === "API-Received" && payload.url === this.url) {
-	  this.loaded = true;
-	  
-	  this.weatherCode = payload.result.data[0].weather.code;
-    //   this.weatherCode = payload.weatherCode;
+      this.loaded = true;
+      this.weatherCode = parseInt(payload.result.data[0].weather.code);
       this.updateDom(1000);
     }
   },
