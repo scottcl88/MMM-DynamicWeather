@@ -12,7 +12,8 @@ Module.register("MMM-DynamicWeather", {
     api_key: "",
     lat: 0,
     lon: 0,
-    interval: 600000, // Every 10 minutes
+    interval: 600000, // Every 10 minutes,
+    alwaysDisplay: "",
   },
 
   start: function () {
@@ -51,6 +52,31 @@ Module.register("MMM-DynamicWeather", {
   getDom: function () {
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
+
+    if (this.config.alwaysDisplay) {
+      switch (this.config.alwaysDisplay) {
+        case "love": {
+          this.showEffect(wrapper, "love");
+          break;
+        }
+        case "snow": {
+          this.showEffect(wrapper, "snow");
+          break;
+        }
+        case "rain": {
+          this.makeItRain(wrapper);
+          break;
+        }
+        case "cloudy": {
+          this.makeItCloudy(wrapper);
+          break;
+        }
+        default: {
+          console.error("Invalid config option 'alwaysDisplay'");
+        }
+      }
+      return wrapper;
+    }
 
     var now = new Date();
     if (now.getMonth() == 1 && now.getDate() == 14) {
