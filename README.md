@@ -1,4 +1,4 @@
-# Module: MMM-3DWeather
+# Module: MMM-DynamicWeather
 Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I created a little more realistic snow plugin to improve your winter experience! 
 
 The module supports themes. Current themes are *winter* and *love*. The first one let's it snow while the latter conjurs hearts on your mirror.  
@@ -28,7 +28,7 @@ cd ~/MagicMirror/modules
 
 Clone this repository:
 ````
-git clone https://github.com/scottcl88/MMM-3DWeather.git
+git clone https://github.com/scottcl88/MMM-DynamicWeather.git
 ````
 
 Configure the module in your `config.js` file.
@@ -41,7 +41,7 @@ To use this module, add it to the modules array in the `config/config.js` file:
 ````javascript
 modules: [
 	{
-		module: 'MMM-3DWeather',
+		module: 'MMM-DynamicWeather',
 		position: 'fullscreen_above',
 		config: { // See 'Configuration options' for more information.
 			flakeCount: 100	
