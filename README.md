@@ -1,7 +1,5 @@
 # Module: MMM-DynamicWeather
-Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I created a little more realistic snow plugin to improve your winter experience! 
-
-The module supports themes. Current themes are *winter* and *love*. The first one let's it snow while the latter conjurs hearts on your mirror.  
+Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I added rain and clouds as well as automatically toggling the effects based on the current weather and date.
 
 **Screenshot "snowing"**
 
@@ -44,7 +42,9 @@ modules: [
 		module: 'MMM-DynamicWeather',
 		position: 'fullscreen_above',
 		config: { // See 'Configuration options' for more information.
-			flakeCount: 100	
+			api_key: "your_key",
+			lat: "38.907192",
+			lat: "-77.036873"
 		}
 	}
 ]
@@ -52,10 +52,12 @@ modules: [
 
 ## Configuration options
 
-The following property can be configured:
-
+The following properties can be configured:
 
 |Option|Description|
 |---|---|
+|`api_key`|**Required** This is the API key you need to use to request weather data from the Weather Underground site.  Details on how to request an API key can be found [here](https://www.weatherbit.io/account/create)<br><br>**Type:** `string`<br>**Default value:** `null`|
+|`lat`|This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
+|`lon`|This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
+|`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `900000 // 15 minutes`|
 |`flakeCount`|The number of snow flakes. More flakes are havier for the cpu, so don't go wild. <br>**Default value:** `100`|
-|`theme`| Defines the type of "flakes". Possible values are `winter`, `love`, and `water`.<br>**Default value:** `winter`|
