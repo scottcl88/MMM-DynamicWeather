@@ -49,13 +49,13 @@ Module.register("MMM-DynamicWeather", {
   },
 
   getDom: function () {
-    var now = new Date();
-    if (now.getMonth() == 2 && now.getDate() == 14) {
-      this.showEffect(wrapper, "love");
-    }
-
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
+
+    var now = new Date();
+    if (now.getMonth() == 1 && now.getDate() == 14) {
+      this.showEffect(wrapper, "love");
+    }
 
     //Codes from https://www.weatherbit.io/api/codes
     if (this.weatherCode >= 600 && this.weatherCode <= 623) {
@@ -165,6 +165,10 @@ Module.register("MMM-DynamicWeather", {
     if (notification === "API-Received" && payload.url === this.url) {
       this.loaded = true;
       this.weatherCode = parseInt(payload.result.data[0].weather.code);
+      console.log("api_key: ", this.config.api_key);
+      console.log("lat: ", this.config.lat);
+      console.log("lon: ", this.config.lon);
+      console.log("WeatherCode: ", this.weatherCode);
       this.updateDom(1000);
     }
   },
