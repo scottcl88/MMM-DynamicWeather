@@ -65,7 +65,7 @@ Module.register("MMM-DynamicWeather", {
           break;
         }
         case "snow": {
-          this.showEffect(wrapper, "snow");
+          this.showEffect(wrapper, "winter");
           break;
         }
         case "rain": {
