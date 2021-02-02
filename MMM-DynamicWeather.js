@@ -1,12 +1,12 @@
 /* Magic Mirror
- * Module: MMM-3DWeather
+ * Module: MMM-DynamicWeather
  *
- * By Scott Lewis - https://github.com/scottcl88/MMM-3DWeather
+ * By Scott Lewis - https://github.com/scottcl88/MMM-DynamicWeather
  * MIT Licensed.
  *
  * A simple module to display different images based on current weather
  */
-Module.register("MMM-3DWeather", {
+Module.register("MMM-DynamicWeather", {
   defaults: {
     flakeCount: 100,
     api_key: "c5cf8af3d17140838bfcec85c2467d3b",
@@ -45,7 +45,7 @@ Module.register("MMM-3DWeather", {
   },
 
   getStyles: function () {
-    return ["MMM-3DWeather.css"];
+    return ["MMM-DynamicWeather.css"];
   },
 
   getDom: function () {

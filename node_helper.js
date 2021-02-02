@@ -1,7 +1,7 @@
 /* Magic Mirror
- * Module: MMM-3DWeather
+ * Module: MMM-DynamicWeather
  *
- * By Scott Lewis - https://github.com/scottcl88/MMM-3DWeather
+ * By Scott Lewis - https://github.com/scottcl88/MMM-DynamicWeather
  * MIT Licensed.
  *
  * Extension helper module to call an API
