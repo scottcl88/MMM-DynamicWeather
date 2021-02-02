@@ -8,10 +8,10 @@
  */
 Module.register("MMM-DynamicWeather", {
   defaults: {
-    flakeCount: 100,
-    api_key: "c5cf8af3d17140838bfcec85c2467d3b",
-    lat: 39.822948,
-    lon: -84.017937,
+    particleCount: 100,
+    api_key: "",
+    lat: 0,
+    lon: 0,
     interval: 600000, // Every 10 minutes
   },
 
@@ -57,6 +57,7 @@ Module.register("MMM-DynamicWeather", {
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
+    //Codes from https://www.weatherbit.io/api/codes
     if (this.weatherCode >= 600 && this.weatherCode <= 623) {
       this.showEffect(wrapper, "snow");
     } else if (this.weatherCode >= 200 && this.weatherCode <= 522) {
@@ -68,11 +69,12 @@ Module.register("MMM-DynamicWeather", {
     return wrapper;
   },
 
+  //taken from https://github.com/MichMich/MMM-Snow
   showEffect: function (wrapper, theme) {
     var themeSettings = this.themes[theme];
     var flake, jiggle, size;
 
-    for (var i = 0; i < this.config.flakeCount; i++) {
+    for (var i = 0; i < this.config.particleCount; i++) {
       size = themeSettings.sizeFactor * (Math.random() * 0.75) + 0.25;
       let flakeImage = document.createElement("div");
 
@@ -110,7 +112,7 @@ Module.register("MMM-DynamicWeather", {
 
   makeItRain: function (wrapper) {
     var increment = 0;
-    while (increment < 100) {
+    while (increment < this.config.particleCount) {
       var randoHundo = Math.floor(Math.random() * (98 - 1 + 1) + 1); //random number between 98 and 1
       var randoFiver = Math.floor(Math.random() * (5 - 2 + 1) + 2);
 
@@ -135,8 +137,8 @@ Module.register("MMM-DynamicWeather", {
 
   makeItCloudy: function (wrapper) {
     var increment = 0;
-    while (increment < 50) {
-      var randNum = Math.floor(Math.random() * (5 - 2 + 1) + 2); //random number between 5 and 2
+    while (increment < this.config.particleCount) {
+      var randNum = Math.floor(Math.random() * (25 - 5 + 1) + 5); //random number between 25 and 5
       var speed = Math.floor(Math.random() * (35 - 15 + 1) + 15);
       var size = Math.floor(Math.random() * (60 - 3 + 1) + 3);
 
