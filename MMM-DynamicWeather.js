@@ -14,6 +14,7 @@ Module.register("MMM-DynamicWeather", {
     lon: 0,
     interval: 600000, // Every 10 minutes,
     alwaysDisplay: "",
+    zIndex: 99,
   },
 
   start: function () {
@@ -55,6 +56,7 @@ Module.register("MMM-DynamicWeather", {
   getDom: function () {
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper";
+    wrapper.style.zIndex = this.config.zIndex;
 
     if (this.config.alwaysDisplay) {
       switch (this.config.alwaysDisplay) {
