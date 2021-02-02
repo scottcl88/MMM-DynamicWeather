@@ -1,19 +1,19 @@
 # Module: MMM-DynamicWeather
 Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I added rain and clouds as well as automatically toggling the effects based on the current weather and date.
 
-**Screenshot "snowing"**
+**Snowing**
 
 ![](.github/example-winter.png)
 
-**Screenshot "rain
+**Rain**
 
 ![](.github/example-water.png)
 
-**Screenshot "clouds"**
+**Clouds**
 
 ![](.github/example-water.png)
 
-**Screenshot "Valentine's Day"**
+**Valentine's Day**
 
 ![](.github/example-love.png)
 
@@ -59,5 +59,5 @@ The following properties can be configured:
 |`api_key`|**Required** This is the API key you need to use to request weather data from the Weather Underground site.  Details on how to request an API key can be found [here](https://www.weatherbit.io/account/create)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`lat`|This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`lon`|This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
-|`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `900000 // 15 minutes`|
-|`flakeCount`|The number of snow flakes. More flakes are havier for the cpu, so don't go wild. <br>**Default value:** `100`|
+|`interval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 15 minutes`|
+|`flakeCount`|The number of particles to show for each effect. Higher counts may cause performance issues. <br>**Default value:** `100`|
