@@ -44,7 +44,7 @@ modules: [
 		config: { // See 'Configuration options' for more information.
 			api_key: "your_key",
 			lat: "38.907192",
-			lat: "-77.036873"
+			lon: "-77.036873"
 		}
 	}
 ]
