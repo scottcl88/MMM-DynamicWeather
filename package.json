@@ -20,5 +20,12 @@
   "main": "MMM-DynamicWeather.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "dependencies": {
+    "typescript": "^4.1.3"
+  },
+  "prettier":{
+    "printWidth": 200
+  },
+  "devDependencies": {}
 }
