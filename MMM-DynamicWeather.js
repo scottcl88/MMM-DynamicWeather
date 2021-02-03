@@ -10,23 +10,32 @@ Module.register("MMM-DynamicWeather", {
   defaults: {
     particleCount: 100,
     api_key: "",
+    locationID: 0,
     lat: 0,
     lon: 0,
-    interval: 600000, // Every 10 minutes,
+    weatherInterval: 600000, // Every 10 minutes,
     alwaysDisplay: "",
     zIndex: 99,
+    effectDuration: 0,
+    effectDelay: 0,
+    effects: []
   },
 
   start: function () {
     this.initialized = false;
     this.loaded = false;
     this.url =
-      "https://api.weatherbit.io/v2.0/current?key=" +
-      this.config.api_key +
-      "&lat=" +
-      this.config.lat +
-      "&lon=" +
-      this.config.lon;
+      "https://api.openweathermap.org/data/2.5/weather?appid=" +
+      this.config.api_key;
+
+    if (this.config.lat && this.config.lon) {
+      this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
+    }
+
+    if (this.locationID) {
+      this.url += "&id=" + this.config.locationID;
+    }
+
     this.weatherCode = 0;
 
     if (!this.config.alwaysDisplay) {
@@ -88,10 +97,10 @@ Module.register("MMM-DynamicWeather", {
       this.showEffect(wrapper, "love");
     }
 
-    //Codes from https://www.weatherbit.io/api/codes
-    if (this.weatherCode >= 600 && this.weatherCode <= 623) {
+    //Codes from https://openweathermap.org/weather-conditions
+    if (this.weatherCode >= 600 && this.weatherCode <= 622) {
       this.showEffect(wrapper, "snow");
-    } else if (this.weatherCode >= 200 && this.weatherCode <= 522) {
+    } else if (this.weatherCode >= 200 && this.weatherCode <= 531) {
       this.makeItRain(wrapper);
     } else if (this.weatherCode >= 801 && this.weatherCode <= 804) {
       this.makeItCloudy(wrapper);
@@ -99,7 +108,6 @@ Module.register("MMM-DynamicWeather", {
 
     return wrapper;
   },
-
   //taken from https://github.com/MichMich/MMM-Snow
   showEffect: function (wrapper, theme) {
     var themeSettings = this.themes[theme];
@@ -139,6 +147,7 @@ Module.register("MMM-DynamicWeather", {
 
       wrapper.appendChild(flake);
     }
+    setTimeout(stopEffect, this.config.effectDuration, wrapper, theme);
   },
 
   makeItRain: function (wrapper) {
@@ -202,6 +211,16 @@ Module.register("MMM-DynamicWeather", {
     }
   },
 
+  stopEffect: function (_this, wrapper, effectOptions) {
+    //clear elements
+    while (wrapper.firstChild) {
+      wrapper.removeChild(wrapper.firstChild);
+    }
+    this.updateDom();
+    //wait for delay to start effect again
+    setTimeout(showEffect, this.config.effectDelay, wrapper, theme);
+  },
+
   getWeatherAPI: function (_this) {
     _this.sendSocketNotification("API-Fetch", _this.url);
     setTimeout(_this.getWeatherData, _this.config.interval, _this);
@@ -210,12 +229,9 @@ Module.register("MMM-DynamicWeather", {
   socketNotificationReceived: function (notification, payload) {
     if (notification === "API-Received" && payload.url === this.url) {
       this.loaded = true;
-      this.weatherCode = parseInt(payload.result.data[0].weather.code);
-      console.log("api_key: ", this.config.api_key);
-      console.log("lat: ", this.config.lat);
-      console.log("lon: ", this.config.lon);
+      this.weatherCode = payload.result.weather.id;
       console.log("WeatherCode: ", this.weatherCode);
-      this.updateDom(1000);
+      this.updateDom();
     }
   },
 });

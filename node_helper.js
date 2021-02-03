@@ -11,9 +11,7 @@ var NodeHelper = require("node_helper");
 var request = require("request");
 
 module.exports = NodeHelper.create({
-  start: function () {
-    this.weatherCode = "";
-  },
+  start: function () {  },
 
   callApi: function (payload) {
     var that = this;

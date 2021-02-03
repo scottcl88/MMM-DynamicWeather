@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "outDir": "./",
+      "allowJs": true,
+      "target": "es5"
+    },
+    "include": ["MMM-DynamicWeather.ts"]
+  }
