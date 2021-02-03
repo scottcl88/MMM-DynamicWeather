@@ -18,6 +18,30 @@ class Effect {
   direction: string;
   size: number;
   isWeather: boolean;
+  weatherCode: number;
+
+  public getYear() {
+    return this.year ? this.year : 0;
+  }
+  public getMonth() {
+    return this.month ? this.month : 0;
+  }
+  public getDay() {
+    return this.day ? this.day : 0;
+  }
+
+  public clone(other: Effect) {
+    this.day = other.day;
+    this.month = other.month;
+    this.year = other.year;
+    this.duration = other.duration;
+    this.delay = other.delay;
+    this.images = other.images;
+    this.direction = other.direction;
+    this.size = other.size;
+    this.isWeather = other.isWeather;
+    this.weatherCode = other.weatherCode;
+  }
 }
 Module.register("MMM-DynamicWeather", {
   defaults: {
@@ -31,6 +55,9 @@ Module.register("MMM-DynamicWeather", {
     zIndex: 99,
     weatherDuration: 120000,
     weatherDelay: 60000,
+    hideSnow: false,
+    hideRain: false,
+    hideClouds: false,
     effects: [
       {
         month: 2,
@@ -51,9 +78,7 @@ Module.register("MMM-DynamicWeather", {
     this.loaded = false;
     this.doShowCustomEffects = true;
     this.doShowWeatherEffects = true;
-    this.url =
-      "https://api.openweathermap.org/data/2.5/weather?appid=" +
-      this.config.api_key;
+    this.url = "https://api.openweathermap.org/data/2.5/weather?appid=" + this.config.api_key;
 
     if (this.config.lat && this.config.lon) {
       this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
@@ -62,6 +87,21 @@ Module.register("MMM-DynamicWeather", {
     if (this.config.locationID) {
       this.url += "&id=" + this.config.locationID;
     }
+
+    this.snowEffect = new Effect();
+    this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
+    this.snowEffect.size = 1;
+    this.snowEffect.direction = "down";
+    this.snowEffect.isWeather = true;
+    this.snowEffect.duration = this.config.weatherDuration;
+    this.snowEffect.delay = this.config.weatherDelay;
+
+    this.loveEffect = new Effect();
+    this.loveEffect.images = ["heart1.png", "heart2.png"];
+    this.loveEffect.size = 2;
+    this.loveEffect.direction = "up";
+    this.loveEffect.duration = this.config.weatherDuration;
+    this.loveEffect.delay = this.config.weatherDelay;
 
     this.weatherCode = 0;
 
@@ -79,28 +119,14 @@ Module.register("MMM-DynamicWeather", {
     wrapper.className = "wrapper";
     wrapper.style.zIndex = this.config.zIndex;
 
-    var snowEffect = new Effect();
-    snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
-    snowEffect.size = 1;
-    snowEffect.direction = "down";
-    snowEffect.isWeather = true;
-    snowEffect.duration = this.config.weatherDuration;
-    snowEffect.delay = this.config.weatherDelay;
-
     if (this.config.alwaysDisplay) {
       switch (this.config.alwaysDisplay) {
         case "love": {
-          var loveEffect = new Effect();
-          loveEffect.images = ["heart1.png", "heart2.png"];
-          loveEffect.size = 2;
-          loveEffect.direction = "up";
-          loveEffect.duration = this.config.weatherDuration;
-          loveEffect.delay = this.config.weatherDelay;
-          this.showCustomEffect(wrapper, loveEffect);
+          this.showCustomEffect(wrapper, this.loveEffect);
           break;
         }
         case "snow": {
-          this.showCustomEffect(wrapper, snowEffect);
+          this.showCustomEffect(wrapper, this.snowEffect);
           break;
         }
         case "rain": {
@@ -118,13 +144,17 @@ Module.register("MMM-DynamicWeather", {
       return wrapper;
     }
 
+    console.log("GetDom: ", this.doShowCustomEffects);
     if (this.doShowCustomEffects) {
-      (this.config.effects as Effect[]).forEach((effect) => {
+      this.config.effects.forEach((configEffect) => {
+        var effect = new Effect();
+        effect.clone(configEffect);
+
         var effectMonth = effect.month - 1;
-        if (
-          this.now.getMonth() == effectMonth &&
-          this.now.getDate() == effect.day
-        ) {
+        console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
+        if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
+          this.showCustomEffect(wrapper, effect);
+        } else if (this.now.getMonth() == effectMonth && this.now.getDate() == effect.day) {
           if (effect.year == 0 || this.now.getYear() == effect.year) {
             this.showCustomEffect(wrapper, effect);
           }
@@ -134,11 +164,11 @@ Module.register("MMM-DynamicWeather", {
 
     if (this.doShowWeatherEffects) {
       //Codes from https://openweathermap.org/weather-conditions
-      if (this.weatherCode >= 600 && this.weatherCode <= 622) {
-        this.showCustomEffect(wrapper, snowEffect);
-      } else if (this.weatherCode >= 200 && this.weatherCode <= 531) {
+      if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
+        this.showCustomEffect(wrapper, this.snowEffect);
+      } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
         this.makeItRain(wrapper);
-      } else if (this.weatherCode >= 801 && this.weatherCode <= 804) {
+      } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
         this.makeItCloudy(wrapper);
       }
     }
@@ -155,15 +185,13 @@ Module.register("MMM-DynamicWeather", {
     var flake, jiggle, size;
 
     for (var i = 0; i < this.config.particleCount; i++) {
-      size = effect.size * (Math.random() * 0.75) + 0.25;
+      size = effect.size; // * (Math.random() * 0.75) + 0.25;
       let flakeImage = document.createElement("div");
 
       let maxNum = effect.images.length;
       var picIndex = Math.floor(Math.random() * (maxNum - 0) + 0);
-      flakeImage.style.backgroundImage =
-        "url('./modules/MMM-DynamicWeather/images/" +
-        effect.images[picIndex] +
-        "')";
+      // console.log("Setting up effect image: ", effect.images[picIndex]);
+      flakeImage.style.backgroundImage = "url('./modules/MMM-DynamicWeather/images/" + effect.images[picIndex] + "')";
       flakeImage.style.transform = "scale(" + size + ", " + size + ")";
       flakeImage.style.opacity = size;
 
@@ -235,13 +263,7 @@ Module.register("MMM-DynamicWeather", {
     }
     var rainEffect = new Effect();
     rainEffect.isWeather = true;
-    setTimeout(
-      this.stopEffect,
-      this.config.weatherDuration,
-      this,
-      wrapper,
-      rainEffect
-    );
+    setTimeout(this.stopEffect, this.config.weatherDuration, this, wrapper, rainEffect);
   },
 
   makeItCloudy: function (wrapper) {
@@ -265,13 +287,7 @@ Module.register("MMM-DynamicWeather", {
     }
     var cloudEffect = new Effect();
     cloudEffect.isWeather = true;
-    setTimeout(
-      this.stopEffect,
-      this.config.weatherDuration,
-      this,
-      wrapper,
-      cloudEffect
-    );
+    setTimeout(this.stopEffect, this.config.weatherDuration, this, wrapper, cloudEffect);
   },
 
   stopEffect: function (_this, wrapper, effect: Effect) {
@@ -297,11 +313,6 @@ Module.register("MMM-DynamicWeather", {
     );
   },
 
-  restartEffect: function (_this) {
-    _this.doShowCustomEffects = false;
-    _this.updateDom();
-  },
-
   getWeatherAPI: function (_this) {
     _this.sendSocketNotification("API-Fetch", _this.url);
     setTimeout(_this.getWeatherData, _this.config.interval, _this);
@@ -310,7 +321,9 @@ Module.register("MMM-DynamicWeather", {
   socketNotificationReceived: function (notification, payload) {
     if (notification === "API-Received" && payload.url === this.url) {
       this.loaded = true;
-      this.weatherCode = payload.result.weather[0].id;
+      this.weatherCode = 801; //payload.result.weather[0].id;
+      this.doShowWeatherEffects = true;
+      this.doShowCustomEffects = true;
       this.updateDom();
     }
   },
