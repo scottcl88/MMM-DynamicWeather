@@ -26,6 +26,9 @@ class Effect {
   public getDay(): number {
     return this.day ? this.day : 0;
   }
+  public getSize(): number {
+    return this.size ? this.size : 1;
+  }
   public getWeatherCode(): number {
     return this.weatherCode ? this.weatherCode : 0;
   }
@@ -57,16 +60,7 @@ Module.register("MMM-DynamicWeather", {
     hideSnow: false,
     hideRain: false,
     hideClouds: false,
-    effects: [
-      {
-        month: 2,
-        day: 14,
-        year: 0,
-        images: ["heart1.png", "heart2.png"],
-        direction: "up",
-        size: 2,
-      },
-    ] as Effect[],
+    effects: [] as Effect[],
   },
 
   start: function () {
@@ -90,15 +84,6 @@ Module.register("MMM-DynamicWeather", {
     this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
     this.snowEffect.size = 1;
     this.snowEffect.direction = "down";
-    this.snowEffect.duration = this.config.effectDuration;
-    this.snowEffect.delay = this.config.effectDelay;
-
-    this.loveEffect = new Effect();
-    this.loveEffect.images = ["heart1.png", "heart2.png"];
-    this.loveEffect.size = 2;
-    this.loveEffect.direction = "up";
-    this.loveEffect.duration = this.config.effectDuration;
-    this.loveEffect.delay = this.config.effectDelay;
 
     this.weatherCode = 0;
 
@@ -120,10 +105,6 @@ Module.register("MMM-DynamicWeather", {
 
     if (this.config.alwaysDisplay) {
       switch (this.config.alwaysDisplay) {
-        case "love": {
-          this.showCustomEffect(wrapper, this.loveEffect);
-          break;
-        }
         case "snow": {
           this.showCustomEffect(wrapper, this.snowEffect);
           break;
