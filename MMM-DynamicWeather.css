@@ -23,14 +23,6 @@
     animation-iteration-count: infinite;
 }
 
-.MMM-DynamicWeather .snow1 {background-image: url('images/snow1.png');}
-.MMM-DynamicWeather .snow2 {background-image: url('images/snow2.png');}
-.MMM-DynamicWeather .snow3 {background-image: url('images/snow3.png');}
-
-.MMM-DynamicWeather .heart1 {background-image: url('images/heart1.png');}
-.MMM-DynamicWeather .heart2 {background-image: url('images/heart2.png');}
-
-
 @keyframes flake-downwards {
     from {transform: translateY(0vh)}
     to {transform: translateY(calc(100vh + 20px))}
@@ -126,16 +118,6 @@ RAIN CSS
 Clouds
 https://codepen.io/Mark_Bowley/pen/xEbuI
 ******************************/
-
-.MMM-DynamicWeather #background-wrap {
-    bottom: 0;
-	left: 0;
-	padding-top: 50px;
-	position: fixed;
-	right: 0;
-	top: 0;
-	z-index: -1;
-}
 
 /* KEYFRAMES */
 
