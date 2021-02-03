@@ -11,16 +11,19 @@ var Effect = /** @class */ (function () {
     Effect.prototype.getDay = function () {
         return this.day ? this.day : 0;
     };
+    Effect.prototype.getWeatherCode = function () {
+        return this.weatherCode ? this.weatherCode : 0;
+    };
+    Effect.prototype.hasWeatherCode = function () {
+        return this.weatherCode && this.weatherCode > 0 ? true : false;
+    };
     Effect.prototype.clone = function (other) {
         this.day = other.day;
         this.month = other.month;
         this.year = other.year;
-        this.duration = other.duration;
-        this.delay = other.delay;
         this.images = other.images;
         this.direction = other.direction;
         this.size = other.size;
-        this.isWeather = other.isWeather;
         this.weatherCode = other.weatherCode;
     };
     return Effect;
@@ -35,8 +38,8 @@ Module.register("MMM-DynamicWeather", {
         weatherInterval: 600000,
         alwaysDisplay: "",
         zIndex: 99,
-        weatherDuration: 120000,
-        weatherDelay: 60000,
+        effectDuration: 120000,
+        effectDelay: 60000,
         hideSnow: false,
         hideRain: false,
         hideClouds: false,
@@ -45,8 +48,6 @@ Module.register("MMM-DynamicWeather", {
                 month: 2,
                 day: 14,
                 year: 0,
-                duration: 60000,
-                delay: 30000,
                 images: ["heart1.png", "heart2.png"],
                 direction: "up",
                 size: 2,
@@ -57,8 +58,9 @@ Module.register("MMM-DynamicWeather", {
         this.now = new Date();
         this.initialized = false;
         this.loaded = false;
-        this.doShowCustomEffects = true;
-        this.doShowWeatherEffects = true;
+        this.doShowEffects = true;
+        this.effectDurationTimeout = null;
+        this.effectDelayTimeout = null;
         this.url = "https://api.openweathermap.org/data/2.5/weather?appid=" + this.config.api_key;
         if (this.config.lat && this.config.lon) {
             this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
@@ -70,15 +72,14 @@ Module.register("MMM-DynamicWeather", {
         this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
         this.snowEffect.size = 1;
         this.snowEffect.direction = "down";
-        this.snowEffect.isWeather = true;
-        this.snowEffect.duration = this.config.weatherDuration;
-        this.snowEffect.delay = this.config.weatherDelay;
+        this.snowEffect.duration = this.config.effectDuration;
+        this.snowEffect.delay = this.config.effectDelay;
         this.loveEffect = new Effect();
         this.loveEffect.images = ["heart1.png", "heart2.png"];
         this.loveEffect.size = 2;
         this.loveEffect.direction = "up";
-        this.loveEffect.duration = this.config.weatherDuration;
-        this.loveEffect.delay = this.config.weatherDelay;
+        this.loveEffect.duration = this.config.effectDuration;
+        this.loveEffect.delay = this.config.effectDelay;
         this.weatherCode = 0;
         if (!this.config.alwaysDisplay) {
             this.getWeatherAPI(this);
@@ -92,6 +93,7 @@ Module.register("MMM-DynamicWeather", {
         var wrapper = document.createElement("div");
         wrapper.className = "wrapper";
         wrapper.style.zIndex = this.config.zIndex;
+        // if (!this.loaded) return wrapper; //need to wait for the weather to first be loaded
         if (this.config.alwaysDisplay) {
             switch (this.config.alwaysDisplay) {
                 case "love": {
@@ -116,44 +118,42 @@ Module.register("MMM-DynamicWeather", {
             }
             return wrapper;
         }
-        console.log("GetDom: ", this.doShowCustomEffects);
-        if (this.doShowCustomEffects) {
-            this.config.effects.forEach(function (configEffect) {
-                var effect = new Effect();
-                effect.clone(configEffect);
-                var effectMonth = effect.month - 1;
-                console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
-                if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
+        // console.log("GetDom: ", this.doShowEffects, this.weatherCode);
+        if (!this.doShowEffects)
+            return wrapper;
+        this.config.effects.forEach(function (configEffect) {
+            var effect = new Effect();
+            effect.clone(configEffect);
+            var effectMonth = effect.month - 1;
+            // console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
+            if (effect.getWeatherCode() == _this_1.weatherCode) {
+                _this_1.showCustomEffect(wrapper, effect);
+            }
+            else if (!effect.hasWeatherCode() && effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
+                _this_1.showCustomEffect(wrapper, effect);
+            }
+            else if (!effect.hasWeatherCode() && _this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
+                if (effect.year == 0 || _this_1.now.getYear() == effect.year) {
                     _this_1.showCustomEffect(wrapper, effect);
                 }
-                else if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                    if (effect.year == 0 || _this_1.now.getYear() == effect.year) {
-                        _this_1.showCustomEffect(wrapper, effect);
-                    }
-                }
-            });
+            }
+        });
+        //Codes from https://openweathermap.org/weather-conditions
+        if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
+            this.showCustomEffect(wrapper, this.snowEffect);
         }
-        if (this.doShowWeatherEffects) {
-            //Codes from https://openweathermap.org/weather-conditions
-            if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
-                this.showCustomEffect(wrapper, this.snowEffect);
-            }
-            else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
-                this.makeItRain(wrapper);
-            }
-            else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-                this.makeItCloudy(wrapper);
-            }
+        else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
+            this.makeItRain(wrapper);
         }
+        else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
+            this.makeItCloudy(wrapper);
+        }
+        // console.log("Going to wait for: ", this.config.effectDuration);
+        this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this, wrapper);
         return wrapper;
     },
     showCustomEffect: function (wrapper, effect) {
-        if (effect.isWeather) {
-            this.doShowWeatherEffects = false;
-        }
-        else {
-            this.doShowCustomEffects = false;
-        }
+        this.doShowEffects = false;
         var flake, jiggle, size;
         for (var i = 0; i < this.config.particleCount; i++) {
             size = effect.size; // * (Math.random() * 0.75) + 0.25;
@@ -184,11 +184,9 @@ Module.register("MMM-DynamicWeather", {
             flake.style.animationDuration = 100 - Math.random() * 50 * size + "s";
             wrapper.appendChild(flake);
         }
-        console.log("Going to wait for: ", effect.duration);
-        setTimeout(this.stopEffect, effect.duration, this, wrapper, effect);
     },
     makeItRain: function (wrapper) {
-        this.doShowWeatherEffects = false;
+        this.doShowEffects = false;
         var increment = 0;
         while (increment < this.config.particleCount) {
             var randoHundo = Math.floor(Math.random() * (98 - 1 + 1) + 1); //random number between 98 and 1
@@ -220,11 +218,9 @@ Module.register("MMM-DynamicWeather", {
             wrapper.appendChild(backDrop);
             wrapper.appendChild(frontDrop);
         }
-        var rainEffect = new Effect();
-        rainEffect.isWeather = true;
-        setTimeout(this.stopEffect, this.config.weatherDuration, this, wrapper, rainEffect);
     },
     makeItCloudy: function (wrapper) {
+        this.doShowEffects = false;
         var increment = 0;
         while (increment < this.config.particleCount) {
             var randNum = Math.floor(Math.random() * (25 - 5 + 1) + 5); //random number between 25 and 5
@@ -239,30 +235,18 @@ Module.register("MMM-DynamicWeather", {
             cloudBase.appendChild(cloud);
             wrapper.appendChild(cloudBase);
         }
-        var cloudEffect = new Effect();
-        cloudEffect.isWeather = true;
-        setTimeout(this.stopEffect, this.config.weatherDuration, this, wrapper, cloudEffect);
     },
-    stopEffect: function (_this, wrapper, effect) {
+    stopEffect: function (_this, wrapper) {
         //clear elements
         while (wrapper.firstChild) {
             wrapper.removeChild(wrapper.firstChild);
         }
         _this.updateDom();
-        var delay = effect.isWeather ? _this.config.weatherDelay : effect.delay;
-        setTimeout(function (_that, _effect) {
-            if (_effect.isWeather) {
-                _that.doShowWeatherEffects = true;
-            }
-            else {
-                _that.doShowCustomEffects = true;
-            }
+        var delay = this.config.effectDelay;
+        this.effectDelayTimeout = setTimeout(function (_that, _effect) {
+            _that.doShowEffects = true;
             _that.updateDom();
-        }, delay, _this, effect);
-    },
-    restartEffect: function (_this) {
-        _this.doShowCustomEffects = false;
-        _this.updateDom();
+        }, delay, _this);
     },
     getWeatherAPI: function (_this) {
         _this.sendSocketNotification("API-Fetch", _this.url);
@@ -271,10 +255,35 @@ Module.register("MMM-DynamicWeather", {
     socketNotificationReceived: function (notification, payload) {
         if (notification === "API-Received" && payload.url === this.url) {
             this.loaded = true;
-            this.weatherCode = 801; //payload.result.weather[0].id;
-            this.doShowWeatherEffects = true;
-            this.doShowCustomEffects = true;
-            this.updateDom();
+            var newCode = payload.result.weather[0].id;
+            var doUpdate = false;
+            //check to see if the newCode is different than already displayed, and if so, is it going to show anything
+            if (newCode != this.weatherCode) {
+                if (newCode >= 600 && newCode <= 622 && !this.config.hideSnow) {
+                    doUpdate = true;
+                }
+                if (newCode >= 200 && newCode <= 531 && !this.config.hideRain) {
+                    doUpdate = true;
+                }
+                if (newCode >= 801 && newCode <= 804 && !this.config.hideClouds) {
+                    doUpdate = true;
+                }
+                this.config.effects.forEach(function (configEffect) {
+                    var effect = new Effect();
+                    effect.clone(configEffect);
+                    if (effect.weatherCode == newCode) {
+                        doUpdate = true;
+                    }
+                });
+            }
+            //only update the dom if the weather is different
+            if (doUpdate) {
+                this.weatherCode = newCode;
+                this.doShowEffects = true;
+                clearTimeout(this.effectDurationTimeout);
+                clearTimeout(this.effectDelayTimeout);
+                this.updateDom();
+            }
         }
     },
 });
