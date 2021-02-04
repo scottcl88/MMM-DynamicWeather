@@ -131,14 +131,14 @@ Module.register("MMM-DynamicWeather", {
       var effect = new Effect();
       effect.clone(configEffect);
 
-      var effectMonth = effect.month - 1;
-      // console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
-      if (effect.getWeatherCode() == this.weatherCode) {
+      var effectMonth = effect.getMonth() - 1;
+      // console.log("Showing effect: ", effect.hasWeatherCode(), effect.getMonth(), effect.getDay(), effect.getYear(), this.now.getMonth(), this.now.getDate(), this.now.getFullYear());
+      if (effect.getWeatherCode() == this.weatherCode) { 
         this.showCustomEffect(wrapper, effect);
       } else if (!effect.hasWeatherCode() && effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
         this.showCustomEffect(wrapper, effect);
       } else if (!effect.hasWeatherCode() && this.now.getMonth() == effectMonth && this.now.getDate() == effect.day) {
-        if (effect.year == 0 || this.now.getYear() == effect.year) {
+        if (effect.getYear() == 0 || this.now.getFullYear() == effect.getYear()) {
           this.showCustomEffect(wrapper, effect);
         }
       }
