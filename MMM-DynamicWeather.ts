@@ -30,7 +30,7 @@ class Effect {
     return this.size ? this.size : 1;
   }
   public getWeatherCode(): number {
-    return this.weatherCode ? this.weatherCode : 0;
+    return this.weatherCode ? this.weatherCode : -99;
   }
   public hasWeatherCode(): boolean {
     return this.weatherCode && this.weatherCode > 0 ? true : false;
