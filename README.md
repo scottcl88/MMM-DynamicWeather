@@ -65,7 +65,7 @@ The following properties can be configured:
 
 |Option|Description|
 |---|---|
-|`alwaysDisplay`|Set this to always display the specified effect. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** `null`|
+|`alwaysDisplay`|Set this to always display the specified default effect, regardless of weather. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** `null`|
 |`api_key`|**Required** This is the API key you need to use to request weather data from the OpenWeatherMap site.  Details on how to request an API key can be found [here](https://home.openweathermap.org/users/sign_up)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`effectDuration`|The length, in milliseconds, to display the effect. <br><br>**Type:** `number`<br>**Default value:** `120000`|
 |`effectDelay`|The length, in milliseconds, to wait to restart the effect. <br><br>**Type:** `number`<br>**Default value:** `60000`|
@@ -88,5 +88,5 @@ Effect options
 |`year`|The year (4 digits) of the date to display this effect on.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`images`|An array of image files to display at random for this effect. All files need to be in the "images" folder of the MMM-DynamicWeather module folder.<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
-|`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br><br>**Type:** `number`<br>**Default value:** `0`|
+|`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless `hideSnow`, `hideRain` or `hideClouds` is turned on. <br><br>**Type:** `number`<br>**Default value:** `0`|
 
