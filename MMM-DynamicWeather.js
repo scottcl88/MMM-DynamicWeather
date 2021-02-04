@@ -106,8 +106,8 @@ Module.register("MMM-DynamicWeather", {
         this.config.effects.forEach(function (configEffect) {
             var effect = new Effect();
             effect.clone(configEffect);
-            var effectMonth = effect.month - 1;
-            // console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
+            var effectMonth = effect.getMonth() - 1;
+            // console.log("Showing effect: ", effect.hasWeatherCode(), effect.getMonth(), effect.getDay(), effect.getYear(), this.now.getMonth(), this.now.getDate(), this.now.getFullYear());
             if (effect.getWeatherCode() == _this_1.weatherCode) {
                 _this_1.showCustomEffect(wrapper, effect);
             }
@@ -115,7 +115,7 @@ Module.register("MMM-DynamicWeather", {
                 _this_1.showCustomEffect(wrapper, effect);
             }
             else if (!effect.hasWeatherCode() && _this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                if (effect.year == 0 || _this_1.now.getYear() == effect.year) {
+                if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
                     _this_1.showCustomEffect(wrapper, effect);
                 }
             }
