@@ -1,6 +1,7 @@
 var Effect = /** @class */ (function () {
     function Effect() {
         this.year = 0;
+        this.doDisplay = false;
     }
     Effect.prototype.getYear = function () {
         return this.year ? this.year : 0;
@@ -20,6 +21,9 @@ var Effect = /** @class */ (function () {
     Effect.prototype.hasWeatherCode = function () {
         return this.weatherCode && this.weatherCode > 0 ? true : false;
     };
+    Effect.prototype.hasHoliday = function () {
+        return this.holiday && this.holiday.length > 0 ? true : false;
+    };
     Effect.prototype.clone = function (other) {
         this.day = other.day;
         this.month = other.month;
@@ -28,6 +32,8 @@ var Effect = /** @class */ (function () {
         this.direction = other.direction;
         this.size = other.size;
         this.weatherCode = other.weatherCode;
+        this.holiday = other.holiday;
+        this.doDisplay = other.doDisplay;
     };
     return Effect;
 }());
@@ -49,12 +55,16 @@ Module.register("MMM-DynamicWeather", {
         effects: [],
     },
     start: function () {
+        var _this_1 = this;
         this.now = new Date();
         this.initialized = false;
         this.loaded = false;
         this.doShowEffects = true;
         this.effectDurationTimeout = null;
         this.effectDelayTimeout = null;
+        this.weatherTimeout = null;
+        this.holidayTimeout = null;
+        this.allEffects = [];
         this.url = "https://api.openweathermap.org/data/2.5/weather?appid=" + this.config.api_key;
         if (this.config.lat && this.config.lon) {
             this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
@@ -67,12 +77,39 @@ Module.register("MMM-DynamicWeather", {
         this.snowEffect.size = 1;
         this.snowEffect.direction = "down";
         this.weatherCode = 0;
+        this.allHolidays = [];
+        this.config.effects.forEach(function (configEffect) {
+            var effect = new Effect();
+            effect.clone(configEffect);
+            _this_1.allEffects.push(effect);
+            _this_1.allHolidays.push(effect.holiday);
+        });
+        this.checkDates();
+        if (this.allHolidays.length > 0) {
+            this.getHolidays(this);
+        }
         if (!this.config.alwaysDisplay) {
-            this.getWeatherAPI(this);
+            this.getWeather(this);
         }
     },
     getStyles: function () {
         return ["MMM-DynamicWeather.css"];
+    },
+    checkDates: function () {
+        var _this_1 = this;
+        this.allEffects.forEach(function (effect) {
+            var effectMonth = effect.month - 1;
+            if (!effect.hasWeatherCode() && !effect.hasHoliday()) { //if there is weatherCode or holiday, dates are ignored
+                if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) { //if no weatherCode, no holiday and no dates, then always display it
+                    effect.doDisplay = true;
+                }
+                else if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
+                    if (effect.year == 0 || _this_1.now.getYear() == effect.year) { //if the month and date match or the month, date and year match
+                        effect.doDisplay = true;
+                    }
+                }
+            }
+        });
     },
     getDom: function () {
         var _this_1 = this;
@@ -103,21 +140,9 @@ Module.register("MMM-DynamicWeather", {
         // console.log("GetDom: ", this.doShowEffects, this.weatherCode);
         if (!this.doShowEffects)
             return wrapper;
-        this.config.effects.forEach(function (configEffect) {
-            var effect = new Effect();
-            effect.clone(configEffect);
-            var effectMonth = effect.month - 1;
-            // console.log("Showing effect: ", effect, effect.month, effect.day, effect.year);
-            if (effect.getWeatherCode() == _this_1.weatherCode) {
+        this.allEffects.forEach(function (effect) {
+            if (effect.doDisplay) {
                 _this_1.showCustomEffect(wrapper, effect);
-            }
-            else if (!effect.hasWeatherCode() && effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
-                _this_1.showCustomEffect(wrapper, effect);
-            }
-            else if (!effect.hasWeatherCode() && _this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                if (effect.year == 0 || _this_1.now.getYear() == effect.year) {
-                    _this_1.showCustomEffect(wrapper, effect);
-                }
             }
         });
         //Codes from https://openweathermap.org/weather-conditions
@@ -224,43 +249,106 @@ Module.register("MMM-DynamicWeather", {
             wrapper.removeChild(wrapper.firstChild);
         }
         _this.updateDom();
-        var delay = this.config.effectDelay;
-        this.effectDelayTimeout = setTimeout(function (_that, _effect) {
+        var delay = _this.config.effectDelay;
+        _this.effectDelayTimeout = setTimeout(function (_that, _effect) {
             _that.doShowEffects = true;
             _that.updateDom();
         }, delay, _this);
     },
-    getWeatherAPI: function (_this) {
+    getWeather: function (_this) {
         _this.sendSocketNotification("API-Fetch", _this.url);
-        setTimeout(_this.getWeatherData, _this.config.interval, _this);
+        _this.weatherTimeout = setTimeout(_this.getWeather, _this.config.interval, _this);
+    },
+    getHolidays: function (_this) {
+        _this.sendSocketNotification("Holiday-Fetch", {});
+        _this.holidayTimeout = setTimeout(_this.getHolidays, 1000 * 60 * 60 * 24, _this); //once a day
+    },
+    parseHolidays: function (body) {
+        var today = new Date();
+        var todayHolidays = [];
+        console.log("Parsing holidays...");
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(body, "text/html");
+        var children = doc.getElementById("holidays-table").children[1].children;
+        for (var i = 0; i < children.length; i++) {
+            var child1 = children[i];
+            if (child1.hasAttribute("data-date")) {
+                var holidayDateStr = child1.getAttribute("data-date");
+                var child2 = child1.children;
+                for (var j = 0; j < child2.length; j++) {
+                    var child3 = child2[j];
+                    if (child3.hasChildNodes()) {
+                        for (var k = 0; k < child3.children.length; k++) {
+                            var child4 = child3.children[k];
+                            for (var l = 0; l < this.allHolidays.length; l++) {
+                                var effectHoliday = this.allHolidays[l];
+                                if (child4.textContent == effectHoliday) {
+                                    console.log("Found effect holiday");
+                                    var holidayDate = new Date(parseInt(holidayDateStr));
+                                    console.log("Holiday date: ", holidayDate, holidayDate.getUTCDate(), today.getDate(), holidayDate.getUTCMonth(), today.getMonth());
+                                    if (holidayDate.getUTCDate() == today.getDate() && holidayDate.getUTCMonth() == today.getMonth()) {
+                                        console.log("Effect holiday added: ", effectHoliday);
+                                        todayHolidays.push(effectHoliday);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return todayHolidays;
     },
     socketNotificationReceived: function (notification, payload) {
         if (notification === "API-Received" && payload.url === this.url) {
             this.loaded = true;
-            var newCode = payload.result.weather[0].id;
-            var doUpdate = false;
+            var newCode_1 = payload.result.weather[0].id;
+            var doUpdate_1 = false;
             //check to see if the newCode is different than already displayed, and if so, is it going to show anything
-            if (newCode != this.weatherCode) {
-                if (newCode >= 600 && newCode <= 622 && !this.config.hideSnow) {
-                    doUpdate = true;
+            if (newCode_1 != this.weatherCode) {
+                if (newCode_1 >= 600 && newCode_1 <= 622 && !this.config.hideSnow) {
+                    doUpdate_1 = true;
                 }
-                if (newCode >= 200 && newCode <= 531 && !this.config.hideRain) {
-                    doUpdate = true;
+                if (newCode_1 >= 200 && newCode_1 <= 531 && !this.config.hideRain) {
+                    doUpdate_1 = true;
                 }
-                if (newCode >= 801 && newCode <= 804 && !this.config.hideClouds) {
-                    doUpdate = true;
+                if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
+                    doUpdate_1 = true;
                 }
-                this.config.effects.forEach(function (configEffect) {
-                    var effect = new Effect();
-                    effect.clone(configEffect);
-                    if (effect.weatherCode == newCode) {
-                        doUpdate = true;
+                this.allEffects.forEach(function (effect) {
+                    if (effect.weatherCode == newCode_1) {
+                        doUpdate_1 = true;
+                        effect.doDisplay = true;
                     }
                 });
             }
             //only update the dom if the weather is different
-            if (doUpdate) {
-                this.weatherCode = newCode;
+            if (doUpdate_1) {
+                this.weatherCode = newCode_1;
+                this.doShowEffects = true;
+                clearTimeout(this.effectDurationTimeout);
+                clearTimeout(this.effectDelayTimeout);
+                this.updateDom();
+            }
+        }
+        if (notification === "Holiday-Received") {
+            this.loaded = true;
+            var doUpdate_2 = false;
+            var todayHolidays_1 = [];
+            todayHolidays_1 = this.parseHolidays(payload.result.holidayBody);
+            console.log("Parsing holidays finished with results: ", todayHolidays_1.length);
+            //returned a list of holidays for today, check to see if any effects have the same holiday name, if so display them and update dom
+            this.allEffects.forEach(function (effect) {
+                todayHolidays_1.forEach(function (holidayName) {
+                    if (effect.holiday == holidayName) {
+                        console.log("Marking effect for holiday: ", holidayName);
+                        doUpdate_2 = true;
+                        effect.doDisplay = true;
+                    }
+                });
+            });
+            //only update the dom if the effects have a holiday to show today
+            if (doUpdate_2) {
                 this.doShowEffects = true;
                 clearTimeout(this.effectDurationTimeout);
                 clearTimeout(this.effectDelayTimeout);
