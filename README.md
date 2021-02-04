@@ -32,8 +32,9 @@ cd ~/MagicMirror/modules/MMM-DynamicWeather
 ````
 Run NPM Install
 ````
-npm install mmm-dynamicweather
+npm install
 ````
+NPM package: https://www.npmjs.com/package/mmm-dynamicweather
 
 ## Using the module
 
