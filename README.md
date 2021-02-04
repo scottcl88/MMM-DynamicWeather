@@ -44,8 +44,8 @@ To use this module, add it to the modules array in the `config/config.js` file:
 	module: 'MMM-DynamicWeather',
 	position: 'fullscreen_above',
 	config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
-		api_key: "f9cf757d2ef008ec0b085af1b7f5c58a",
-		locationID: "4511263",
+		api_key: "your_key",
+		locationID: "4140963",
 		effects: [
 			{
 				month: "2",
