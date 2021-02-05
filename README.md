@@ -77,6 +77,7 @@ The following properties can be configured:
 |`lat`|**Required with lon (or use locationID)** This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`lon`|**Required with lat (or use locationID)** This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues.<br><br>**Type:** `integer`<br>**Default value:** `100`|
+|`sequential`|If set, will not display weather and a custom effect at the same time. If not set, both weather and effect can be seen together. Set the value to "weather" if you want to see weather first; weather will run for duration time, then wait for delay time, then show effect. If value is "effect", the effect will be shown first, then weather. Repeats until either the weather changes and/or the effect date/holiday is no longer today. <br><br>**Options:**`weather`,`effect`<br>**Type:** `string`<br>**Default value:** `null`|
 |`weatherInterval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
 |`zIndex`|Sets the z-index of the module's wrapper, in case of other elements being blocked.<br><br>**Type:** `number`<br>**Default value:** `99`|
 
