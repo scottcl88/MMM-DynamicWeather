@@ -118,6 +118,7 @@ Module.register("MMM-DynamicWeather", {
 
     if (!this.config.alwaysDisplay) {
       //this.getWeather(this);
+      this.weatherLoaded = true;
     } else {
       this.weatherLoaded = true;
     }
@@ -215,22 +216,33 @@ Module.register("MMM-DynamicWeather", {
       flakeImage.style.opacity = size;
 
       flake = document.createElement("div");
+      var animationName;
 
       switch (effect.direction) {
         case "down": {
           flake.className = "flake-downwards";
+          flake.style.left = Math.random() * 100 - 10 + "%";
+          animationName = "flake-jiggle";
           break;
         }
         case "left-right": {
           flake.className = "flake-left-right";
+          flake.style.left = "-50px";
+          flake.style.top = Math.random() * 100 - 10 + "%";
+          flake.style.animationName = "flake-jiggle-left-right";
           break;
         }
         case "right-left": {
           flake.className = "flake-right-left";
+          flake.style.right = "-50px";
+          flake.style.top = Math.random() * 100 - 10 + "%";
+          flake.style.animationName = "flake-jiggle-right-left";
           break;
         }
         default: {
           flake.className = "flake-upwards";
+          flake.style.left = Math.random() * 100 - 10 + "%";
+          animationName = "flake-jiggle";
           break;
         }
       }
@@ -238,14 +250,20 @@ Module.register("MMM-DynamicWeather", {
       jiggle = document.createElement("div");
       jiggle.style.animationDelay = Math.random() * 4 + "s";
       jiggle.style.animationDuration = Math.random() * 30 + 30 + "s";
+      if (animationName) {
+        jiggle.style.animationName = animationName;
+      }
+
       jiggle.appendChild(flakeImage);
 
       size = Math.random() * 0.75 + 0.25;
       jiggle.style.transform = "scale(" + size + ", " + size + ")";
       jiggle.style.opacity = size;
+      if (animationName) {
+        jiggle.style.animationName = animationName;
+      }
 
       flake.appendChild(jiggle);
-      flake.style.left = Math.random() * 100 - 10 + "%";
       flake.style.animationDelay = Math.random() * 100 + "s";
       flake.style.animationDuration = 100 - Math.random() * 50 * size + "s";
 

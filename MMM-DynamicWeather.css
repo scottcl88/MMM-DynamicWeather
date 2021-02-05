@@ -14,14 +14,12 @@
 
 .MMM-DynamicWeather .flake-right-left {
   position: absolute;
-  top: -50px;
   animation-name: flake-right-left;
   animation-iteration-count: infinite;
 }
 
 .MMM-DynamicWeather .flake-left-right {
   position: absolute;
-  top: -50px;
   animation-name: flake-left-right;
   animation-iteration-count: infinite;
 }
@@ -32,8 +30,6 @@
 
   background-repeat: no-repeat;
   background-size: cover;
-
-  animation-name: flake-jiggle-vertical;
   animation-iteration-count: infinite;
 }
 
@@ -42,7 +38,7 @@
     transform: translateY(0vh);
   }
   to {
-    transform: translateY(calc(100vh + 20px));
+    transform: translateY(100vh);
   }
 }
 
@@ -57,19 +53,19 @@
 
 @keyframes flake-left-right {
   from {
-    transform: translateX(0vh);
+    transform: translateX(0vw);
   }
   to {
-    transform: translateX(calc(100vw + 20px));
+    transform: translateX(calc(100vw + 60px));
   }
 }
 
 @keyframes flake-right-left {
   from {
-    transform: translateX(calc(100vw + 20px));
+    transform: translateX(calc(100vw + 60px));
   }
   to {
-    transform: translateX(0vh);
+    transform: translateX(0vw);
   }
 }
 
@@ -96,30 +92,23 @@
     transform: translateX(0vw);
   }
 }
-
-@keyframes flake-jiggle-vertical {
+@keyframes flake-jiggle-left-right {
   0% {
-    transform: translateY(0vh);
-  }
-  20% {
-    transform: translateY(20vh);
-  }
-  30% {
-    transform: translateY(5vh);
-  }
-  50% {
-    transform: translateY(25vh);
-  }
-  70% {
-    transform: translateY(0vh);
-  }
-  85% {
-    transform: translateY(15vh);
+    transform: translateX(0vw);
   }
   100% {
-    transform: translateY(0vh);
+    transform: translateX(150vw);
   }
 }
+@keyframes flake-jiggle-right-left {
+  0% {
+    transform: translateX(0vw);
+  }
+  100% {
+    transform: translateX(-150vw);
+  }
+}
+
 
 /********************
 RAIN CSS
