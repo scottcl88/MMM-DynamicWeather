@@ -91,4 +91,6 @@ Effect options
 |`images`|An array of image files to display at random for this effect. All files need to be in the "images" folder of the MMM-DynamicWeather module folder.<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
 |`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless `hideSnow`, `hideRain` or `hideClouds` is turned on. <br><br>**Type:** `number`<br>**Default value:** `0`|
+|`weatherCodeMin`|Similar to `weatherCode` but will show the effect if the current weather code is greater or equal to this value. <br><br>**Type:** `number`<br>**Default value:** `0`|
+|`weatherCodeMax`|Similar to `weatherCode` but will show the effect if the current weather code is less than or equal to this value. <br><br>**Type:** `number`<br>**Default value:** `0`|
 
