@@ -74,6 +74,7 @@ Module.register("MMM-DynamicWeather", {
     weatherInterval: 600000, // Every 10 minutes,
     alwaysDisplay: "",
     zIndex: 99,
+    fadeDuration: 3000,
     effectDuration: 120000,
     effectDelay: 60000,
     hideSnow: false,
@@ -205,8 +206,26 @@ Module.register("MMM-DynamicWeather", {
 
   getDom: function () {
     var wrapper = document.createElement("div");
-    wrapper.className = "wrapper";
     wrapper.style.zIndex = this.config.zIndex;
+    wrapper.className = "wrapper fade-out";
+
+    var fadeDuration = parseInt(this.config.fadeDuration);
+
+    var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
+    console.log("Setting animation delay to: ", animationDelay);
+
+    var fadeCSS = document.createElement("style");
+    fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: "+fadeDuration+"ms; animation-delay: " + animationDelay + "ms;}";
+    wrapper.prepend(fadeCSS);
+
+    wrapper.onanimationend = (e) => {
+      console.log("Wrapper fade-out called: ", e.animationName, e);
+      var thisAnimation = e.animationName;
+      if (thisAnimation == "fade") {
+        console.log("Wrapper fade-out now removing");
+        wrapper.remove();
+      }
+    };
 
     if (this.config.alwaysDisplay) {
       switch (this.config.alwaysDisplay) {
@@ -410,11 +429,35 @@ Module.register("MMM-DynamicWeather", {
     }
   },
 
-  stopEffect: function (_this, wrapper) {
+  stopEffect: function (_this, wrapper: HTMLDivElement) {
     //clear elements
-    while (wrapper.firstChild) {
-      wrapper.removeChild(wrapper.firstChild);
-    }
+
+    // console.log("Fading out elements...");
+    // const elementToFade = wrapper;
+
+    // To fade away:
+    // elementToFade.classList.add("fade-out");
+    // for (var i = 0; i < wrapper.children.length; i++) {
+    //   console.log("Adding fade out animation to child..");
+    //   var child = wrapper.children[i] as HTMLDivElement;
+    //   child.onanimationend = (e) => {
+    //     console.log("Element done fading animation");
+    //     var source = (e.target || e.srcElement) as HTMLDivElement;
+    //     if (source.classList.contains("fade-out")) {
+    //       console.log("Element being removed");
+    //       wrapper.removeChild(child);
+    //     }
+    //   };
+    //   child.classList.add("fade-out");
+    // }
+
+    // // removeTarget.style.opacity = "0";
+    // setTimeout(function () {
+    //   while (wrapper.firstChild) {
+    //     wrapper.removeChild(wrapper.firstChild);
+    //   }
+    // }, 1000);
+
     _this.updateDom();
     let delay = _this.config.effectDelay;
     console.log("Stopped effect, waiting for: ", delay);
