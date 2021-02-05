@@ -93,7 +93,6 @@ Module.register("MMM-DynamicWeather", {
             this.holidayLoaded = true;
         }
         if (!this.config.alwaysDisplay) {
-            this.weatherLoaded = true;
             this.getWeather(this);
         }
         else {

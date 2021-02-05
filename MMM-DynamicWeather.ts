@@ -116,7 +116,6 @@ Module.register("MMM-DynamicWeather", {
     }
 
     if (!this.config.alwaysDisplay) {
-      this.weatherLoaded = true;
       this.getWeather(this);
     } else {
       this.weatherLoaded = true;
