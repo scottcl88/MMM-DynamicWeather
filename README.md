@@ -70,6 +70,7 @@ The following properties can be configured:
 |`api_key`|**Required** This is the API key you need to use to request weather data from the OpenWeatherMap site.  Details on how to request an API key can be found [here](https://home.openweathermap.org/users/sign_up)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`effectDuration`|The length, in milliseconds, to display the effect. <br><br>**Type:** `number`<br>**Default value:** `120000`|
 |`effectDelay`|The length, in milliseconds, to wait to restart the effect. <br><br>**Type:** `number`<br>**Default value:** `60000`|
+|`fadeDuration`|The length, in milliseconds, to fade out all effects. <br><br>**Type:** `number`<br>**Default value:** `3000`|
 |`hideSnow`|If true, will never display the "snow" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideRain`|If true, will never display the "rain" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideClouds`|If true, will never display the "cloudy" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
