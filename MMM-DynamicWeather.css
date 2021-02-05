@@ -29,7 +29,7 @@
   height: 20px;
 
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   animation-iteration-count: infinite;
 }
 
