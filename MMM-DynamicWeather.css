@@ -1,46 +1,124 @@
 .MMM-DynamicWeather .flake-downwards {
-    position: absolute;
-    top: -50px;
-    animation-name: flake-downwards;
-    animation-iteration-count: infinite;
+  position: absolute;
+  top: -50px;
+  animation-name: flake-downwards;
+  animation-iteration-count: infinite;
 }
 
 .MMM-DynamicWeather .flake-upwards {
-    position: absolute;
-    top: -50px;
-    animation-name: flake-upwards;
-    animation-iteration-count: infinite;
+  position: absolute;
+  top: -50px;
+  animation-name: flake-upwards;
+  animation-iteration-count: infinite;
+}
+
+.MMM-DynamicWeather .flake-right-left {
+  position: absolute;
+  top: -50px;
+  animation-name: flake-right-left;
+  animation-iteration-count: infinite;
+}
+
+.MMM-DynamicWeather .flake-left-right {
+  position: absolute;
+  top: -50px;
+  animation-name: flake-left-right;
+  animation-iteration-count: infinite;
 }
 
 .MMM-DynamicWeather *[class|="flake"] div {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
 
-    animation-name: flake-jiggle;
-    animation-iteration-count: infinite;
+  animation-name: flake-jiggle-vertical;
+  animation-iteration-count: infinite;
 }
 
 @keyframes flake-downwards {
-    from {transform: translateY(0vh)}
-    to {transform: translateY(calc(100vh + 20px))}
+  from {
+    transform: translateY(0vh);
+  }
+  to {
+    transform: translateY(calc(100vh + 20px));
+  }
 }
 
 @keyframes flake-upwards {
-    from {transform: translateY(calc(100vh + 20px))}
-    to {transform: translateY(0vh)}
+  from {
+    transform: translateY(calc(100vh + 20px));
+  }
+  to {
+    transform: translateY(0vh);
+  }
+}
+
+@keyframes flake-left-right {
+  from {
+    transform: translateX(0vh);
+  }
+  to {
+    transform: translateX(calc(100vw + 20px));
+  }
+}
+
+@keyframes flake-right-left {
+  from {
+    transform: translateX(calc(100vw + 20px));
+  }
+  to {
+    transform: translateX(0vh);
+  }
 }
 
 @keyframes flake-jiggle {
-    0% {transform: translateX(0vw)}
-    20% {transform: translateX(20vw)}
-    30% {transform: translateX(5vw)}
-    50% {transform: translateX(25vw)}
-    70% {transform: translateX(0vw)}
-    85% {transform: translateX(15vw)}
-    100% {transform: translateX(0vw)}
+  0% {
+    transform: translateX(0vw);
+  }
+  20% {
+    transform: translateX(20vw);
+  }
+  30% {
+    transform: translateX(5vw);
+  }
+  50% {
+    transform: translateX(25vw);
+  }
+  70% {
+    transform: translateX(0vw);
+  }
+  85% {
+    transform: translateX(15vw);
+  }
+  100% {
+    transform: translateX(0vw);
+  }
+}
+
+@keyframes flake-jiggle-vertical {
+  0% {
+    transform: translateY(0vh);
+  }
+  20% {
+    transform: translateY(20vh);
+  }
+  30% {
+    transform: translateY(5vh);
+  }
+  50% {
+    transform: translateY(25vh);
+  }
+  70% {
+    transform: translateY(0vh);
+  }
+  85% {
+    transform: translateY(15vh);
+  }
+  100% {
+    transform: translateY(0vh);
+  }
 }
 
 /********************
@@ -122,83 +200,84 @@ https://codepen.io/Mark_Bowley/pen/xEbuI
 /* KEYFRAMES */
 
 @-webkit-keyframes animateCloud {
-    0% {
-        margin-left: -1000px;
-    }
-    100% {
-        margin-left: 100%;
-    }
+  0% {
+    margin-left: -1000px;
+  }
+  100% {
+    margin-left: 100%;
+  }
 }
 
 @-moz-keyframes animateCloud {
-    0% {
-        margin-left: -1000px;
-    }
-    100% {
-        margin-left: 100%;
-    }
+  0% {
+    margin-left: -1000px;
+  }
+  100% {
+    margin-left: 100%;
+  }
 }
 
 @keyframes animateCloud {
-    0% {
-        margin-left: -1000px;
-    }
-    100% {
-        margin-left: 100%;
-    }
+  0% {
+    margin-left: -1000px;
+  }
+  100% {
+    margin-left: 100%;
+  }
 }
 
 /* OBJECTS */
 
 .MMM-DynamicWeather .cloud {
-  opacity: .5;
-	background: #fff;
-	background: -moz-linear-gradient(top,  #fff 5%, #f1f1f1 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,#fff), color-stop(100%,#f1f1f1));
-	background: -webkit-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-	background: -o-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-	background: -ms-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-	background: linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f1f1f1',GradientType=0 );
-	
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
-	border-radius: 100px;
-	
-	-webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-	box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+  opacity: 0.5;
+  background: #fff;
+  background: -moz-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(5%, #fff), color-stop(100%, #f1f1f1));
+  background: -webkit-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+  background: -o-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+  background: -ms-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+  background: linear-gradient(top, #fff 5%, #f1f1f1 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f1f1f1',GradientType=0 );
 
-	height: 120px;
-	position: relative;
-	width: 350px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+
+  -webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+
+  height: 120px;
+  position: relative;
+  width: 350px;
 }
 
-.MMM-DynamicWeather .cloud:after, .cloud:before {
-    background: #fff;
-	content: '';
-	position: absolute;
-	z-indeX: -1;
+.MMM-DynamicWeather .cloud:after,
+.cloud:before {
+  background: #fff;
+  content: "";
+  position: absolute;
+  z-index: -1;
 }
 
 .MMM-DynamicWeather .cloud:after {
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
-	border-radius: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
 
-	height: 100px;
-	left: 50px;
-	top: -50px;
-	width: 100px;
+  height: 100px;
+  left: 50px;
+  top: -50px;
+  width: 100px;
 }
 
 .MMM-DynamicWeather .cloud:before {
-	-webkit-border-radius: 200px;
-	-moz-border-radius: 200px;
-	border-radius: 200px;
+  -webkit-border-radius: 200px;
+  -moz-border-radius: 200px;
+  border-radius: 200px;
 
-	width: 180px;
-	height: 180px;
-	right: 50px;
-	top: -90px;
+  width: 180px;
+  height: 180px;
+  right: 50px;
+  top: -90px;
 }

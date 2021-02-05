@@ -116,7 +116,7 @@ Module.register("MMM-DynamicWeather", {
     }
 
     if (!this.config.alwaysDisplay) {
-      this.getWeather(this);
+      //this.getWeather(this);
     } else {
       this.weatherLoaded = true;
     }
@@ -211,10 +211,24 @@ Module.register("MMM-DynamicWeather", {
       flakeImage.style.opacity = size;
 
       flake = document.createElement("div");
-      if (effect.direction == "down") {
-        flake.className = "flake-downwards";
-      } else {
-        flake.className = "flake-upwards";
+
+      switch (effect.direction) {
+        case "down": {
+          flake.className = "flake-downwards";
+          break;
+        }
+        case "left-right": {
+          flake.className = "flake-left-right";
+          break;
+        }
+        case "right-left": {
+          flake.className = "flake-right-left";
+          break;
+        }
+        default: {
+          flake.className = "flake-upwards";
+          break;
+        }
       }
 
       jiggle = document.createElement("div");
