@@ -400,7 +400,7 @@ Module.register("MMM-DynamicWeather", {
                 console.error("API-Receieved failure status");
                 return;
             }
-            var newCode_1 = 500; // payload.result.weather[0].id;
+            var newCode_1 = payload.result.weather[0].id;
             var doUpdate_1 = false;
             //check to see if the newCode is different than already displayed, and if so, is it going to show anything
             if (newCode_1 != this.weatherCode) {
