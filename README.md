@@ -32,7 +32,7 @@ cd ~/MagicMirror/modules/MMM-DynamicWeather
 ````
 Pull latest
 ````
-git pull
+git pull origin master --allow-unrelated-histories
 ````
 <br><br>
 You can also use the NPM package: https://www.npmjs.com/package/mmm-dynamicweather
