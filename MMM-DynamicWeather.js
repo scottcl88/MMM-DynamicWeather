@@ -41,6 +41,7 @@ var Effect = /** @class */ (function () {
         this.weatherCodeMin = other.weatherCodeMin;
         this.weatherCodeMax = other.weatherCodeMax;
         this.holiday = other.holiday;
+        this.recurrence = other.recurrence;
         this.doDisplay = other.doDisplay;
     };
     return Effect;
@@ -133,18 +134,50 @@ Module.register("MMM-DynamicWeather", {
         this.allEffects.forEach(function (effect) {
             var effectMonth = effect.month - 1;
             if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
-                console.log("Checking effect date: ", effect.getMonth(), effect.getDay(), effect.getYear(), _this_1.now.getMonth(), _this_1.now.getDate(), _this_1.now.getFullYear());
                 //if there is weatherCode or holiday, dates are ignored
+                console.log("Checking effect date: ", effect.getMonth(), effect.getDay(), effect.getYear(), _this_1.now.getMonth(), _this_1.now.getDate(), _this_1.now.getFullYear());
                 if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
                     //if no weatherCode, no holiday and no dates, then always display it
-                    effect.doDisplay = true;
-                }
-                else if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                    if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
-                        console.log("Effect marked to display");
-                        //if the month and date match or the month, date and year match
+                    if (effect.recurrence == "weekdays") {
+                        //if its not Sunday (0) and not Saturday (6)
+                        if (_this_1.now.getDay() !== 6 && _this_1.now.getDay() !== 0) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
+                    }
+                    else if (effect.recurrence == "weekends") {
+                        //if its Sunday (0) or Saturday (6)
+                        if (_this_1.now.getDay() == 6 || _this_1.now.getDay() == 0) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
+                    }
+                    else {
                         _this_1.hasDateEffectsToDisplay = true;
                         effect.doDisplay = true;
+                    }
+                }
+                else {
+                    //if the month and date match or the month, date and year match
+                    if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
+                        if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
+                    }
+                    else if (effect.recurrence == "monthly") {
+                        //ignore everything but the day
+                        if (_this_1.now.getDate() == effect.getDay()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
+                    }
+                    else if (effect.recurrence == "weekly") {
+                        var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
+                        if (_this_1.now.getDay() == effectDay.getDay()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
                     }
                 }
             }
