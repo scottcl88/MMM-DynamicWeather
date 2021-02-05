@@ -61,6 +61,7 @@ Module.register("MMM-DynamicWeather", {
         this.weatherLoaded = false;
         this.holidayLoaded = false;
         this.doShowEffects = true;
+        this.hasDateEffectsToDisplay = false;
         this.effectDurationTimeout = null;
         this.effectDelayTimeout = null;
         this.weatherTimeout = null;
@@ -107,14 +108,17 @@ Module.register("MMM-DynamicWeather", {
         this.allEffects.forEach(function (effect) {
             var effectMonth = effect.month - 1;
             if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
+                console.log("Checking effect date: ", effect.getMonth(), effect.getDay(), effect.getYear(), _this_1.now.getMonth(), _this_1.now.getDate(), _this_1.now.getFullYear());
                 //if there is weatherCode or holiday, dates are ignored
                 if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
                     //if no weatherCode, no holiday and no dates, then always display it
                     effect.doDisplay = true;
                 }
                 else if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                    if (effect.year == 0 || _this_1.now.getYear() == effect.year) {
+                    if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
+                        console.log("Effect marked to display");
                         //if the month and date match or the month, date and year match
+                        _this_1.hasDateEffectsToDisplay = true;
                         effect.doDisplay = true;
                     }
                 }
@@ -341,7 +345,7 @@ Module.register("MMM-DynamicWeather", {
                 });
             }
             //only update the dom if the weather is different
-            if (doUpdate_1) {
+            if (doUpdate_1 || (this.holidayLoaded && this.hasDateEffectsToDisplay)) {
                 this.weatherCode = newCode_1;
                 this.doShowEffects = true;
                 clearTimeout(this.effectDurationTimeout);
@@ -370,7 +374,7 @@ Module.register("MMM-DynamicWeather", {
                 });
             });
             //only update the dom if the effects have a holiday to show today
-            if (doUpdate_2) {
+            if (doUpdate_2 || (this.weatherLoaded && this.hasDateEffectsToDisplay)) {
                 this.doShowEffects = true;
                 clearTimeout(this.effectDurationTimeout);
                 clearTimeout(this.effectDelayTimeout);

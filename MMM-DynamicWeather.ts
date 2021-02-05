@@ -76,6 +76,7 @@ Module.register("MMM-DynamicWeather", {
     this.weatherLoaded = false;
     this.holidayLoaded = false;
     this.doShowEffects = true;
+    this.hasDateEffectsToDisplay = false;
     this.effectDurationTimeout = null;
     this.effectDelayTimeout = null;
     this.weatherTimeout = null;
@@ -130,13 +131,16 @@ Module.register("MMM-DynamicWeather", {
     (this.allEffects as Effect[]).forEach((effect) => {
       var effectMonth = effect.month - 1;
       if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
+        console.log("Checking effect date: ", effect.getMonth(), effect.getDay(), effect.getYear(), this.now.getMonth(), this.now.getDate(), this.now.getFullYear());
         //if there is weatherCode or holiday, dates are ignored
         if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
           //if no weatherCode, no holiday and no dates, then always display it
           effect.doDisplay = true;
         } else if (this.now.getMonth() == effectMonth && this.now.getDate() == effect.day) {
-          if (effect.year == 0 || this.now.getYear() == effect.year) {
+          if (effect.getYear() == 0 || this.now.getFullYear() == effect.getYear()) {
+            console.log("Effect marked to display");
             //if the month and date match or the month, date and year match
+            this.hasDateEffectsToDisplay = true;
             effect.doDisplay = true;
           }
         }
@@ -399,7 +403,7 @@ Module.register("MMM-DynamicWeather", {
       }
 
       //only update the dom if the weather is different
-      if (doUpdate) {
+      if (doUpdate || (this.holidayLoaded && this.hasDateEffectsToDisplay)) {
         this.weatherCode = newCode;
         this.doShowEffects = true;
         clearTimeout(this.effectDurationTimeout);
@@ -429,7 +433,7 @@ Module.register("MMM-DynamicWeather", {
       });
 
       //only update the dom if the effects have a holiday to show today
-      if (doUpdate) {
+      if (doUpdate || (this.weatherLoaded && this.hasDateEffectsToDisplay)) {
         this.doShowEffects = true;
         clearTimeout(this.effectDurationTimeout);
         clearTimeout(this.effectDelayTimeout);
