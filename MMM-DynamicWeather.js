@@ -60,6 +60,7 @@ Module.register("MMM-DynamicWeather", {
         hideSnow: false,
         hideRain: false,
         hideClouds: false,
+        sequential: "",
         effects: [],
     },
     start: function () {
@@ -96,6 +97,20 @@ Module.register("MMM-DynamicWeather", {
             _this_1.allEffects.push(effect);
             _this_1.allHolidays.push(effect.holiday);
         });
+        if (this.config.sequential) {
+            if (this.config.sequential == "effect") {
+                this.lastSequential = "weather";
+            }
+            else if (this.config.sequential == "weather") {
+                this.lastSequential = "effect";
+            }
+            else {
+                this.lastSequential = "";
+            }
+        }
+        else {
+            this.lastSequential = "";
+        }
         this.checkDates();
         if (this.allHolidays.length > 0) {
             this.getHolidays(this);
@@ -166,21 +181,41 @@ Module.register("MMM-DynamicWeather", {
         console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
         if (!this.doShowEffects)
             return wrapper;
-        this.allEffects.forEach(function (effect) {
-            if (effect.doDisplay) {
-                console.log("Effect is going to display...");
-                _this_1.showCustomEffect(wrapper, effect);
+        var showEffects = false;
+        var showWeather = false;
+        if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
+            if (this.lastSequential == "effect") {
+                showWeather = true;
+                this.lastSequential = "weather";
             }
-        });
-        //Codes from https://openweathermap.org/weather-conditions
-        if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
-            this.showCustomEffect(wrapper, this.snowEffect);
+            else if (this.lastSequential == "weather") {
+                showEffects = true;
+                this.lastSequential = "effect";
+            }
+            else {
+                showWeather = true;
+                showEffects = true;
+            }
         }
-        else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
-            this.makeItRain(wrapper);
+        if (showEffects) {
+            this.allEffects.forEach(function (effect) {
+                if (effect.doDisplay) {
+                    console.log("Effect is going to display...");
+                    _this_1.showCustomEffect(wrapper, effect);
+                }
+            });
         }
-        else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-            this.makeItCloudy(wrapper);
+        if (showWeather) {
+            //Codes from https://openweathermap.org/weather-conditions
+            if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
+                this.showCustomEffect(wrapper, this.snowEffect);
+            }
+            else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
+                this.makeItRain(wrapper);
+            }
+            else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
+                this.makeItCloudy(wrapper);
+            }
         }
         console.log("Going to wait for: ", this.config.effectDuration);
         this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this, wrapper);
@@ -365,7 +400,7 @@ Module.register("MMM-DynamicWeather", {
                 console.error("API-Receieved failure status");
                 return;
             }
-            var newCode_1 = payload.result.weather[0].id;
+            var newCode_1 = 500; // payload.result.weather[0].id;
             var doUpdate_1 = false;
             //check to see if the newCode is different than already displayed, and if so, is it going to show anything
             if (newCode_1 != this.weatherCode) {

@@ -77,6 +77,7 @@ Module.register("MMM-DynamicWeather", {
     hideSnow: false,
     hideRain: false,
     hideClouds: false,
+    sequential: "",
     effects: [] as Effect[],
   },
 
@@ -119,6 +120,18 @@ Module.register("MMM-DynamicWeather", {
       this.allEffects.push(effect);
       this.allHolidays.push(effect.holiday);
     });
+
+    if (this.config.sequential) {
+      if (this.config.sequential == "effect") {
+        this.lastSequential = "weather";
+      } else if (this.config.sequential == "weather") {
+        this.lastSequential = "effect";
+      } else {
+        this.lastSequential = "";
+      }
+    } else {
+      this.lastSequential = "";
+    }
 
     this.checkDates();
 
@@ -192,20 +205,40 @@ Module.register("MMM-DynamicWeather", {
     console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
     if (!this.doShowEffects) return wrapper;
 
-    (this.allEffects as Effect[]).forEach((effect) => {
-      if (effect.doDisplay) {
-        console.log("Effect is going to display...");
-        this.showCustomEffect(wrapper, effect);
-      }
-    });
+    let showEffects = false;
+    let showWeather = false;
 
-    //Codes from https://openweathermap.org/weather-conditions
-    if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
-      this.showCustomEffect(wrapper, this.snowEffect);
-    } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
-      this.makeItRain(wrapper);
-    } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-      this.makeItCloudy(wrapper);
+    if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
+      if (this.lastSequential == "effect") {
+        showWeather = true;
+        this.lastSequential = "weather";
+      } else if (this.lastSequential == "weather") {
+        showEffects = true;
+        this.lastSequential = "effect";
+      } else {
+        showWeather = true;
+        showEffects = true;
+      }
+    }
+
+    if (showEffects) {
+      (this.allEffects as Effect[]).forEach((effect) => {
+        if (effect.doDisplay) {
+          console.log("Effect is going to display...");
+          this.showCustomEffect(wrapper, effect);
+        }
+      });
+    }
+
+    if (showWeather) {
+      //Codes from https://openweathermap.org/weather-conditions
+      if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
+        this.showCustomEffect(wrapper, this.snowEffect);
+      } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
+        this.makeItRain(wrapper);
+      } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
+        this.makeItCloudy(wrapper);
+      }
     }
 
     console.log("Going to wait for: ", this.config.effectDuration);
