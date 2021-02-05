@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.6.0] - 2021-02-05
+### Added
+- Adding fade duration to slowing hide effects (added to configuration)
+
 ## [2.5.0] - 2021-02-05
 ### Added
 - Adding recurrence option for effects (added to effect configuration)
