@@ -371,11 +371,11 @@ Module.register("MMM-DynamicWeather", {
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === "API-Received" && payload.url === this.url) {
+      this.weatherLoaded = true;
       if (!payload.success) {
         console.error("API-Receieved failure status");
         return;
       }
-      this.weatherLoaded = true;
       let newCode = payload.result.weather[0].id;
       let doUpdate = false;
 
@@ -408,11 +408,11 @@ Module.register("MMM-DynamicWeather", {
       }
     }
     if (notification === "Holiday-Received") {
+      this.holidayLoaded = true;
       if (!payload.success) {
         console.error("Holiday-Receieved failure status");
         return;
       }
-      this.holidayLoaded = true;
       let doUpdate = false;
       let todayHolidays = [] as string[];
       todayHolidays = this.parseHolidays(payload.result.holidayBody);
