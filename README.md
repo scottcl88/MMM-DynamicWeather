@@ -86,7 +86,7 @@ Effect options
 |`direction`|How the effect moves across the screen.<br><br><br>**Options** `up`, `down`<br>**Type:** `string`<br>**Default value:** `up`|
 |`month`|The month (1-12) of the date to display this effect on. Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`day`|The day of the month (1-31) of the date to display this effect on.  Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
-|`year`|The year (4 digits) of the date to display this effect on.  Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|`|
+|`year`|The year (4 digits) of the date to display this effect on. You can leave it out or set to zero to ignore the year and it will just check month and date. If you want to use dates, then you must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|`|
 |`holiday`|Will display the effect on the holiday found at [https://www.timeanddate.com/holidays/us/?hol=43122559](https://www.timeanddate.com/holidays/us/?hol=43122559). Simply copy the "Name" value from that table. <br><br>**Type:** `string`<br>**Default value:** `null`|
 |`images`|An array of image files to display at random for this effect. All files need to be in the "images" folder of the MMM-DynamicWeather module folder.<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
