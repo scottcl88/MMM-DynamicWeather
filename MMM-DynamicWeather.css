@@ -33,6 +33,16 @@
   animation-iteration-count: infinite;
 }
 
+/* Animate opacity */
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes flake-downwards {
   from {
     transform: translateY(0vh);
@@ -108,7 +118,6 @@
     transform: translateX(-150vw);
   }
 }
-
 
 /********************
 RAIN CSS
