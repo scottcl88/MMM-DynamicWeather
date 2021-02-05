@@ -30,11 +30,12 @@ Go to the DynamicWeather module
 ````
 cd ~/MagicMirror/modules/MMM-DynamicWeather
 ````
-Run NPM Install
+Pull latest
 ````
-npm install
+git pull
 ````
-NPM package: https://www.npmjs.com/package/mmm-dynamicweather
+<br><br>
+You can also use the NPM package: https://www.npmjs.com/package/mmm-dynamicweather
 
 ## Using the module
 
@@ -85,7 +86,8 @@ Effect options
 |`direction`|How the effect moves across the screen.<br><br><br>**Options** `up`, `down`<br>**Type:** `string`<br>**Default value:** `up`|
 |`month`|The month (1-12) of the date to display this effect on.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`day`|The day of the month (1-31) of the date to display this effect on.<br><br>**Type:** `number`<br>**Default value:** `0`|
-|`year`|The year (4 digits) of the date to display this effect on.<br><br>**Type:** `number`<br>**Default value:** `0`|
+|`year`|The year (4 digits) of the date to display this effect on.<br><br>**Type:** `number`<br>**Default value:** `0`|`|
+|`holiday`|Will display the effect on the holiday found at (https://www.timeanddate.com/holidays/us/?hol=43122559)[https://www.timeanddate.com/holidays/us/?hol=43122559]. Simply copy the "Name" value from that table. <br><br>**Type:** `string`<br>**Default value:** `null`|
 |`images`|An array of image files to display at random for this effect. All files need to be in the "images" folder of the MMM-DynamicWeather module folder.<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
 |`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless `hideSnow`, `hideRain` or `hideClouds` is turned on. <br><br>**Type:** `number`<br>**Default value:** `0`|
