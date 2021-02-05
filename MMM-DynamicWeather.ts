@@ -16,6 +16,8 @@ class Effect {
   direction: string;
   size: number;
   weatherCode: number;
+  weatherCodeMin: number;
+  weatherCodeMax: number;
   holiday: string;
   doDisplay: boolean = false;
 
@@ -34,8 +36,14 @@ class Effect {
   public getWeatherCode(): number {
     return this.weatherCode ? this.weatherCode : -99;
   }
+  public getMinWeatherCode(): number {
+    return this.weatherCodeMin ? this.weatherCodeMin : 99999;
+  }
+  public getMaxWeatherCode(): number {
+    return this.weatherCodeMax ? this.weatherCodeMax : -99999;
+  }
   public hasWeatherCode(): boolean {
-    return this.weatherCode && this.weatherCode > 0 ? true : false;
+    return (this.weatherCode && this.weatherCode > 0) || (this.weatherCodeMin && this.weatherCodeMin > 0) || (this.weatherCodeMax && this.weatherCodeMax > 0) ? true : false;
   }
   public hasHoliday(): boolean {
     return this.holiday && this.holiday.length > 0 ? true : false;
@@ -48,6 +56,8 @@ class Effect {
     this.direction = other.direction;
     this.size = other.size;
     this.weatherCode = other.weatherCode;
+    this.weatherCodeMin = other.weatherCodeMin;
+    this.weatherCodeMax = other.weatherCodeMax;
     this.holiday = other.holiday;
     this.doDisplay = other.doDisplay;
   }
@@ -77,6 +87,8 @@ Module.register("MMM-DynamicWeather", {
     this.holidayLoaded = false;
     this.doShowEffects = true;
     this.hasDateEffectsToDisplay = false;
+    this.hasHolidayEffectsToDisplay = false;
+    this.hasWeatherEffectsToDisplay = true;
     this.effectDurationTimeout = null;
     this.effectDelayTimeout = null;
     this.weatherTimeout = null;
@@ -174,13 +186,15 @@ Module.register("MMM-DynamicWeather", {
       return wrapper;
     }
 
+    console.log("GetDom 1: ", this.weatherLoaded, this.holidayLoaded);
     if (!this.weatherLoaded || !this.holidayLoaded) return wrapper; //need to wait for the weather to first be loaded
 
-    // console.log("GetDom: ", this.doShowEffects, this.weatherCode);
+    console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
     if (!this.doShowEffects) return wrapper;
 
     (this.allEffects as Effect[]).forEach((effect) => {
       if (effect.doDisplay) {
+        console.log("Effect is going to display...");
         this.showCustomEffect(wrapper, effect);
       }
     });
@@ -426,15 +440,18 @@ Module.register("MMM-DynamicWeather", {
           doUpdate = true;
         }
         (this.allEffects as Effect[]).forEach((effect) => {
-          if (effect.weatherCode == newCode) {
+          console.log("Checking weather code for effect: ", newCode, effect.getWeatherCode(), effect.getMinWeatherCode(), effect.getMaxWeatherCode());
+          if (effect.getWeatherCode() == newCode || (effect.getMinWeatherCode() <= newCode && effect.getMaxWeatherCode() >= newCode)) {
+            console.log("Weather codes matched");
             doUpdate = true;
             effect.doDisplay = true;
+            this.hasWeatherEffectsToDisplay = true;
           }
         });
       }
 
-      //only update the dom if the weather is different
-      if (doUpdate || (this.holidayLoaded && this.hasDateEffectsToDisplay)) {
+      //only update the dom if the weather is different (unless holiday or date effects exist and holiday has finished loading)
+      if (doUpdate || (this.holidayLoaded && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay))) {
         this.weatherCode = newCode;
         this.doShowEffects = true;
         clearTimeout(this.effectDurationTimeout);
@@ -459,12 +476,13 @@ Module.register("MMM-DynamicWeather", {
             console.log("Marking effect for holiday: ", holidayName);
             doUpdate = true;
             effect.doDisplay = true;
+            this.hasHolidayEffectsToDisplay = true;
           }
         });
       });
 
-      //only update the dom if the effects have a holiday to show today
-      if (doUpdate || (this.weatherLoaded && this.hasDateEffectsToDisplay)) {
+      //only update the dom if the effects have a holiday to show today (unless weather and date effects exist and weather has finished loading)
+      if (doUpdate || (this.weatherLoaded && (this.hasDateEffectsToDisplay || this.hasWeatherEffectsToDisplay))) {
         this.doShowEffects = true;
         clearTimeout(this.effectDurationTimeout);
         clearTimeout(this.effectDelayTimeout);
