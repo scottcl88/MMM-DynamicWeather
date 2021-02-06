@@ -80,6 +80,7 @@ Module.register("MMM-DynamicWeather", {
     hideSnow: false,
     hideRain: false,
     hideClouds: false,
+    hideFog: false,
     sequential: "",
     effects: [] as Effect[],
   },
@@ -207,7 +208,7 @@ Module.register("MMM-DynamicWeather", {
   getDom: function () {
     var wrapper = document.createElement("div");
     wrapper.style.zIndex = this.config.zIndex;
-    wrapper.className = "wrapper fade-out";
+    wrapper.className = "wrapper";
 
     var fadeDuration = parseInt(this.config.fadeDuration);
 
@@ -215,7 +216,7 @@ Module.register("MMM-DynamicWeather", {
     console.log("Setting animation delay to: ", animationDelay);
 
     var fadeCSS = document.createElement("style");
-    fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: "+fadeDuration+"ms; animation-delay: " + animationDelay + "ms;}";
+    fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: " + fadeDuration + "ms; animation-delay: " + animationDelay + "ms;}";
     wrapper.prepend(fadeCSS);
 
     wrapper.onanimationend = (e) => {
@@ -241,6 +242,10 @@ Module.register("MMM-DynamicWeather", {
           this.makeItCloudy(wrapper);
           break;
         }
+        case "fog": {
+          this.makeItFoggy(wrapper);
+          break;
+        }
         default: {
           console.error("Invalid config option 'alwaysDisplay'");
         }
@@ -253,6 +258,8 @@ Module.register("MMM-DynamicWeather", {
 
     console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
     if (!this.doShowEffects) return wrapper;
+     
+    wrapper.className = "wrapper fade-out";
 
     let showEffects = false;
     let showWeather = false;
@@ -287,6 +294,8 @@ Module.register("MMM-DynamicWeather", {
         this.makeItRain(wrapper);
       } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
         this.makeItCloudy(wrapper);
+      } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
+        this.makeItFoggy(wrapper);
       }
     }
 
@@ -429,6 +438,55 @@ Module.register("MMM-DynamicWeather", {
     }
   },
 
+  makeItFoggy: function (wrapper) {
+    console.log("Showing fog");
+    this.doShowEffects = false;
+
+    var fogImage1 = document.createElement("div");
+    fogImage1.classList.add("image01");
+
+    var fogImage2 = document.createElement("div");
+    fogImage2.classList.add("image02");
+
+    let fogPlayer1 = document.createElement("div");
+    fogPlayer1.id = "foglayer_01";
+    fogPlayer1.classList.add("fog");
+    fogPlayer1.appendChild(fogImage1);
+    fogPlayer1.appendChild(fogImage2);
+
+    wrapper.appendChild(fogPlayer1);
+
+    
+    fogImage1 = document.createElement("div");
+    fogImage1.classList.add("image01");
+
+    fogImage2 = document.createElement("div");
+    fogImage2.classList.add("image02");
+
+    let fogPlayer2 = document.createElement("div");
+    fogPlayer2.id = "foglayer_02";
+    fogPlayer2.classList.add("fog");
+    fogPlayer2.appendChild(fogImage1);
+    fogPlayer2.appendChild(fogImage2);
+
+    wrapper.appendChild(fogPlayer2);
+
+    
+    fogImage1 = document.createElement("div");
+    fogImage1.classList.add("image01");
+
+    fogImage2 = document.createElement("div");
+    fogImage2.classList.add("image02");
+
+    let fogPlayer3 = document.createElement("div");
+    fogPlayer3.id = "foglayer_03";
+    fogPlayer3.classList.add("fog");
+    fogPlayer3.appendChild(fogImage1);
+    fogPlayer3.appendChild(fogImage2);
+
+    wrapper.appendChild(fogPlayer3);
+  },
+
   stopEffect: function (_this, wrapper: HTMLDivElement) {
     //clear elements
 
@@ -543,6 +601,9 @@ Module.register("MMM-DynamicWeather", {
           doUpdate = true;
         }
         if (newCode >= 801 && newCode <= 804 && !this.config.hideClouds) {
+          doUpdate = true;
+        }
+        if (newCode >= 701 && newCode <= 781 && !this.config.hideFogs) {
           doUpdate = true;
         }
         (this.allEffects as Effect[]).forEach((effect) => {

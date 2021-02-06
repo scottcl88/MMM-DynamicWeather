@@ -279,3 +279,54 @@ https://codepen.io/Mark_Bowley/pen/xEbuI
   right: 50px;
   top: -90px;
 }
+/***************************
+Fog 
+https://codepen.io/Ravyre/pen/gXawyY
+***************************/
+
+/* ---------- Fog ---------- */
+.fogwrapper {
+  height: 150%;
+  position: absolute;
+  top: -150px;
+  width: 100%;
+  -webkit-filter: blur(1px) grayscale(0.2) saturate(1.2) sepia(0.2);
+  filter: blur(1px) grayscale(0.2) saturate(1.2) sepia(0.2);
+}
+#foglayer_01, #foglayer_02, #foglayer_03 {
+  height: 150%;
+  position: absolute;
+  width: 500%;
+  top: -150px;
+}
+#foglayer_01 .image01, #foglayer_01 .image02,
+#foglayer_02 .image01, #foglayer_02 .image02,
+#foglayer_03 .image01, #foglayer_03 .image02 {
+  float: left;
+  height: 150%;
+  top: -150px;
+  width: 100%;
+}
+#foglayer_01, #foglayer_02, #foglayer_03 {
+  animation: foglayer_01_opacity 10s linear infinite, foglayer_moveme 10s linear infinite;
+}
+
+#foglayer_01 .image01, #foglayer_01 .image02 {
+  background: url("images/fog1.png") center center/cover no-repeat transparent;
+}
+#foglayer_02 .image01, #foglayer_02 .image02,
+#foglayer_03 .image01, #foglayer_03 .image02{
+  background: url("images/fog2.png") center center/cover no-repeat transparent;
+}
+
+/* ---------- Keyframe Layer 1 ---------- */
+@keyframes foglayer_01_opacity {
+  0% { opacity: 0; }
+  50% { opacity: .7; }
+  100% { opacity: 0; }
+}
+/* ---------- Keyframe moveMe ---------- */
+@keyframes foglayer_moveme {
+  0% { left: 0; }
+  100% { left: -100%; }
+}

@@ -62,6 +62,7 @@ Module.register("MMM-DynamicWeather", {
         hideSnow: false,
         hideRain: false,
         hideClouds: false,
+        hideFog: false,
         sequential: "",
         effects: [],
     },
@@ -188,7 +189,7 @@ Module.register("MMM-DynamicWeather", {
         var _this_1 = this;
         var wrapper = document.createElement("div");
         wrapper.style.zIndex = this.config.zIndex;
-        wrapper.className = "wrapper fade-out";
+        wrapper.className = "wrapper";
         var fadeDuration = parseInt(this.config.fadeDuration);
         var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
         console.log("Setting animation delay to: ", animationDelay);
@@ -217,6 +218,10 @@ Module.register("MMM-DynamicWeather", {
                     this.makeItCloudy(wrapper);
                     break;
                 }
+                case "fog": {
+                    this.makeItFoggy(wrapper);
+                    break;
+                }
                 default: {
                     console.error("Invalid config option 'alwaysDisplay'");
                 }
@@ -229,6 +234,7 @@ Module.register("MMM-DynamicWeather", {
         console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
         if (!this.doShowEffects)
             return wrapper;
+        wrapper.className = "wrapper fade-out";
         var showEffects = false;
         var showWeather = false;
         if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
@@ -263,6 +269,9 @@ Module.register("MMM-DynamicWeather", {
             }
             else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
                 this.makeItCloudy(wrapper);
+            }
+            else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
+                this.makeItFoggy(wrapper);
             }
         }
         console.log("Going to wait for: ", this.config.effectDuration);
@@ -380,6 +389,40 @@ Module.register("MMM-DynamicWeather", {
             wrapper.appendChild(cloudBase);
         }
     },
+    makeItFoggy: function (wrapper) {
+        console.log("Showing fog");
+        this.doShowEffects = false;
+        var fogImage1 = document.createElement("div");
+        fogImage1.classList.add("image01");
+        var fogImage2 = document.createElement("div");
+        fogImage2.classList.add("image02");
+        var fogPlayer1 = document.createElement("div");
+        fogPlayer1.id = "foglayer_01";
+        fogPlayer1.classList.add("fog");
+        fogPlayer1.appendChild(fogImage1);
+        fogPlayer1.appendChild(fogImage2);
+        wrapper.appendChild(fogPlayer1);
+        fogImage1 = document.createElement("div");
+        fogImage1.classList.add("image01");
+        fogImage2 = document.createElement("div");
+        fogImage2.classList.add("image02");
+        var fogPlayer2 = document.createElement("div");
+        fogPlayer2.id = "foglayer_02";
+        fogPlayer2.classList.add("fog");
+        fogPlayer2.appendChild(fogImage1);
+        fogPlayer2.appendChild(fogImage2);
+        wrapper.appendChild(fogPlayer2);
+        fogImage1 = document.createElement("div");
+        fogImage1.classList.add("image01");
+        fogImage2 = document.createElement("div");
+        fogImage2.classList.add("image02");
+        var fogPlayer3 = document.createElement("div");
+        fogPlayer3.id = "foglayer_03";
+        fogPlayer3.classList.add("fog");
+        fogPlayer3.appendChild(fogImage1);
+        fogPlayer3.appendChild(fogImage2);
+        wrapper.appendChild(fogPlayer3);
+    },
     stopEffect: function (_this, wrapper) {
         //clear elements
         // console.log("Fading out elements...");
@@ -479,6 +522,9 @@ Module.register("MMM-DynamicWeather", {
                     doUpdate_1 = true;
                 }
                 if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
+                    doUpdate_1 = true;
+                }
+                if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFogs) {
                     doUpdate_1 = true;
                 }
                 this.allEffects.forEach(function (effect) {
