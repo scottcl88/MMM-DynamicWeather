@@ -603,7 +603,7 @@ Module.register("MMM-DynamicWeather", {
         if (newCode >= 801 && newCode <= 804 && !this.config.hideClouds) {
           doUpdate = true;
         }
-        if (newCode >= 701 && newCode <= 781 && !this.config.hideFogs) {
+        if (newCode >= 701 && newCode <= 781 && !this.config.hideFog) {
           doUpdate = true;
         }
         (this.allEffects as Effect[]).forEach((effect) => {

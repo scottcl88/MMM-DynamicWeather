@@ -524,7 +524,7 @@ Module.register("MMM-DynamicWeather", {
                 if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
                     doUpdate_1 = true;
                 }
-                if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFogs) {
+                if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFog) {
                     doUpdate_1 = true;
                 }
                 this.allEffects.forEach(function (effect) {
