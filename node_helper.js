@@ -4,7 +4,7 @@
  * By Scott Lewis - https://github.com/scottcl88/MMM-DynamicWeather
  * MIT Licensed.
  *
- * Extension helper module to call an API
+ * Extension helper module to call external resources
  */
 
 var NodeHelper = require("node_helper");
@@ -16,7 +16,6 @@ module.exports = NodeHelper.create({
     var that = this;
     this.url = payload;
     var success = false;
-    console.log("Calling API...");
 
     request({ url: this.url, method: "GET" }, function (error, response, body) {
       var result = JSON.parse(body);
@@ -37,13 +36,11 @@ module.exports = NodeHelper.create({
   callHoliday: function () {
     var that = this;
     var success = false;
-    console.log("Getting all holidays...");
     request({ url: "https://www.timeanddate.com/holidays/us/?hol=43122559", method: "GET" }, function (error, response, body) {
       if (error || response.statusCode !== 200) {
         console.error("Failed getting holidays: ", error, response);
       } else {
         success = true;
-        console.log("Recieved success status from holiday site");
       }
       var result = { holidayBody: body };
       that.sendSocketNotification("Holiday-Received", {
@@ -56,7 +53,6 @@ module.exports = NodeHelper.create({
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === "API-Fetch") {
-      console.log("Socket notification received for callApi...");
       this.callApi(payload);
     }
     if (notification === "Holiday-Fetch") {

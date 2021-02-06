@@ -4,7 +4,7 @@
  * By Scott Lewis - https://github.com/scottcl88/MMM-DynamicWeather
  * MIT Licensed.
  *
- * A simple module to display different images based on current weather
+ * A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
  */
 declare var Module: any;
 class Effect {
@@ -161,7 +161,6 @@ Module.register("MMM-DynamicWeather", {
       var effectMonth = effect.month - 1;
       if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
         //if there is weatherCode or holiday, dates are ignored
-        console.log("Checking effect date: ", effect.getMonth(), effect.getDay(), effect.getYear(), this.now.getMonth(), this.now.getDate(), this.now.getFullYear());
         if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
           //if no weatherCode, no holiday and no dates, then always display it
           if (effect.recurrence == "weekdays") {
@@ -210,20 +209,17 @@ Module.register("MMM-DynamicWeather", {
     wrapper.style.zIndex = this.config.zIndex;
     wrapper.className = "wrapper";
 
+    //setup the fade-out animation
     var fadeDuration = parseInt(this.config.fadeDuration);
-
     var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
-    console.log("Setting animation delay to: ", animationDelay);
-
     var fadeCSS = document.createElement("style");
     fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: " + fadeDuration + "ms; animation-delay: " + animationDelay + "ms;}";
     wrapper.prepend(fadeCSS);
 
     wrapper.onanimationend = (e) => {
-      console.log("Wrapper fade-out called: ", e.animationName, e);
+      //delay finished, elements faded out, now remove
       var thisAnimation = e.animationName;
       if (thisAnimation == "fade") {
-        console.log("Wrapper fade-out now removing");
         wrapper.remove();
       }
     };
@@ -253,12 +249,10 @@ Module.register("MMM-DynamicWeather", {
       return wrapper;
     }
 
-    console.log("GetDom 1: ", this.weatherLoaded, this.holidayLoaded);
     if (!this.weatherLoaded || !this.holidayLoaded) return wrapper; //need to wait for the weather to first be loaded
 
-    console.log("GetDom 2: ", this.doShowEffects, this.weatherCode);
     if (!this.doShowEffects) return wrapper;
-     
+
     wrapper.className = "wrapper fade-out";
 
     let showEffects = false;
@@ -280,7 +274,6 @@ Module.register("MMM-DynamicWeather", {
     if (showEffects) {
       (this.allEffects as Effect[]).forEach((effect) => {
         if (effect.doDisplay) {
-          console.log("Effect is going to display...");
           this.showCustomEffect(wrapper, effect);
         }
       });
@@ -299,8 +292,8 @@ Module.register("MMM-DynamicWeather", {
       }
     }
 
-    console.log("Going to wait for: ", this.config.effectDuration);
-    this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this, wrapper);
+    // console.log("Going to wait for: ", this.config.effectDuration);
+    this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
 
     return wrapper;
   },
@@ -439,7 +432,6 @@ Module.register("MMM-DynamicWeather", {
   },
 
   makeItFoggy: function (wrapper) {
-    console.log("Showing fog");
     this.doShowEffects = false;
 
     var fogImage1 = document.createElement("div");
@@ -456,7 +448,6 @@ Module.register("MMM-DynamicWeather", {
 
     wrapper.appendChild(fogPlayer1);
 
-    
     fogImage1 = document.createElement("div");
     fogImage1.classList.add("image01");
 
@@ -471,7 +462,6 @@ Module.register("MMM-DynamicWeather", {
 
     wrapper.appendChild(fogPlayer2);
 
-    
     fogImage1 = document.createElement("div");
     fogImage1.classList.add("image01");
 
@@ -487,41 +477,12 @@ Module.register("MMM-DynamicWeather", {
     wrapper.appendChild(fogPlayer3);
   },
 
-  stopEffect: function (_this, wrapper: HTMLDivElement) {
-    //clear elements
-
-    // console.log("Fading out elements...");
-    // const elementToFade = wrapper;
-
-    // To fade away:
-    // elementToFade.classList.add("fade-out");
-    // for (var i = 0; i < wrapper.children.length; i++) {
-    //   console.log("Adding fade out animation to child..");
-    //   var child = wrapper.children[i] as HTMLDivElement;
-    //   child.onanimationend = (e) => {
-    //     console.log("Element done fading animation");
-    //     var source = (e.target || e.srcElement) as HTMLDivElement;
-    //     if (source.classList.contains("fade-out")) {
-    //       console.log("Element being removed");
-    //       wrapper.removeChild(child);
-    //     }
-    //   };
-    //   child.classList.add("fade-out");
-    // }
-
-    // // removeTarget.style.opacity = "0";
-    // setTimeout(function () {
-    //   while (wrapper.firstChild) {
-    //     wrapper.removeChild(wrapper.firstChild);
-    //   }
-    // }, 1000);
-
+  stopEffect: function (_this) {
+    //wait for delay and reset
     _this.updateDom();
     let delay = _this.config.effectDelay;
-    console.log("Stopped effect, waiting for: ", delay);
     _this.effectDelayTimeout = setTimeout(
       (_that, _effect) => {
-        console.log("Resetting effect to display again");
         _that.doShowEffects = true;
         _that.updateDom();
       },
@@ -531,12 +492,10 @@ Module.register("MMM-DynamicWeather", {
   },
 
   getWeather: function (_this) {
-    console.log("Fetching current weather");
     _this.sendSocketNotification("API-Fetch", _this.url);
     _this.weatherTimeout = setTimeout(_this.getWeather, _this.config.weatherInterval, _this);
   },
   getHolidays: function (_this) {
-    console.log("Fetching holidays");
     _this.sendSocketNotification("Holiday-Fetch", {});
     _this.holidayTimeout = setTimeout(_this.getHolidays, 1000 * 60 * 60 * 24, _this); //once a day
   },
@@ -545,7 +504,7 @@ Module.register("MMM-DynamicWeather", {
     let today = new Date();
     let todayHolidays = [];
 
-    console.log("Parsing holidays...");
+    // console.log("Parsing holidays...");
 
     var parser = new DOMParser();
     var doc = parser.parseFromString(body, "text/html");
@@ -564,11 +523,8 @@ Module.register("MMM-DynamicWeather", {
               for (var l = 0; l < this.allHolidays.length; l++) {
                 var effectHoliday = this.allHolidays[l];
                 if (child4.textContent == effectHoliday) {
-                  console.log("Found effect holiday");
                   var holidayDate = new Date(parseInt(holidayDateStr));
-                  console.log("Holiday date: ", holidayDate, holidayDate.getUTCDate(), today.getDate(), holidayDate.getUTCMonth(), today.getMonth());
                   if (holidayDate.getUTCDate() == today.getDate() && holidayDate.getUTCMonth() == today.getMonth()) {
-                    console.log("Effect holiday added: ", effectHoliday);
                     todayHolidays.push(effectHoliday);
                   }
                 }
@@ -607,9 +563,7 @@ Module.register("MMM-DynamicWeather", {
           doUpdate = true;
         }
         (this.allEffects as Effect[]).forEach((effect) => {
-          console.log("Checking weather code for effect: ", newCode, effect.getWeatherCode(), effect.getMinWeatherCode(), effect.getMaxWeatherCode());
           if (effect.getWeatherCode() == newCode || (effect.getMinWeatherCode() <= newCode && effect.getMaxWeatherCode() >= newCode)) {
-            console.log("Weather codes matched");
             doUpdate = true;
             effect.doDisplay = true;
             this.hasWeatherEffectsToDisplay = true;
@@ -635,12 +589,12 @@ Module.register("MMM-DynamicWeather", {
       let doUpdate = false;
       let todayHolidays = [] as string[];
       todayHolidays = this.parseHolidays(payload.result.holidayBody);
-      console.log("Parsing holidays finished with results: ", todayHolidays.length);
+      // console.log("Parsing holidays finished with results: ", todayHolidays.length);
+
       //returned a list of holidays for today, check to see if any effects have the same holiday name, if so display them and update dom
       (this.allEffects as Effect[]).forEach((effect) => {
         todayHolidays.forEach((holidayName) => {
           if (effect.holiday == holidayName) {
-            console.log("Marking effect for holiday: ", holidayName);
             doUpdate = true;
             effect.doDisplay = true;
             this.hasHolidayEffectsToDisplay = true;
