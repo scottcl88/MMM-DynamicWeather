@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.7.0] - 2021-02-05
+### Added
+- Added fog weather effect (added to configuration)
+
 ## [2.6.1] - 2021-02-05
 ### Fixed
 - Issue with larger images getting cut off has been resovled by changing background to "contain", which will not keep ratio of image
