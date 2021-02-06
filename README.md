@@ -66,7 +66,7 @@ The following properties can be configured:
 
 |Option|Description|
 |---|---|
-|`alwaysDisplay`|Set this to always display the specified default effect, regardless of weather. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `snow`, `rain`, `cloudy`<br>**Type:** `string`<br>**Default value:** `null`|
+|`alwaysDisplay`|Set this to always display the specified default effect, regardless of weather. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `snow`, `rain`, `cloudy`,`fog`<br>**Type:** `string`<br>**Default value:** `null`|
 |`api_key`|**Required** This is the API key you need to use to request weather data from the OpenWeatherMap site.  Details on how to request an API key can be found [here](https://home.openweathermap.org/users/sign_up)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`effectDuration`|The length, in milliseconds, to display the effect. <br><br>**Type:** `number`<br>**Default value:** `120000`|
 |`effectDelay`|The length, in milliseconds, to wait to restart the effect. <br><br>**Type:** `number`<br>**Default value:** `60000`|
@@ -74,6 +74,7 @@ The following properties can be configured:
 |`hideSnow`|If true, will never display the "snow" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideRain`|If true, will never display the "rain" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideClouds`|If true, will never display the "cloudy" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`hideFog`|If true, will never display the "fog" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`locationID`|**Required (or use lat/lon)** The locationID from OpenWeatherMap for your city to get current weather. [Follow steps here to find city ID](https://www.dmopress.com/openweathermap-howto/) <br><br>**Type:** `integer`<br>**Default value:** `0`|
 |`lat`|**Required with lon (or use locationID)** This is the latitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
 |`lon`|**Required with lat (or use locationID)** This is the longitude of the location you want to get the weather for.<br><br>**Type:** `number`<br>**Default value:** `0.0`|
