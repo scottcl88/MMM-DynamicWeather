@@ -1,7 +1,7 @@
 {
   "name": "mmm-dynamicweather",
   "version": "2.7.0",
-  "description": "A MagicMirror Module to display different animations based on current weather.",
+  "description": "A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scottcl88/MMM-DynamicWeather.git"

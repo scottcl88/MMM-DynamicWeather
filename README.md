@@ -1,13 +1,16 @@
 # Module: MMM-DynamicWeather
-Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow) I added rain and clouds as well as automatically toggling the effects based on the current weather and date.
+A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
+<br>
+<br>
+Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow)
 
 **Rain**
 
-![](rain.png)
+![](rain_example.png)
 
 **Cloudy**
 
-![](cloudy.png)
+![](cloudy_example.png)
 
 ## Installation
 
