@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.7.2] - 2021-02-18
+### Fixed
+- Fixed issue with sequential taking twice as long and holiday not being removed the next day
+
 ## [2.7.1] - 2021-02-05
 ### Changes
 - Cleaned up code, removed unncessary comments and logs, formats, renamed example files
