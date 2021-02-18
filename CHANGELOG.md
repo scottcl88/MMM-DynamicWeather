@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.8.0] - 2021-02-18
+### Added
+- Adding effect-one option for sequential
+
 ## [2.7.2] - 2021-02-18
 ### Fixed
 - Fixed issue with sequential taking twice as long and holiday not being removed the next day
