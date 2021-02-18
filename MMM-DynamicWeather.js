@@ -31,6 +31,7 @@ var Effect = /** @class */ (function () {
         return this.holiday && this.holiday.length > 0 ? true : false;
     };
     Effect.prototype.clone = function (other) {
+        this.id = other.id;
         this.day = other.day;
         this.month = other.month;
         this.year = other.year;
@@ -94,14 +95,18 @@ Module.register("MMM-DynamicWeather", {
         this.snowEffect.direction = "down";
         this.weatherCode = 0;
         this.allHolidays = [];
+        var count = 0;
         this.config.effects.forEach(function (configEffect) {
             var effect = new Effect();
             effect.clone(configEffect);
+            effect.id = count;
+            count++;
             _this_1.allEffects.push(effect);
             _this_1.allHolidays.push(effect.holiday);
         });
+        this.lastSequentialId = -1;
         if (this.config.sequential) {
-            if (this.config.sequential == "effect") {
+            if (this.config.sequential == "effect" || this.config.sequential == "effect-one") {
                 this.lastSequential = "weather";
             }
             else if (this.config.sequential == "weather") {
@@ -185,7 +190,6 @@ Module.register("MMM-DynamicWeather", {
         });
     },
     getDom: function () {
-        var _this_1 = this;
         var wrapper = document.createElement("div");
         wrapper.style.zIndex = this.config.zIndex;
         wrapper.className = "wrapper";
@@ -251,11 +255,27 @@ Module.register("MMM-DynamicWeather", {
             }
         }
         if (showEffects) {
-            this.allEffects.forEach(function (effect) {
+            for (var _i = 0, _a = this.allEffects; _i < _a.length; _i++) {
+                var effect = _a[_i];
                 if (effect.doDisplay) {
-                    _this_1.showCustomEffect(wrapper, effect);
+                    //we can display this effect
+                    if (this.config.sequential == "effect-one") {
+                        //only show one effect at a time. if it wasn't the last one and its next in line, then do show it
+                        if (this.lastSequentialId < effect.id) {
+                            this.lastSequentialId = effect.id;
+                            if (this.allEffects.length - 1 == this.lastSequentialId) {
+                                //reached end of effects, reset
+                                this.lastSequentialId = -1;
+                            }
+                            this.showCustomEffect(wrapper, effect);
+                            break;
+                        }
+                    }
+                    else {
+                        this.showCustomEffect(wrapper, effect);
+                    }
                 }
-            });
+            }
         }
         if (showWeather) {
             //Codes from https://openweathermap.org/weather-conditions

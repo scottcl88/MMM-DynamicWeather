@@ -9,6 +9,7 @@
 declare var Module: any;
 class Effect {
   constructor() {}
+  id: number; //an id made up to use for sequential logic
   month: number;
   day: number;
   year: number = 0;
@@ -50,6 +51,7 @@ class Effect {
     return this.holiday && this.holiday.length > 0 ? true : false;
   }
   public clone(other: Effect) {
+    this.id = other.id;
     this.day = other.day;
     this.month = other.month;
     this.year = other.year;
@@ -118,15 +120,19 @@ Module.register("MMM-DynamicWeather", {
 
     this.allHolidays = [] as string[];
 
+    let count = 0;
     this.config.effects.forEach((configEffect) => {
       var effect = new Effect();
       effect.clone(configEffect);
+      effect.id = count;
+      count++;
       this.allEffects.push(effect);
       this.allHolidays.push(effect.holiday);
     });
 
+    this.lastSequentialId = -1;
     if (this.config.sequential) {
-      if (this.config.sequential == "effect") {
+      if (this.config.sequential == "effect" || this.config.sequential == "effect-one") {
         this.lastSequential = "weather";
       } else if (this.config.sequential == "weather") {
         this.lastSequential = "effect";
@@ -275,11 +281,25 @@ Module.register("MMM-DynamicWeather", {
     }
 
     if (showEffects) {
-      (this.allEffects as Effect[]).forEach((effect) => {
+      for (let effect of this.allEffects as Effect[]) {
         if (effect.doDisplay) {
-          this.showCustomEffect(wrapper, effect);
+          //we can display this effect
+          if (this.config.sequential == "effect-one") {
+            //only show one effect at a time. if it wasn't the last one and its next in line, then do show it
+            if (this.lastSequentialId < effect.id) {
+              this.lastSequentialId = effect.id;
+              if (this.allEffects.length - 1 == this.lastSequentialId) {
+                //reached end of effects, reset
+                this.lastSequentialId = -1;
+              }
+              this.showCustomEffect(wrapper, effect);
+              break;
+            }
+          } else {
+            this.showCustomEffect(wrapper, effect);
+          }
         }
-      });
+      }
     }
 
     if (showWeather) {
