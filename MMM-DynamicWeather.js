@@ -233,12 +233,15 @@ Module.register("MMM-DynamicWeather", {
         wrapper.className = "wrapper fade-out";
         var showEffects = false;
         var showWeather = false;
+        //check to see what should be shown based on availability and sequential
         if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
-            if (this.lastSequential == "effect") {
+            if (this.lastSequential == "effect" && this.hasWeatherEffectsToDisplay) {
+                //if its weather's turn and there are weather to show
                 showWeather = true;
                 this.lastSequential = "weather";
             }
-            else if (this.lastSequential == "weather") {
+            else if (this.lastSequential == "weather" && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay)) {
+                //if its effect's turn and there are effects to show
                 showEffects = true;
                 this.lastSequential = "effect";
             }
@@ -432,11 +435,31 @@ Module.register("MMM-DynamicWeather", {
     },
     getHolidays: function (_this) {
         _this.sendSocketNotification("Holiday-Fetch", {});
-        _this.holidayTimeout = setTimeout(_this.getHolidays, 1000 * 60 * 60 * 24, _this); //once a day
+        var today = new Date();
+        var tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        var msTillMidnight = tomorrow.getTime() - today.getTime();
+        // console.log("Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
+        _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
+    },
+    resetHolidays: function (_this) {
+        // console.log("Resetting holidays...");
+        //Reset all effects with a holiday to not show, we will trigger another getHolidays to see if the next day has another holiday to display next
+        _this.allEffects.forEach(function (effect) {
+            if (effect.holiday) {
+                effect.doDisplay = false;
+            }
+        });
+        _this.hasHolidayEffectsToDisplay = false;
+        _this.updateDom();
+        // console.log("Holidays reset.");
+        _this.getHolidays(_this);
     },
     parseHolidays: function (body) {
         var today = new Date();
         var todayHolidays = [];
+        todayHolidays.push("test");
         // console.log("Parsing holidays...");
         var parser = new DOMParser();
         var doc = parser.parseFromString(body, "text/html");
