@@ -346,3 +346,88 @@ https://codepen.io/Ravyre/pen/gXawyY
     left: -100%;
   }
 }
+
+/***************************
+Lightning
+***************************/
+.MMM-DynamicWeather .lightningPlayer {
+  height: 100%;
+  position: absolute;
+  top: -10px;
+  left: 0px;
+  width: 100%;
+  display: block;
+}
+.MMM-DynamicWeather .lightning1 {
+  height: 100%;
+  position: absolute;
+  top: -10px;
+  left: 0px;
+  width: 100%;
+  background: url("images/lightning1.png") center center/cover no-repeat transparent;
+  animation: lightning1_opacity 14s linear;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+.MMM-DynamicWeather .lightning2 {
+  height: 100%;
+  position: absolute;
+  top: -10px;
+  left: 0px;
+  width: 100%;
+  background: url("images/lightning2.png") center center/cover no-repeat transparent;
+  animation: lightning2_opacity 14s linear;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+@keyframes lightningPlayer_opacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes lightning1_opacity {
+  0% {
+    opacity: 0;
+  }
+  49% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes lightning2_opacity {
+  0% {
+    opacity: 0;
+  }
+  19% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  25% {
+    opacity: 0;
+  }
+  59% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  65% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}

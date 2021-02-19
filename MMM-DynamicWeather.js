@@ -72,6 +72,9 @@ Module.register("MMM-DynamicWeather", {
         hideRain: false,
         hideClouds: false,
         hideFog: false,
+        hideLightning: false,
+        lightning1Count: 2,
+        lightning2Count: 3,
         sequential: "",
         effects: [],
     },
@@ -224,6 +227,15 @@ Module.register("MMM-DynamicWeather", {
                     this.makeItRain(wrapper);
                     break;
                 }
+                case "lightning": {
+                    this.makeItLightning(wrapper);
+                    break;
+                }
+                case "rain-lightning": {
+                    this.makeItRain(wrapper);
+                    this.makeItLightning(wrapper);
+                    break;
+                }
                 case "cloudy": {
                     this.makeItCloudy(wrapper);
                     break;
@@ -292,6 +304,9 @@ Module.register("MMM-DynamicWeather", {
             }
             else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
                 this.makeItRain(wrapper);
+                if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
+                    this.makeItLightning(wrapper);
+                }
             }
             else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
                 this.makeItCloudy(wrapper);
@@ -400,6 +415,20 @@ Module.register("MMM-DynamicWeather", {
             wrapper.appendChild(backDrop);
             wrapper.appendChild(frontDrop);
         }
+    },
+    makeItLightning: function (wrapper) {
+        this.doShowEffects = false;
+        var lightningImage1 = document.createElement("div");
+        lightningImage1.classList.add("lightning1");
+        lightningImage1.style.animationIterationCount = this.config.lightning1Count;
+        var lightningImage2 = document.createElement("div");
+        lightningImage2.classList.add("lightning2");
+        lightningImage2.style.animationIterationCount = this.config.lightning2Count;
+        var lightningPlayer = document.createElement("div");
+        lightningPlayer.classList.add("lightningPlayer");
+        lightningPlayer.appendChild(lightningImage1);
+        lightningPlayer.appendChild(lightningImage2);
+        wrapper.appendChild(lightningPlayer);
     },
     makeItCloudy: function (wrapper) {
         this.doShowEffects = false;
@@ -537,6 +566,9 @@ Module.register("MMM-DynamicWeather", {
                     doUpdate_1 = true;
                 }
                 if (newCode_1 >= 200 && newCode_1 <= 531 && !this.config.hideRain) {
+                    doUpdate_1 = true;
+                }
+                if (newCode_1 >= 200 && newCode_1 <= 232 && !this.config.hideLightning) {
                     doUpdate_1 = true;
                 }
                 if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
