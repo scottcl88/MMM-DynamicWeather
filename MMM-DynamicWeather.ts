@@ -93,6 +93,9 @@ Module.register("MMM-DynamicWeather", {
     hideRain: false,
     hideClouds: false,
     hideFog: false,
+    hideLightning: false,
+    lightning1Count: 2,
+    lightning2Count: 3,
     sequential: "",
     effects: [] as Effect[],
   },
@@ -250,6 +253,15 @@ Module.register("MMM-DynamicWeather", {
           this.makeItRain(wrapper);
           break;
         }
+        case "lightning": {
+          this.makeItLightning(wrapper);
+          break;
+        }
+        case "rain-lightning": {
+          this.makeItRain(wrapper);
+          this.makeItLightning(wrapper);
+          break;
+        }
         case "cloudy": {
           this.makeItCloudy(wrapper);
           break;
@@ -318,6 +330,9 @@ Module.register("MMM-DynamicWeather", {
         this.showCustomEffect(wrapper, this.snowEffect);
       } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
         this.makeItRain(wrapper);
+        if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
+          this.makeItLightning(wrapper);
+        }
       } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
         this.makeItCloudy(wrapper);
       } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
@@ -378,9 +393,9 @@ Module.register("MMM-DynamicWeather", {
       }
 
       //let speed = 95;
-      let max = effect.getSpeedMax();//(100 - speed) < 1 ? 1 : 100 - speed;
-      let min = effect.getSpeedMin();//(50 - speed) < 0 ? 0 : 50 - speed;
- 
+      let max = effect.getSpeedMax(); //(100 - speed) < 1 ? 1 : 100 - speed;
+      let min = effect.getSpeedMin(); //(50 - speed) < 0 ? 0 : 50 - speed;
+
       jiggle = document.createElement("div");
       jiggle.style.animationDelay = Math.random() * max + "s";
       jiggle.style.animationDuration = max - Math.random() * min * size + "s";
@@ -445,6 +460,25 @@ Module.register("MMM-DynamicWeather", {
       wrapper.appendChild(backDrop);
       wrapper.appendChild(frontDrop);
     }
+  },
+
+  makeItLightning: function (wrapper) {
+    this.doShowEffects = false;
+
+    var lightningImage1 = document.createElement("div");
+    lightningImage1.classList.add("lightning1");
+    lightningImage1.style.animationIterationCount = this.config.lightning1Count;
+
+    var lightningImage2 = document.createElement("div");
+    lightningImage2.classList.add("lightning2");
+    lightningImage2.style.animationIterationCount = this.config.lightning2Count;
+
+    let lightningPlayer = document.createElement("div");
+    lightningPlayer.classList.add("lightningPlayer");
+    lightningPlayer.appendChild(lightningImage1);
+    lightningPlayer.appendChild(lightningImage2);
+
+    wrapper.appendChild(lightningPlayer);
   },
 
   makeItCloudy: function (wrapper) {
@@ -612,6 +646,9 @@ Module.register("MMM-DynamicWeather", {
           doUpdate = true;
         }
         if (newCode >= 200 && newCode <= 531 && !this.config.hideRain) {
+          doUpdate = true;
+        }
+        if (newCode >= 200 && newCode <= 232 && !this.config.hideLightning) {
           doUpdate = true;
         }
         if (newCode >= 801 && newCode <= 804 && !this.config.hideClouds) {
