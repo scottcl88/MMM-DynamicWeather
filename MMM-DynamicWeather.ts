@@ -16,6 +16,8 @@ class Effect {
   images: string[];
   direction: string;
   size: number;
+  speedMax: number;
+  speedMin: number;
   weatherCode: number;
   weatherCodeMin: number;
   weatherCodeMax: number;
@@ -34,6 +36,12 @@ class Effect {
   }
   public getSize(): number {
     return this.size ? this.size : 1;
+  }
+  public getSpeedMax(): number {
+    return this.speedMax ? this.speedMax : 100;
+  }
+  public getSpeedMin(): number {
+    return this.speedMin ? this.speedMin : 50;
   }
   public getWeatherCode(): number {
     return this.weatherCode ? this.weatherCode : -99;
@@ -58,6 +66,8 @@ class Effect {
     this.images = other.images;
     this.direction = other.direction;
     this.size = other.size;
+    this.speedMax = other.speedMax;
+    this.speedMin = other.speedMin;
     this.weatherCode = other.weatherCode;
     this.weatherCodeMin = other.weatherCodeMin;
     this.weatherCodeMax = other.weatherCodeMax;
@@ -326,7 +336,7 @@ Module.register("MMM-DynamicWeather", {
     var flake, jiggle, size;
 
     for (var i = 0; i < this.config.particleCount; i++) {
-      size = effect.size; // * (Math.random() * 0.75) + 0.25;
+      size = effect.getSize(); // * (Math.random() * 0.75) + 0.25;
       let flakeImage = document.createElement("div");
 
       let maxNum = effect.images.length;
@@ -347,14 +357,14 @@ Module.register("MMM-DynamicWeather", {
         }
         case "left-right": {
           flake.className = "flake-left-right";
-          flake.style.left = "-50px";
+          flake.style.left = "-75px";
           flake.style.top = Math.random() * 100 - 10 + "%";
           flake.style.animationName = "flake-jiggle-left-right";
           break;
         }
         case "right-left": {
           flake.className = "flake-right-left";
-          flake.style.right = "-50px";
+          flake.style.right = "-75px";
           flake.style.top = Math.random() * 100 - 10 + "%";
           flake.style.animationName = "flake-jiggle-right-left";
           break;
@@ -367,9 +377,13 @@ Module.register("MMM-DynamicWeather", {
         }
       }
 
+      //let speed = 95;
+      let max = effect.getSpeedMax();//(100 - speed) < 1 ? 1 : 100 - speed;
+      let min = effect.getSpeedMin();//(50 - speed) < 0 ? 0 : 50 - speed;
+ 
       jiggle = document.createElement("div");
-      jiggle.style.animationDelay = Math.random() * 4 + "s";
-      jiggle.style.animationDuration = Math.random() * 30 + 30 + "s";
+      jiggle.style.animationDelay = Math.random() * max + "s";
+      jiggle.style.animationDuration = max - Math.random() * min * size + "s";
       if (animationName) {
         jiggle.style.animationName = animationName;
       }
@@ -384,8 +398,9 @@ Module.register("MMM-DynamicWeather", {
       }
 
       flake.appendChild(jiggle);
-      flake.style.animationDelay = Math.random() * 100 + "s";
-      flake.style.animationDuration = 100 - Math.random() * 50 * size + "s";
+
+      flake.style.animationDelay = Math.random() * max + "s";
+      flake.style.animationDuration = max - Math.random() * min * size + "s";
 
       wrapper.appendChild(flake);
     }
