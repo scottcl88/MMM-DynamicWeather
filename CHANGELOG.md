@@ -4,10 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Wintermix, realistic clouds and effect particle count
+
+## [2.11.0] - 2021-02-19
+### Added
+- Winter mix weather effect to show snow and rain at sametime based on current weather
+- Added realisticClouds option (added to configuration)
+- Added particleCount for each effect (added to configuration)
+
 ## [2.10.0] - 2021-02-19
 ### Added
 - Added lightning effect for weather conditions. Added to alwaysDisplay option and hideLightning option. (added to configuration)
-- 
+
 ## [2.9.0] - 2021-02-18
 ### Added
 - Add min and max speed to effects
