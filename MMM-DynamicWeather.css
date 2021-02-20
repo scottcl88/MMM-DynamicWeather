@@ -431,3 +431,117 @@ Lightning
     opacity: 0;
   }
 }
+
+/***************************
+Snowman
+***************************/
+.MMM-DynamicWeather .snowman {
+  width: 350px !important;
+  bottom: 20px;
+  left: 25%;
+  position: absolute;
+  display: block;
+  height: 100px !important;
+  background: url("images/SNOWMAN_1.png") center center/cover no-repeat transparent;
+  animation: snowmanBg linear;
+  animation-fill-mode: forwards;
+  animation-duration: 60;
+  /* animation-delay: 10s; */
+}
+@keyframes snowmanBg {
+  0% {
+    background-image: url("images/SNOWMAN_1.png");
+    height: 100px;
+  }
+  10% {
+    background-image: url("images/SNOWMAN_1.png");
+    height: 100px;
+  }
+  20% {
+    background-image: url("images/SNOWMAN_2.png");
+    height: 200px;
+  }
+  30% {
+    background-image: url("images/SNOWMAN_3.png");
+    height: 300px;
+  }
+  40% {
+    background-image: url("images/SNOWMAN_4.png");
+    height: 375px;
+  }
+  50% {
+    background-image: url("images/SNOWMAN_5.png");
+    height: 450px;
+  }
+  60% {
+    background-image: url("images/SNOWMAN_6.png");
+    height: 600px;
+  }
+  70% {
+    background-image: url("images/SNOWMAN_7.png");
+    height: 625px;
+  }
+  80% {
+    background-image: url("images/SNOWMAN_8.png");
+    height: 625px;
+  }
+  90% {
+    background-image: url("images/SNOWMAN_9.png");
+    height: 650px;
+  }
+  100% {
+    background-image: url("images/SNOWMAN_9.png");
+    height: 650px;
+  }
+}
+
+/***************************
+Flower
+***************************/
+.MMM-DynamicWeather .flower {
+  width: 400px !important;
+  bottom: 20px;
+  left: 25%;
+  position: absolute;
+  display: block;
+  height: 250px !important;
+  background: url("images/FLOWER_1.png") center center/cover no-repeat transparent;
+  animation: flowerBg linear;
+  animation-fill-mode: forwards;
+  /* animation-duration: 60s; */
+  animation-delay: 10s;
+}
+@keyframes flowerBg {
+  0%, 10% {
+    background-image: url("images/FLOWER_1.png");
+    height: 250px;
+  }
+  20% {
+    background-image: url("images/FLOWER_2.png");
+    height: 350px;
+  }
+  30% {
+    background-image: url("images/FLOWER_3.png");
+    height: 400px;
+  }
+  40% {
+    background-image: url("images/FLOWER_4.png");
+    height: 450px;
+  }
+  50% {
+    background-image: url("images/FLOWER_5.png");
+    height: 500px;
+  }
+  60% {
+    background-image: url("images/FLOWER_6.png");
+    height: 600px;
+  }
+  70% {
+    background-image: url("images/FLOWER_7.png");
+    height: 650px;
+  }
+  80%, 100% {
+    background-image: url("images/FLOWER_8.png");
+    height: 650px;
+  }
+}
