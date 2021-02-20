@@ -328,6 +328,10 @@ Module.register("MMM-DynamicWeather", {
       //Codes from https://openweathermap.org/weather-conditions
       if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
         this.showCustomEffect(wrapper, this.snowEffect);
+        if(this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain){
+          //snow/rain mix
+          this.makeItRain(wrapper);
+        }
       } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
         this.makeItRain(wrapper);
         if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
@@ -637,7 +641,7 @@ Module.register("MMM-DynamicWeather", {
         console.error("API-Receieved failure status");
         return;
       }
-      let newCode = payload.result.weather[0].id;
+      let newCode = 613;//payload.result.weather[0].id;
       let doUpdate = false;
 
       //check to see if the newCode is different than already displayed, and if so, is it going to show anything
@@ -645,7 +649,7 @@ Module.register("MMM-DynamicWeather", {
         if (newCode >= 600 && newCode <= 622 && !this.config.hideSnow) {
           doUpdate = true;
         }
-        if (newCode >= 200 && newCode <= 531 && !this.config.hideRain) {
+        if ((newCode >= 200 && newCode <= 531) || (newCode >= 611 && newCode <= 622) && !this.config.hideRain) {
           doUpdate = true;
         }
         if (newCode >= 200 && newCode <= 232 && !this.config.hideLightning) {
