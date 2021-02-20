@@ -715,7 +715,7 @@ Module.register("MMM-DynamicWeather", {
         console.error("API-Receieved failure status");
         return;
       }
-      let newCode = 600; //payload.result.weather[0].id;
+      let newCode = payload.result.weather[0].id;
       let doUpdate = false;
 
       //check to see if the newCode is different than already displayed, and if so, is it going to show anything
