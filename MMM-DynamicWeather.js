@@ -15,6 +15,9 @@ var Effect = /** @class */ (function () {
     Effect.prototype.getSize = function () {
         return this.size ? this.size : 1;
     };
+    Effect.prototype.getParticleCount = function () {
+        return this.particleCount ? this.particleCount : -1;
+    };
     Effect.prototype.getSpeedMax = function () {
         return this.speedMax ? this.speedMax : 100;
     };
@@ -44,6 +47,7 @@ var Effect = /** @class */ (function () {
         this.images = other.images;
         this.direction = other.direction;
         this.size = other.size;
+        this.particleCount = other.particleCount;
         this.speedMax = other.speedMax;
         this.speedMin = other.speedMin;
         this.weatherCode = other.weatherCode;
@@ -68,6 +72,7 @@ Module.register("MMM-DynamicWeather", {
         fadeDuration: 3000,
         effectDuration: 120000,
         effectDelay: 60000,
+        realisticClouds: false,
         hideSnow: false,
         hideRain: false,
         hideClouds: false,
@@ -104,6 +109,10 @@ Module.register("MMM-DynamicWeather", {
         this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
         this.snowEffect.size = 1;
         this.snowEffect.direction = "down";
+        this.realisticCloudsEffect = new Effect();
+        this.realisticCloudsEffect.size = 15;
+        this.realisticCloudsEffect.direction = "left-right";
+        this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
         this.weatherCode = 0;
         this.allHolidays = [];
         var count = 0;
@@ -237,7 +246,12 @@ Module.register("MMM-DynamicWeather", {
                     break;
                 }
                 case "cloudy": {
-                    this.makeItCloudy(wrapper);
+                    if (this.config.realisticClouds) {
+                        this.showCustomEffect(wrapper, this.realisticCloudsEffect);
+                    }
+                    else {
+                        this.makeItCloudy(wrapper);
+                    }
                     break;
                 }
                 case "fog": {
@@ -313,7 +327,32 @@ Module.register("MMM-DynamicWeather", {
                 }
             }
             else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-                this.makeItCloudy(wrapper);
+                if (this.config.realisticClouds) {
+                    if (this.weatherCode == 801) {
+                        this.realisticCloudsEffect.size = 8;
+                        this.realisticCloudsEffect.particleCount = 30;
+                        this.realisticCloudsEffect.images = ["cloud1.png"];
+                    }
+                    else if (this.weatherCode == 802) {
+                        this.realisticCloudsEffect.size = 8;
+                        this.realisticCloudsEffect.particleCount = 50;
+                        this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
+                    }
+                    else if (this.weatherCode == 803) {
+                        this.realisticCloudsEffect.size = 15;
+                        this.realisticCloudsEffect.particleCount = 30;
+                        this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
+                    }
+                    else if (this.weatherCode == 804) {
+                        this.realisticCloudsEffect.size = 15;
+                        this.realisticCloudsEffect.particleCount = 30;
+                        this.realisticCloudsEffect.images = ["cloud3.png", "cloud2.png", "cloud1.png"];
+                    }
+                    this.showCustomEffect(wrapper, this.realisticCloudsEffect);
+                }
+                else {
+                    this.makeItCloudy(wrapper);
+                }
             }
             else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
                 this.makeItFoggy(wrapper);
@@ -326,7 +365,11 @@ Module.register("MMM-DynamicWeather", {
     showCustomEffect: function (wrapper, effect) {
         this.doShowEffects = false;
         var flake, jiggle, size;
-        for (var i = 0; i < this.config.particleCount; i++) {
+        var particleCount = effect.getParticleCount();
+        if (particleCount < 0) {
+            particleCount = this.config.particleCount;
+        }
+        for (var i = 0; i < particleCount; i++) {
             size = effect.getSize(); // * (Math.random() * 0.75) + 0.25;
             var flakeImage = document.createElement("div");
             var maxNum = effect.images.length;
@@ -345,14 +388,14 @@ Module.register("MMM-DynamicWeather", {
                 }
                 case "left-right": {
                     flake.className = "flake-left-right";
-                    flake.style.left = "-75px";
+                    flake.style.left = (-75 - (size * 2)) + "px";
                     flake.style.top = Math.random() * 100 - 10 + "%";
                     flake.style.animationName = "flake-jiggle-left-right";
                     break;
                 }
                 case "right-left": {
                     flake.className = "flake-right-left";
-                    flake.style.right = "-75px";
+                    flake.style.right = (75 + (size * 2)) + "px";
                     flake.style.top = Math.random() * 100 - 10 + "%";
                     flake.style.animationName = "flake-jiggle-right-left";
                     break;
@@ -562,14 +605,14 @@ Module.register("MMM-DynamicWeather", {
                 console.error("API-Receieved failure status");
                 return;
             }
-            var newCode_1 = 613; //payload.result.weather[0].id;
+            var newCode_1 = payload.result.weather[0].id;
             var doUpdate_1 = false;
             //check to see if the newCode is different than already displayed, and if so, is it going to show anything
             if (newCode_1 != this.weatherCode) {
                 if (newCode_1 >= 600 && newCode_1 <= 622 && !this.config.hideSnow) {
                     doUpdate_1 = true;
                 }
-                if ((newCode_1 >= 200 && newCode_1 <= 531) || (newCode_1 >= 611 && newCode_1 <= 622) && !this.config.hideRain) {
+                if ((newCode_1 >= 200 && newCode_1 <= 531) || (newCode_1 >= 611 && newCode_1 <= 622 && !this.config.hideRain)) {
                     doUpdate_1 = true;
                 }
                 if (newCode_1 >= 200 && newCode_1 <= 232 && !this.config.hideLightning) {
