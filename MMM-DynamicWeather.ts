@@ -445,7 +445,6 @@ Module.register("MMM-DynamicWeather", {
         }
       }
 
-      //let speed = 95;
       let max = effect.getSpeedMax();
       let min = effect.getSpeedMin();
 
