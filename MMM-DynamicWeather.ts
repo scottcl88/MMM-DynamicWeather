@@ -260,10 +260,16 @@ Module.register("MMM-DynamicWeather", {
       switch (this.config.alwaysDisplay) {
         case "snow": {
           this.showCustomEffect(wrapper, this.snowEffect);
+          if (this.config.hideSnowman === false || this.config.hideSnowman === "false") {
+            this.buildSnowman(wrapper);
+          }
           break;
         }
         case "rain": {
           this.makeItRain(wrapper);
+          if (this.config.hideFlower === false || this.config.hideFlower === "false") {
+            this.buildFlower(wrapper);
+          }
           break;
         }
         case "lightning": {
@@ -345,7 +351,7 @@ Module.register("MMM-DynamicWeather", {
       //Codes from https://openweathermap.org/weather-conditions
       if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
         this.showCustomEffect(wrapper, this.snowEffect);
-        if (this.config.hideSnowman === false) {
+        if (this.config.hideSnowman === false || this.config.hideSnowman === "false") {
           this.buildSnowman(wrapper);
         }
         if (this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain) {
@@ -354,7 +360,7 @@ Module.register("MMM-DynamicWeather", {
         }
       } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
         this.makeItRain(wrapper);
-        if (this.config.hideFlower === false) {
+        if (this.config.hideFlower === false || this.config.hideFlower === "false") {
           this.buildFlower(wrapper);
         }
         if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
