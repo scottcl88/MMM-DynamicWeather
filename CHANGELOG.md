@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Wintermix, realistic clouds and effect particle count
 
+## [2.12.0] - 2021-02-19
+### Added
+- Added a flower growing animation during rain and a snowman being built during snow
+- Added hideSnowman and hideFlower option (added to configuration)
+
 ## [2.11.0] - 2021-02-19
 ### Added
 - Winter mix weather effect to show snow and rain at sametime based on current weather

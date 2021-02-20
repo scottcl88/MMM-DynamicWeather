@@ -74,7 +74,9 @@ Module.register("MMM-DynamicWeather", {
         effectDelay: 60000,
         realisticClouds: false,
         hideSnow: false,
+        hideSnowman: true,
         hideRain: false,
+        hideFlower: true,
         hideClouds: false,
         hideFog: false,
         hideLightning: false,
@@ -315,6 +317,9 @@ Module.register("MMM-DynamicWeather", {
             //Codes from https://openweathermap.org/weather-conditions
             if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
                 this.showCustomEffect(wrapper, this.snowEffect);
+                if (this.config.hideSnowman === false) {
+                    this.buildSnowman(wrapper);
+                }
                 if (this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain) {
                     //snow/rain mix
                     this.makeItRain(wrapper);
@@ -322,6 +327,9 @@ Module.register("MMM-DynamicWeather", {
             }
             else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
                 this.makeItRain(wrapper);
+                if (this.config.hideFlower === false) {
+                    this.buildFlower(wrapper);
+                }
                 if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
                     this.makeItLightning(wrapper);
                 }
@@ -388,14 +396,14 @@ Module.register("MMM-DynamicWeather", {
                 }
                 case "left-right": {
                     flake.className = "flake-left-right";
-                    flake.style.left = (-75 - (size * 2)) + "px";
+                    flake.style.left = -75 - size * 2 + "px";
                     flake.style.top = Math.random() * 100 - 10 + "%";
                     flake.style.animationName = "flake-jiggle-left-right";
                     break;
                 }
                 case "right-left": {
                     flake.className = "flake-right-left";
-                    flake.style.right = (75 + (size * 2)) + "px";
+                    flake.style.right = 75 + size * 2 + "px";
                     flake.style.top = Math.random() * 100 - 10 + "%";
                     flake.style.animationName = "flake-jiggle-right-left";
                     break;
@@ -408,8 +416,8 @@ Module.register("MMM-DynamicWeather", {
                 }
             }
             //let speed = 95;
-            var max = effect.getSpeedMax(); //(100 - speed) < 1 ? 1 : 100 - speed;
-            var min = effect.getSpeedMin(); //(50 - speed) < 0 ? 0 : 50 - speed;
+            var max = effect.getSpeedMax();
+            var min = effect.getSpeedMin();
             jiggle = document.createElement("div");
             jiggle.style.animationDelay = Math.random() * max + "s";
             jiggle.style.animationDuration = max - Math.random() * min * size + "s";
@@ -428,6 +436,13 @@ Module.register("MMM-DynamicWeather", {
             flake.style.animationDuration = max - Math.random() * min * size + "s";
             wrapper.appendChild(flake);
         }
+    },
+    buildSnowman: function (wrapper) {
+        this.doShowEffects = false;
+        var snowmanImage = document.createElement("div");
+        snowmanImage.classList.add("snowman");
+        snowmanImage.style.animationDuration = this.config.effectDuration - 10000 + "ms"; //subtract for 10s delay
+        wrapper.appendChild(snowmanImage);
     },
     makeItRain: function (wrapper) {
         this.doShowEffects = false;
@@ -462,6 +477,13 @@ Module.register("MMM-DynamicWeather", {
             wrapper.appendChild(backDrop);
             wrapper.appendChild(frontDrop);
         }
+    },
+    buildFlower: function (wrapper) {
+        this.doShowEffects = false;
+        var flowerImage = document.createElement("div");
+        flowerImage.classList.add("flower");
+        flowerImage.style.animationDuration = this.config.effectDuration - 10000 + "ms"; //subtract for 10s delay
+        wrapper.appendChild(flowerImage);
     },
     makeItLightning: function (wrapper) {
         this.doShowEffects = false;
