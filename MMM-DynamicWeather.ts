@@ -16,6 +16,7 @@ class Effect {
   images: string[];
   direction: string;
   size: number;
+  particleCount: number;
   speedMax: number;
   speedMin: number;
   weatherCode: number;
@@ -36,6 +37,9 @@ class Effect {
   }
   public getSize(): number {
     return this.size ? this.size : 1;
+  }
+  public getParticleCount(): number {
+    return this.particleCount ? this.particleCount : -1;
   }
   public getSpeedMax(): number {
     return this.speedMax ? this.speedMax : 100;
@@ -66,6 +70,7 @@ class Effect {
     this.images = other.images;
     this.direction = other.direction;
     this.size = other.size;
+    this.particleCount = other.particleCount;
     this.speedMax = other.speedMax;
     this.speedMin = other.speedMin;
     this.weatherCode = other.weatherCode;
@@ -89,6 +94,7 @@ Module.register("MMM-DynamicWeather", {
     fadeDuration: 3000,
     effectDuration: 120000,
     effectDelay: 60000,
+    realisticClouds: false,
     hideSnow: false,
     hideRain: false,
     hideClouds: false,
@@ -128,6 +134,11 @@ Module.register("MMM-DynamicWeather", {
     this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
     this.snowEffect.size = 1;
     this.snowEffect.direction = "down";
+
+    (this.realisticCloudsEffect as Effect) = new Effect();
+    (this.realisticCloudsEffect as Effect).size = 15;
+    (this.realisticCloudsEffect as Effect).direction = "left-right";
+    (this.realisticCloudsEffect as Effect).images = ["cloud1.png", "cloud2.png"];
 
     this.weatherCode = 0;
 
@@ -263,7 +274,11 @@ Module.register("MMM-DynamicWeather", {
           break;
         }
         case "cloudy": {
-          this.makeItCloudy(wrapper);
+          if (this.config.realisticClouds) {
+            this.showCustomEffect(wrapper, this.realisticCloudsEffect);
+          } else {
+            this.makeItCloudy(wrapper);
+          }
           break;
         }
         case "fog": {
@@ -328,13 +343,38 @@ Module.register("MMM-DynamicWeather", {
       //Codes from https://openweathermap.org/weather-conditions
       if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
         this.showCustomEffect(wrapper, this.snowEffect);
+        if (this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain) {
+          //snow/rain mix
+          this.makeItRain(wrapper);
+        }
       } else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
         this.makeItRain(wrapper);
         if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
           this.makeItLightning(wrapper);
         }
       } else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-        this.makeItCloudy(wrapper);
+        if (this.config.realisticClouds) {
+          if (this.weatherCode == 801) {
+            (this.realisticCloudsEffect as Effect).size = 8;
+            (this.realisticCloudsEffect as Effect).particleCount = 30;
+            (this.realisticCloudsEffect as Effect).images = ["cloud1.png"];
+          } else if (this.weatherCode == 802) {
+            (this.realisticCloudsEffect as Effect).size = 8;
+            (this.realisticCloudsEffect as Effect).particleCount = 50;
+            (this.realisticCloudsEffect as Effect).images = ["cloud1.png", "cloud2.png"];
+          } else if (this.weatherCode == 803) {
+            (this.realisticCloudsEffect as Effect).size = 15;
+            (this.realisticCloudsEffect as Effect).particleCount = 30;
+            (this.realisticCloudsEffect as Effect).images = ["cloud1.png", "cloud2.png"];
+          } else if (this.weatherCode == 804) {
+            (this.realisticCloudsEffect as Effect).size = 15;
+            (this.realisticCloudsEffect as Effect).particleCount = 30;
+            (this.realisticCloudsEffect as Effect).images = ["cloud3.png", "cloud2.png", "cloud1.png"];
+          }
+          this.showCustomEffect(wrapper, this.realisticCloudsEffect);
+        } else {
+          this.makeItCloudy(wrapper);
+        }
       } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
         this.makeItFoggy(wrapper);
       }
@@ -350,7 +390,12 @@ Module.register("MMM-DynamicWeather", {
     this.doShowEffects = false;
     var flake, jiggle, size;
 
-    for (var i = 0; i < this.config.particleCount; i++) {
+    var particleCount = effect.getParticleCount();
+    if (particleCount < 0) {
+      particleCount = this.config.particleCount;
+    }
+
+    for (var i = 0; i < particleCount; i++) {
       size = effect.getSize(); // * (Math.random() * 0.75) + 0.25;
       let flakeImage = document.createElement("div");
 
@@ -372,14 +417,14 @@ Module.register("MMM-DynamicWeather", {
         }
         case "left-right": {
           flake.className = "flake-left-right";
-          flake.style.left = "-75px";
+          flake.style.left = (-75 - (size * 2)) + "px";
           flake.style.top = Math.random() * 100 - 10 + "%";
           flake.style.animationName = "flake-jiggle-left-right";
           break;
         }
         case "right-left": {
           flake.className = "flake-right-left";
-          flake.style.right = "-75px";
+          flake.style.right = (75 + (size * 2)) + "px";
           flake.style.top = Math.random() * 100 - 10 + "%";
           flake.style.animationName = "flake-jiggle-right-left";
           break;
@@ -645,7 +690,7 @@ Module.register("MMM-DynamicWeather", {
         if (newCode >= 600 && newCode <= 622 && !this.config.hideSnow) {
           doUpdate = true;
         }
-        if (newCode >= 200 && newCode <= 531 && !this.config.hideRain) {
+        if ((newCode >= 200 && newCode <= 531) || (newCode >= 611 && newCode <= 622 && !this.config.hideRain)) {
           doUpdate = true;
         }
         if (newCode >= 200 && newCode <= 232 && !this.config.hideLightning) {
