@@ -75,7 +75,9 @@ The following properties can be configured:
 |`effectDelay`|The length, in milliseconds, to wait to restart the effect. <br><br>**Type:** `number`<br>**Default value:** `60000`|
 |`fadeDuration`|The length, in milliseconds, to fade out all effects. <br><br>**Type:** `number`<br>**Default value:** `3000`|
 |`hideSnow`|If true, will never display the "snow" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`hideSnowman`|If false, will display an animation at the bottom of a snowman being built if the current weather is snow and `hideSnow` is false. The animation lasts for the effectDuration with a 10 second delay.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`hideRain`|If true, will never display the "rain" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`hideFlower`|If false, will display an animation at the bottom of a flower growing if the current weather is rain and `hideRain` is false. The animation lasts for the effectDuration with a 10 second delay. <br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`hideClouds`|If true, will never display the "cloudy" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideFog`|If true, will never display the "fog" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideLightning`|If true, will never display the "lightning" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
@@ -100,8 +102,8 @@ The following properties can be configured:
 |`holiday`|Will display the effect on the holiday found at [https://www.timeanddate.com/holidays/us/?hol=43122559](https://www.timeanddate.com/holidays/us/?hol=43122559). Simply copy the "Name" value from that table. <br><br>**Type:** `string`<br>**Default value:** `null`|
 |`images`|An array of image files to display at random for this effect. All files need to be in the "images" folder of the MMM-DynamicWeather module folder.<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`particleCount`|The number of particles to show for the effect. Higher counts may cause performance issues. If this is not set, it will use the `particleCount` from the general configuration. <br><br>**Type:** `integer`<br>**Default value:** `null`|
-|`maxSpeed`|The max speed factor. Closer to zero is faster. <br><br>**Type:** `number`<br>**Default value:** `100`|
-|`minSpeed`|The min speed factor. Closer to zero is faster. <br><br>**Type:** `number`<br>**Default value:** `50`|
+|`maxSpeed`|The maximum speed, in seconds, for the effect's image to cross the screen. Closer to zero is faster. Each effect particle is randomized between maxSpeed and minSpeed. <br><br>**Type:** `number`<br>**Default value:** `100`|
+|`minSpeed`|The minimum speed, in seconds, for the effect's image to cross the screen. Closer to zero is faster. Each effect particle is randomized between maxSpeed and minSpeed.  <br><br>**Type:** `number`<br>**Default value:** `50`|
 |`recurrence`|Display the effect repeatedly.<br>Yearly - Not a recurrence option, just leave year unset or zero.<br><br>**Options:**`monthly`,`weekly`,`weekdays`,`weekends`<br>**Type:** `string`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
 |`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless `hideSnow`, `hideRain` or `hideClouds` is turned on. <br><br>**Type:** `number`<br>**Default value:** `0`|

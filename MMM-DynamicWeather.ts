@@ -446,8 +446,8 @@ Module.register("MMM-DynamicWeather", {
       }
 
       //let speed = 95;
-      let max = effect.getSpeedMax(); //(100 - speed) < 1 ? 1 : 100 - speed;
-      let min = effect.getSpeedMin(); //(50 - speed) < 0 ? 0 : 50 - speed;
+      let max = effect.getSpeedMax();
+      let min = effect.getSpeedMin();
 
       jiggle = document.createElement("div");
       jiggle.style.animationDelay = Math.random() * max + "s";

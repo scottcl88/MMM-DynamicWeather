@@ -508,7 +508,6 @@ Flower
   background: url("images/FLOWER_1.png") center center/cover no-repeat transparent;
   animation: flowerBg linear;
   animation-fill-mode: forwards;
-  /* animation-duration: 60s; */
   animation-delay: 10s;
 }
 @keyframes flowerBg {
