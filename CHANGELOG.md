@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-Wintermix, realistic clouds and effect particle count
+## [2.12.1] - 2021-02-19
+### Fixed
+- Fixed issue with false value for hideSnowman and hideFlower not working
 
 ## [2.12.0] - 2021-02-19
 ### Added
