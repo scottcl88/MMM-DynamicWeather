@@ -26,7 +26,7 @@ git clone https://github.com/scottcl88/MMM-DynamicWeather.git
 
 Configure the module in your `config.js` file.
 
-**Note:** After starting the Mirror, it will take a few seconds before any effects may show. If its clear skies, nothing will be seen unless its February 14 (which shows hearts).
+**Note:** After starting the Mirror, it may take a few seconds to startup.
 
 ## Updating
 Go to the DynamicWeather module
