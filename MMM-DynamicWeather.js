@@ -87,6 +87,7 @@ Module.register("MMM-DynamicWeather", {
     },
     start: function () {
         var _this_1 = this;
+        Log.info("Starting MMM-DynamicWeather");
         this.now = new Date();
         this.initialized = false;
         this.weatherLoaded = false;
@@ -154,226 +155,237 @@ Module.register("MMM-DynamicWeather", {
         else {
             this.weatherLoaded = true;
         }
+        Log.info("[MMM-DynamicWeather] Finished initialization");
     },
     getStyles: function () {
         return ["MMM-DynamicWeather.css"];
     },
     checkDates: function () {
         var _this_1 = this;
-        this.allEffects.forEach(function (effect) {
-            var effectMonth = effect.month - 1;
-            if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
-                //if there is weatherCode or holiday, dates are ignored
-                if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
-                    //if no weatherCode, no holiday and no dates, then always display it
-                    if (effect.recurrence == "weekdays") {
-                        //if its not Sunday (0) and not Saturday (6)
-                        if (_this_1.now.getDay() !== 6 && _this_1.now.getDay() !== 0) {
-                            _this_1.hasDateEffectsToDisplay = true;
-                            effect.doDisplay = true;
+        try {
+            this.allEffects.forEach(function (effect) {
+                var effectMonth = effect.month - 1;
+                if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
+                    //if there is weatherCode or holiday, dates are ignored
+                    if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
+                        //if no weatherCode, no holiday and no dates, then always display it
+                        if (effect.recurrence == "weekdays") {
+                            //if its not Sunday (0) and not Saturday (6)
+                            if (_this_1.now.getDay() !== 6 && _this_1.now.getDay() !== 0) {
+                                _this_1.hasDateEffectsToDisplay = true;
+                                effect.doDisplay = true;
+                            }
                         }
-                    }
-                    else if (effect.recurrence == "weekends") {
-                        //if its Sunday (0) or Saturday (6)
-                        if (_this_1.now.getDay() == 6 || _this_1.now.getDay() == 0) {
+                        else if (effect.recurrence == "weekends") {
+                            //if its Sunday (0) or Saturday (6)
+                            if (_this_1.now.getDay() == 6 || _this_1.now.getDay() == 0) {
+                                _this_1.hasDateEffectsToDisplay = true;
+                                effect.doDisplay = true;
+                            }
+                        }
+                        else {
                             _this_1.hasDateEffectsToDisplay = true;
                             effect.doDisplay = true;
                         }
                     }
                     else {
-                        _this_1.hasDateEffectsToDisplay = true;
-                        effect.doDisplay = true;
-                    }
-                }
-                else {
-                    //if the month and date match or the month, date and year match
-                    if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                        if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
-                            _this_1.hasDateEffectsToDisplay = true;
-                            effect.doDisplay = true;
+                        //if the month and date match or the month, date and year match
+                        if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
+                            if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
+                                _this_1.hasDateEffectsToDisplay = true;
+                                effect.doDisplay = true;
+                            }
                         }
-                    }
-                    else if (effect.recurrence == "monthly") {
-                        //ignore everything but the day
-                        if (_this_1.now.getDate() == effect.getDay()) {
-                            _this_1.hasDateEffectsToDisplay = true;
-                            effect.doDisplay = true;
+                        else if (effect.recurrence == "monthly") {
+                            //ignore everything but the day
+                            if (_this_1.now.getDate() == effect.getDay()) {
+                                _this_1.hasDateEffectsToDisplay = true;
+                                effect.doDisplay = true;
+                            }
                         }
-                    }
-                    else if (effect.recurrence == "weekly") {
-                        var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
-                        if (_this_1.now.getDay() == effectDay.getDay()) {
-                            _this_1.hasDateEffectsToDisplay = true;
-                            effect.doDisplay = true;
+                        else if (effect.recurrence == "weekly") {
+                            var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
+                            if (_this_1.now.getDay() == effectDay.getDay()) {
+                                _this_1.hasDateEffectsToDisplay = true;
+                                effect.doDisplay = true;
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in checkDates: ", error);
+        }
     },
     getDom: function () {
         var wrapper = document.createElement("div");
         wrapper.style.zIndex = this.config.zIndex;
         wrapper.className = "wrapper";
-        //setup the fade-out animation
-        var fadeDuration = parseInt(this.config.fadeDuration);
-        var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
-        var fadeCSS = document.createElement("style");
-        fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: " + fadeDuration + "ms; animation-delay: " + animationDelay + "ms;}";
-        wrapper.prepend(fadeCSS);
-        wrapper.onanimationend = function (e) {
-            //delay finished, elements faded out, now remove
-            var thisAnimation = e.animationName;
-            if (thisAnimation == "fade") {
-                wrapper.remove();
+        try {
+            //setup the fade-out animation
+            var fadeDuration = parseInt(this.config.fadeDuration);
+            var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
+            var fadeCSS = document.createElement("style");
+            fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: " + fadeDuration + "ms; animation-delay: " + animationDelay + "ms;}";
+            wrapper.prepend(fadeCSS);
+            wrapper.onanimationend = function (e) {
+                //delay finished, elements faded out, now remove
+                var thisAnimation = e.animationName;
+                if (thisAnimation == "fade") {
+                    wrapper.remove();
+                }
+            };
+            if (this.config.alwaysDisplay) {
+                switch (this.config.alwaysDisplay) {
+                    case "snow": {
+                        this.showCustomEffect(wrapper, this.snowEffect);
+                        if (this.config.hideSnowman === false || this.config.hideSnowman === "false") {
+                            this.buildSnowman(wrapper);
+                        }
+                        break;
+                    }
+                    case "rain": {
+                        this.makeItRain(wrapper);
+                        if (this.config.hideFlower === false || this.config.hideFlower === "false") {
+                            this.buildFlower(wrapper);
+                        }
+                        break;
+                    }
+                    case "lightning": {
+                        this.makeItLightning(wrapper);
+                        break;
+                    }
+                    case "rain-lightning": {
+                        this.makeItRain(wrapper);
+                        this.makeItLightning(wrapper);
+                        break;
+                    }
+                    case "cloudy": {
+                        if (this.config.realisticClouds) {
+                            this.showCustomEffect(wrapper, this.realisticCloudsEffect);
+                        }
+                        else {
+                            this.makeItCloudy(wrapper);
+                        }
+                        break;
+                    }
+                    case "fog": {
+                        this.makeItFoggy(wrapper);
+                        break;
+                    }
+                    default: {
+                        console.error("[MMM-DynamicWeather] Invalid config option 'alwaysDisplay'");
+                    }
+                }
+                return wrapper;
             }
-        };
-        if (this.config.alwaysDisplay) {
-            switch (this.config.alwaysDisplay) {
-                case "snow": {
+            if (!this.weatherLoaded || !this.holidayLoaded)
+                return wrapper; //need to wait for the weather to first be loaded
+            if (!this.doShowEffects)
+                return wrapper;
+            wrapper.className = "wrapper fade-out";
+            var showEffects = false;
+            var showWeather = false;
+            //check to see what should be shown based on availability and sequential
+            if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
+                if (this.lastSequential == "effect" && this.hasWeatherEffectsToDisplay) {
+                    //if its weather's turn and there are weather to show
+                    showWeather = true;
+                    this.lastSequential = "weather";
+                }
+                else if (this.lastSequential == "weather" && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay)) {
+                    //if its effect's turn and there are effects to show
+                    showEffects = true;
+                    this.lastSequential = "effect";
+                }
+                else {
+                    showWeather = true;
+                    showEffects = true;
+                }
+            }
+            if (showEffects) {
+                for (var _i = 0, _a = this.allEffects; _i < _a.length; _i++) {
+                    var effect = _a[_i];
+                    if (effect.doDisplay) {
+                        //we can display this effect
+                        if (this.config.sequential == "effect-one") {
+                            //only show one effect at a time. if it wasn't the last one and its next in line, then do show it
+                            if (this.lastSequentialId < effect.id) {
+                                this.lastSequentialId = effect.id;
+                                if (this.allEffects.length - 1 == this.lastSequentialId) {
+                                    //reached end of effects, reset
+                                    this.lastSequentialId = -1;
+                                }
+                                this.showCustomEffect(wrapper, effect);
+                                break;
+                            }
+                        }
+                        else {
+                            this.showCustomEffect(wrapper, effect);
+                        }
+                    }
+                }
+            }
+            if (showWeather) {
+                //Codes from https://openweathermap.org/weather-conditions
+                if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
                     this.showCustomEffect(wrapper, this.snowEffect);
                     if (this.config.hideSnowman === false || this.config.hideSnowman === "false") {
                         this.buildSnowman(wrapper);
                     }
-                    break;
+                    if (this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain) {
+                        //snow/rain mix
+                        this.makeItRain(wrapper);
+                    }
                 }
-                case "rain": {
+                else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
                     this.makeItRain(wrapper);
                     if (this.config.hideFlower === false || this.config.hideFlower === "false") {
                         this.buildFlower(wrapper);
                     }
-                    break;
+                    if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
+                        this.makeItLightning(wrapper);
+                    }
                 }
-                case "lightning": {
-                    this.makeItLightning(wrapper);
-                    break;
-                }
-                case "rain-lightning": {
-                    this.makeItRain(wrapper);
-                    this.makeItLightning(wrapper);
-                    break;
-                }
-                case "cloudy": {
+                else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
                     if (this.config.realisticClouds) {
+                        if (this.weatherCode == 801) {
+                            this.realisticCloudsEffect.size = 8;
+                            this.realisticCloudsEffect.particleCount = 30;
+                            this.realisticCloudsEffect.images = ["cloud1.png"];
+                        }
+                        else if (this.weatherCode == 802) {
+                            this.realisticCloudsEffect.size = 8;
+                            this.realisticCloudsEffect.particleCount = 50;
+                            this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
+                        }
+                        else if (this.weatherCode == 803) {
+                            this.realisticCloudsEffect.size = 15;
+                            this.realisticCloudsEffect.particleCount = 30;
+                            this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
+                        }
+                        else if (this.weatherCode == 804) {
+                            this.realisticCloudsEffect.size = 15;
+                            this.realisticCloudsEffect.particleCount = 30;
+                            this.realisticCloudsEffect.images = ["cloud3.png", "cloud2.png", "cloud1.png"];
+                        }
                         this.showCustomEffect(wrapper, this.realisticCloudsEffect);
                     }
                     else {
                         this.makeItCloudy(wrapper);
                     }
-                    break;
                 }
-                case "fog": {
+                else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
                     this.makeItFoggy(wrapper);
-                    break;
-                }
-                default: {
-                    console.error("Invalid config option 'alwaysDisplay'");
                 }
             }
-            return wrapper;
+            console.info("[MMM-DynamicWeather] Displaying effects for: ", this.config.effectDuration);
+            this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
         }
-        if (!this.weatherLoaded || !this.holidayLoaded)
-            return wrapper; //need to wait for the weather to first be loaded
-        if (!this.doShowEffects)
-            return wrapper;
-        wrapper.className = "wrapper fade-out";
-        var showEffects = false;
-        var showWeather = false;
-        //check to see what should be shown based on availability and sequential
-        if (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay || this.hasWeatherEffectsToDisplay) {
-            if (this.lastSequential == "effect" && this.hasWeatherEffectsToDisplay) {
-                //if its weather's turn and there are weather to show
-                showWeather = true;
-                this.lastSequential = "weather";
-            }
-            else if (this.lastSequential == "weather" && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay)) {
-                //if its effect's turn and there are effects to show
-                showEffects = true;
-                this.lastSequential = "effect";
-            }
-            else {
-                showWeather = true;
-                showEffects = true;
-            }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in getDom: ", error);
         }
-        if (showEffects) {
-            for (var _i = 0, _a = this.allEffects; _i < _a.length; _i++) {
-                var effect = _a[_i];
-                if (effect.doDisplay) {
-                    //we can display this effect
-                    if (this.config.sequential == "effect-one") {
-                        //only show one effect at a time. if it wasn't the last one and its next in line, then do show it
-                        if (this.lastSequentialId < effect.id) {
-                            this.lastSequentialId = effect.id;
-                            if (this.allEffects.length - 1 == this.lastSequentialId) {
-                                //reached end of effects, reset
-                                this.lastSequentialId = -1;
-                            }
-                            this.showCustomEffect(wrapper, effect);
-                            break;
-                        }
-                    }
-                    else {
-                        this.showCustomEffect(wrapper, effect);
-                    }
-                }
-            }
-        }
-        if (showWeather) {
-            //Codes from https://openweathermap.org/weather-conditions
-            if (this.weatherCode >= 600 && this.weatherCode <= 622 && !this.config.hideSnow) {
-                this.showCustomEffect(wrapper, this.snowEffect);
-                if (this.config.hideSnowman === false || this.config.hideSnowman === "false") {
-                    this.buildSnowman(wrapper);
-                }
-                if (this.weatherCode >= 611 && this.weatherCode <= 622 && !this.config.hideRain) {
-                    //snow/rain mix
-                    this.makeItRain(wrapper);
-                }
-            }
-            else if (this.weatherCode >= 200 && this.weatherCode <= 531 && !this.config.hideRain) {
-                this.makeItRain(wrapper);
-                if (this.config.hideFlower === false || this.config.hideFlower === "false") {
-                    this.buildFlower(wrapper);
-                }
-                if (this.weatherCode >= 200 && this.weatherCode <= 232 && !this.config.hideLightning) {
-                    this.makeItLightning(wrapper);
-                }
-            }
-            else if (this.weatherCode >= 801 && this.weatherCode <= 804 && !this.config.hideClouds) {
-                if (this.config.realisticClouds) {
-                    if (this.weatherCode == 801) {
-                        this.realisticCloudsEffect.size = 8;
-                        this.realisticCloudsEffect.particleCount = 30;
-                        this.realisticCloudsEffect.images = ["cloud1.png"];
-                    }
-                    else if (this.weatherCode == 802) {
-                        this.realisticCloudsEffect.size = 8;
-                        this.realisticCloudsEffect.particleCount = 50;
-                        this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
-                    }
-                    else if (this.weatherCode == 803) {
-                        this.realisticCloudsEffect.size = 15;
-                        this.realisticCloudsEffect.particleCount = 30;
-                        this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
-                    }
-                    else if (this.weatherCode == 804) {
-                        this.realisticCloudsEffect.size = 15;
-                        this.realisticCloudsEffect.particleCount = 30;
-                        this.realisticCloudsEffect.images = ["cloud3.png", "cloud2.png", "cloud1.png"];
-                    }
-                    this.showCustomEffect(wrapper, this.realisticCloudsEffect);
-                }
-                else {
-                    this.makeItCloudy(wrapper);
-                }
-            }
-            else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
-                this.makeItFoggy(wrapper);
-            }
-        }
-        // console.log("Going to wait for: ", this.config.effectDuration);
-        this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
         return wrapper;
     },
     showCustomEffect: function (wrapper, effect) {
@@ -555,65 +567,81 @@ Module.register("MMM-DynamicWeather", {
         wrapper.appendChild(fogPlayer3);
     },
     stopEffect: function (_this) {
-        //wait for delay and reset
-        _this.updateDom();
-        var delay = _this.config.effectDelay;
-        _this.effectDelayTimeout = setTimeout(function (_that, _effect) {
-            _that.doShowEffects = true;
-            _that.updateDom();
-        }, delay, _this);
+        try {
+            //wait for delay and reset
+            _this.updateDom();
+            var delay = _this.config.effectDelay;
+            _this.effectDelayTimeout = setTimeout(function (_that, _effect) {
+                _that.doShowEffects = true;
+                _that.updateDom();
+            }, delay, _this);
+        }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in stopping effects: ", error);
+        }
     },
     getWeather: function (_this) {
         _this.sendSocketNotification("API-Fetch", _this.url);
         _this.weatherTimeout = setTimeout(_this.getWeather, _this.config.weatherInterval, _this);
     },
     getHolidays: function (_this) {
-        _this.sendSocketNotification("Holiday-Fetch", {});
-        var today = new Date();
-        var tomorrow = new Date();
-        tomorrow.setDate(today.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        var msTillMidnight = tomorrow.getTime() - today.getTime();
-        // console.log("Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
-        _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
+        try {
+            _this.sendSocketNotification("Holiday-Fetch", {});
+            var today = new Date();
+            var tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            var msTillMidnight = tomorrow.getTime() - today.getTime();
+            console.info("[MMM-DynamicWeather] Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
+            _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
+        }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in getHolidays: ", error);
+        }
     },
     resetHolidays: function (_this) {
-        // console.log("Resetting holidays...");
-        //Reset all effects with a holiday to not show, we will trigger another getHolidays to see if the next day has another holiday to display next
-        _this.allEffects.forEach(function (effect) {
-            if (effect.holiday) {
-                effect.doDisplay = false;
-            }
-        });
-        _this.hasHolidayEffectsToDisplay = false;
-        _this.updateDom();
-        // console.log("Holidays reset.");
-        _this.getHolidays(_this);
+        try {
+            console.info("[MMM-DynamicWeather] Resetting holidays...");
+            //Reset all effects with a holiday to not show, we will trigger another getHolidays to see if the next day has another holiday to display next
+            _this.allEffects.forEach(function (effect) {
+                if (effect.holiday) {
+                    effect.doDisplay = false;
+                }
+            });
+            _this.hasHolidayEffectsToDisplay = false;
+            _this.updateDom();
+            console.info("[MMM-DynamicWeather] Holidays reset.");
+            _this.getHolidays(_this);
+        }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in resetting holidays: ", error);
+        }
     },
     parseHolidays: function (body) {
         var today = new Date();
         var todayHolidays = [];
         todayHolidays.push("test");
-        // console.log("Parsing holidays...");
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(body, "text/html");
-        var children = doc.getElementById("holidays-table").children[1].children;
-        for (var i = 0; i < children.length; i++) {
-            var child1 = children[i];
-            if (child1.hasAttribute("data-date")) {
-                var holidayDateStr = child1.getAttribute("data-date");
-                var child2 = child1.children;
-                for (var j = 0; j < child2.length; j++) {
-                    var child3 = child2[j];
-                    if (child3.hasChildNodes()) {
-                        for (var k = 0; k < child3.children.length; k++) {
-                            var child4 = child3.children[k];
-                            for (var l = 0; l < this.allHolidays.length; l++) {
-                                var effectHoliday = this.allHolidays[l];
-                                if (child4.textContent == effectHoliday) {
-                                    var holidayDate = new Date(parseInt(holidayDateStr));
-                                    if (holidayDate.getUTCDate() == today.getDate() && holidayDate.getUTCMonth() == today.getMonth()) {
-                                        todayHolidays.push(effectHoliday);
+        try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(body, "text/html");
+            var children = doc.getElementById("holidays-table").children[1].children;
+            for (var i = 0; i < children.length; i++) {
+                var child1 = children[i];
+                if (child1.hasAttribute("data-date")) {
+                    var holidayDateStr = child1.getAttribute("data-date");
+                    var child2 = child1.children;
+                    for (var j = 0; j < child2.length; j++) {
+                        var child3 = child2[j];
+                        if (child3.hasChildNodes()) {
+                            for (var k = 0; k < child3.children.length; k++) {
+                                var child4 = child3.children[k];
+                                for (var l = 0; l < this.allHolidays.length; l++) {
+                                    var effectHoliday = this.allHolidays[l];
+                                    if (child4.textContent == effectHoliday) {
+                                        var holidayDate = new Date(parseInt(holidayDateStr));
+                                        if (holidayDate.getUTCDate() == today.getDate() && holidayDate.getUTCMonth() == today.getMonth()) {
+                                            todayHolidays.push(effectHoliday);
+                                        }
                                     }
                                 }
                             }
@@ -622,79 +650,86 @@ Module.register("MMM-DynamicWeather", {
                 }
             }
         }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in parsing holidays: ", error);
+        }
         return todayHolidays;
     },
     socketNotificationReceived: function (notification, payload) {
         var _this_1 = this;
-        if (notification === "API-Received" && payload.url === this.url) {
-            this.weatherLoaded = true;
-            if (!payload.success) {
-                console.error("API-Receieved failure status");
-                return;
-            }
-            var newCode_1 = payload.result.weather[0].id;
-            var doUpdate_1 = false;
-            //check to see if the newCode is different than already displayed, and if so, is it going to show anything
-            if (newCode_1 != this.weatherCode) {
-                if (newCode_1 >= 600 && newCode_1 <= 622 && !this.config.hideSnow) {
-                    doUpdate_1 = true;
+        try {
+            if (notification === "API-Received" && payload.url === this.url) {
+                this.weatherLoaded = true;
+                if (!payload.success) {
+                    console.error("[MMM-DynamicWeather] API-Receieved failure status");
+                    return;
                 }
-                if ((newCode_1 >= 200 && newCode_1 <= 531) || (newCode_1 >= 611 && newCode_1 <= 622 && !this.config.hideRain)) {
-                    doUpdate_1 = true;
-                }
-                if (newCode_1 >= 200 && newCode_1 <= 232 && !this.config.hideLightning) {
-                    doUpdate_1 = true;
-                }
-                if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
-                    doUpdate_1 = true;
-                }
-                if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFog) {
-                    doUpdate_1 = true;
-                }
-                this.allEffects.forEach(function (effect) {
-                    if (effect.getWeatherCode() == newCode_1 || (effect.getMinWeatherCode() <= newCode_1 && effect.getMaxWeatherCode() >= newCode_1)) {
+                var newCode_1 = payload.result.weather[0].id;
+                var doUpdate_1 = false;
+                //check to see if the newCode is different than already displayed, and if so, is it going to show anything
+                if (newCode_1 != this.weatherCode) {
+                    if (newCode_1 >= 600 && newCode_1 <= 622 && !this.config.hideSnow) {
                         doUpdate_1 = true;
-                        effect.doDisplay = true;
-                        _this_1.hasWeatherEffectsToDisplay = true;
                     }
-                });
+                    if ((newCode_1 >= 200 && newCode_1 <= 531) || (newCode_1 >= 611 && newCode_1 <= 622 && !this.config.hideRain)) {
+                        doUpdate_1 = true;
+                    }
+                    if (newCode_1 >= 200 && newCode_1 <= 232 && !this.config.hideLightning) {
+                        doUpdate_1 = true;
+                    }
+                    if (newCode_1 >= 801 && newCode_1 <= 804 && !this.config.hideClouds) {
+                        doUpdate_1 = true;
+                    }
+                    if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFog) {
+                        doUpdate_1 = true;
+                    }
+                    this.allEffects.forEach(function (effect) {
+                        if (effect.getWeatherCode() == newCode_1 || (effect.getMinWeatherCode() <= newCode_1 && effect.getMaxWeatherCode() >= newCode_1)) {
+                            doUpdate_1 = true;
+                            effect.doDisplay = true;
+                            _this_1.hasWeatherEffectsToDisplay = true;
+                        }
+                    });
+                }
+                //only update the dom if the weather is different (unless holiday or date effects exist and holiday has finished loading)
+                if (doUpdate_1 || (this.holidayLoaded && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay))) {
+                    this.weatherCode = newCode_1;
+                    this.doShowEffects = true;
+                    clearTimeout(this.effectDurationTimeout);
+                    clearTimeout(this.effectDelayTimeout);
+                    this.updateDom();
+                }
             }
-            //only update the dom if the weather is different (unless holiday or date effects exist and holiday has finished loading)
-            if (doUpdate_1 || (this.holidayLoaded && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay))) {
-                this.weatherCode = newCode_1;
-                this.doShowEffects = true;
-                clearTimeout(this.effectDurationTimeout);
-                clearTimeout(this.effectDelayTimeout);
-                this.updateDom();
+            if (notification === "Holiday-Received") {
+                this.holidayLoaded = true;
+                if (!payload.success) {
+                    console.error("[MMM-DynamicWeather] Holiday-Receieved failure status");
+                    return;
+                }
+                var doUpdate_2 = false;
+                var todayHolidays_1 = [];
+                todayHolidays_1 = this.parseHolidays(payload.result.holidayBody);
+                //returned a list of holidays for today, check to see if any effects have the same holiday name, if so display them and update dom
+                this.allEffects.forEach(function (effect) {
+                    todayHolidays_1.forEach(function (holidayName) {
+                        if (effect.holiday == holidayName) {
+                            doUpdate_2 = true;
+                            effect.doDisplay = true;
+                            _this_1.hasHolidayEffectsToDisplay = true;
+                        }
+                    });
+                });
+                //only update the dom if the effects have a holiday to show today (unless weather and date effects exist and weather has finished loading)
+                if (doUpdate_2 || (this.weatherLoaded && (this.hasDateEffectsToDisplay || this.hasWeatherEffectsToDisplay))) {
+                    this.doShowEffects = true;
+                    clearTimeout(this.effectDurationTimeout);
+                    clearTimeout(this.effectDelayTimeout);
+                    this.updateDom();
+                }
             }
         }
-        if (notification === "Holiday-Received") {
-            this.holidayLoaded = true;
-            if (!payload.success) {
-                console.error("Holiday-Receieved failure status");
-                return;
-            }
-            var doUpdate_2 = false;
-            var todayHolidays_1 = [];
-            todayHolidays_1 = this.parseHolidays(payload.result.holidayBody);
-            // console.log("Parsing holidays finished with results: ", todayHolidays.length);
-            //returned a list of holidays for today, check to see if any effects have the same holiday name, if so display them and update dom
-            this.allEffects.forEach(function (effect) {
-                todayHolidays_1.forEach(function (holidayName) {
-                    if (effect.holiday == holidayName) {
-                        doUpdate_2 = true;
-                        effect.doDisplay = true;
-                        _this_1.hasHolidayEffectsToDisplay = true;
-                    }
-                });
-            });
-            //only update the dom if the effects have a holiday to show today (unless weather and date effects exist and weather has finished loading)
-            if (doUpdate_2 || (this.weatherLoaded && (this.hasDateEffectsToDisplay || this.hasWeatherEffectsToDisplay))) {
-                this.doShowEffects = true;
-                clearTimeout(this.effectDurationTimeout);
-                clearTimeout(this.effectDelayTimeout);
-                this.updateDom();
-            }
+        catch (error) {
+            console.error("[MMM-DynamicWeather] Error occured in notification received: ", error);
         }
     },
 });
