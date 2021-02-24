@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.12.2] - 2021-02-23
+### Changed
+- Applied more logging info and try/catch for error handling.
+
 ## [2.12.1] - 2021-02-19
 ### Fixed
 - Fixed issue with false value for hideSnowman and hideFlower not working
