@@ -380,7 +380,7 @@ Module.register("MMM-DynamicWeather", {
                     this.makeItFoggy(wrapper);
                 }
             }
-            console.log("[MMM-DynamicWeather] Displaying effects for: ", this.config.effectDuration);
+            console.info("[MMM-DynamicWeather] Displaying effects for: ", this.config.effectDuration);
             this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
         }
         catch (error) {
@@ -592,7 +592,7 @@ Module.register("MMM-DynamicWeather", {
             tomorrow.setDate(today.getDate() + 1);
             tomorrow.setHours(0, 0, 0, 0);
             var msTillMidnight = tomorrow.getTime() - today.getTime();
-            console.log("[MMM-DynamicWeather] Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
+            console.info("[MMM-DynamicWeather] Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
             _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
         }
         catch (error) {
@@ -601,7 +601,7 @@ Module.register("MMM-DynamicWeather", {
     },
     resetHolidays: function (_this) {
         try {
-            console.log("[MMM-DynamicWeather] Resetting holidays...");
+            console.info("[MMM-DynamicWeather] Resetting holidays...");
             //Reset all effects with a holiday to not show, we will trigger another getHolidays to see if the next day has another holiday to display next
             _this.allEffects.forEach(function (effect) {
                 if (effect.holiday) {
@@ -610,7 +610,7 @@ Module.register("MMM-DynamicWeather", {
             });
             _this.hasHolidayEffectsToDisplay = false;
             _this.updateDom();
-            console.log("[MMM-DynamicWeather] Holidays reset.");
+            console.info("[MMM-DynamicWeather] Holidays reset.");
             _this.getHolidays(_this);
         }
         catch (error) {
