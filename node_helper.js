@@ -16,12 +16,13 @@ module.exports = NodeHelper.create({
     var that = this;
     this.url = payload;
     var success = false;
-
+    console.log("[MMM-DynamicWeather] Getting Weather API data");
     request({ url: this.url, method: "GET" }, function (error, response, body) {
       var result = JSON.parse(body);
       if (error || response.statusCode !== 200) {
-        console.error("Failed getting api: ", error, response);
+        console.error("[MMM-DynamicWeather] Failed getting api: ", error, response);
       } else {
+        console.log("[MMM-DynamicWeather] Received successful Weather API data");
         success = true;
       }
 
@@ -36,10 +37,12 @@ module.exports = NodeHelper.create({
   callHoliday: function () {
     var that = this;
     var success = false;
+    console.log("[MMM-DynamicWeather] Getting Holiday data");
     request({ url: "https://www.timeanddate.com/holidays/us/?hol=43122559", method: "GET" }, function (error, response, body) {
       if (error || response.statusCode !== 200) {
-        console.error("Failed getting holidays: ", error, response);
+        console.error("[MMM-DynamicWeather] Failed getting holidays: ", error, response);
       } else {
+        console.log("[MMM-DynamicWeather] Received successful Holiday data");
         success = true;
       }
       var result = { holidayBody: body };
