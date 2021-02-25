@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 **Have you tried all steps under [Troublehsooting](https://github.com/scottcl88/MMM-DynamicWeather/wiki/Troubleshooting)?**
+Yes/No
 
 **Describe the bug**
 A clear and concise description of what the bug is.
