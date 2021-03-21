@@ -73,6 +73,7 @@ Module.register("MMM-DynamicWeather", {
         effectDuration: 120000,
         effectDelay: 60000,
         realisticClouds: false,
+        hideSun: false,
         hideSnow: false,
         hideSnowman: true,
         hideRain: false,
@@ -245,6 +246,10 @@ Module.register("MMM-DynamicWeather", {
                         }
                         break;
                     }
+                    case "sun": {
+                        this.makeItSunny(wrapper);
+                        break;
+                    }
                     case "rain": {
                         this.makeItRain(wrapper);
                         if (this.config.hideFlower === false || this.config.hideFlower === "false") {
@@ -378,6 +383,9 @@ Module.register("MMM-DynamicWeather", {
                 }
                 else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
                     this.makeItFoggy(wrapper);
+                }
+                else if (this.weatherCode == 800 && !this.config.hideSun) {
+                    this.makeItSunny(wrapper);
                 }
             }
             console.info("[MMM-DynamicWeather] Displaying effects for: ", this.config.effectDuration);
@@ -515,6 +523,15 @@ Module.register("MMM-DynamicWeather", {
         lightningPlayer.appendChild(lightningImage1);
         lightningPlayer.appendChild(lightningImage2);
         wrapper.appendChild(lightningPlayer);
+    },
+    makeItSunny: function (wrapper) {
+        this.doShowEffects = false;
+        var sunImage = document.createElement("div");
+        sunImage.classList.add("sun");
+        var sunPlayer = document.createElement("div");
+        sunPlayer.classList.add("sunPlayer");
+        sunPlayer.appendChild(sunImage);
+        wrapper.appendChild(sunPlayer);
     },
     makeItCloudy: function (wrapper) {
         this.doShowEffects = false;
@@ -681,6 +698,9 @@ Module.register("MMM-DynamicWeather", {
                         doUpdate_1 = true;
                     }
                     if (newCode_1 >= 701 && newCode_1 <= 781 && !this.config.hideFog) {
+                        doUpdate_1 = true;
+                    }
+                    if (newCode_1 == 800 && !this.config.hideSun) {
                         doUpdate_1 = true;
                     }
                     this.allEffects.forEach(function (effect) {
