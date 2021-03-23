@@ -81,6 +81,7 @@ The following properties can be configured:
 |`hideClouds`|If true, will never display the "cloudy" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideFog`|If true, will never display the "fog" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`hideLightning`|If true, will never display the "lightning" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`hideSun`|If true, will never display the "sun" effect. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`lightning1Count`|Sets how many times the lightning1.png image will be displayed during the effect duration if current weather is thunderstorm.<br><br>**Type:** `number`<br>**Default value:** `2`|
 |`lightning2Count`|Sets how many times the lightning2.png image will be displayed during the effect duration if current weather is thunderstorm.<br><br>**Type:** `number`<br>**Default value:** `3`|
 |`locationID`|**Required (or use lat/lon)** The locationID from OpenWeatherMap for your city to get current weather. [Follow steps here to find city ID](https://www.dmopress.com/openweathermap-howto/) <br><br>**Type:** `integer`<br>**Default value:** `0`|
