@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.13] - 2021-03-22
+## [2.14.0] - 2021-03-22
+### Added
+- Removed zIndex option and added opacity as a substitue.
+
+## [2.13.0] - 2021-03-22
 ### Added
 - Added sunny effect with multiple images. (added to configuration)
 
