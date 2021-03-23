@@ -440,9 +440,6 @@ Sunny
   height: 100%;
   width: 100%;
   position: absolute;
-  /* top: 150px;
-  left: 50px; */
-  /* margin: auto; */
   display: block;
   opacity: .4;
 }
@@ -450,30 +447,9 @@ Sunny
   height: 100%;
   width: 100%;
   position: absolute;
-  /* top: 150px; */
-  /* left: 50px; */
-  /* margin: auto; */
   opacity: .4;
-  /* background: url('./modules/MMM-DynamicWeather/images/" + this.config.sunImage + ".png')  center center/cover no-repeat transparent; */
-  /* animation-name: spin;
-  animation-duration: 20000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear; */
 }
-@keyframes spin {
-  0% {
-      transform:rotate(0deg);
-  }
-  30% {
-      transform:rotate(15deg);
-  }
-  60% {
-      transform:rotate(0deg);
-  }
-  90% {
-      transform:rotate(-15deg);
-  }
-}
+
 /***************************
 Snowman
 ***************************/

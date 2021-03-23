@@ -762,10 +762,7 @@ Module.register("MMM-DynamicWeather", {
           return;
         }
         let newCode = payload.result.weather[0].id;
-        console.log("Showing WEATHER:::: ", newCode);
-        console.log("Showing WEATHER:::: ", newCode);
-        console.log("Showing WEATHER:::: ", newCode);
-        console.log("Showing WEATHER:::: ", newCode);
+        
         let doUpdate = false;
 
         //check to see if the newCode is different than already displayed, and if so, is it going to show anything
