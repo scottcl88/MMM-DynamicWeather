@@ -107,6 +107,7 @@ Module.register("MMM-DynamicWeather", {
     lightning1Count: 2,
     lightning2Count: 3,
     sequential: "",
+    sunImage: "sun_right",
     effects: [] as Effect[],
   },
 
@@ -580,6 +581,7 @@ Module.register("MMM-DynamicWeather", {
 
     var sunImage = document.createElement("div");
     sunImage.classList.add("sun");
+    sunImage.style.background = "url('./modules/MMM-DynamicWeather/images/" + this.config.sunImage + ".png')  center center/cover no-repeat transparent";
 
     let sunPlayer = document.createElement("div");
     sunPlayer.classList.add("sunPlayer");
@@ -760,6 +762,10 @@ Module.register("MMM-DynamicWeather", {
           return;
         }
         let newCode = payload.result.weather[0].id;
+        console.log("Showing WEATHER:::: ", newCode);
+        console.log("Showing WEATHER:::: ", newCode);
+        console.log("Showing WEATHER:::: ", newCode);
+        console.log("Showing WEATHER:::: ", newCode);
         let doUpdate = false;
 
         //check to see if the newCode is different than already displayed, and if so, is it going to show anything
