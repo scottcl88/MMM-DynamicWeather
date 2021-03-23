@@ -69,6 +69,7 @@ Module.register("MMM-DynamicWeather", {
         weatherInterval: 600000,
         alwaysDisplay: "",
         zIndex: 99,
+        opacity: 1,
         fadeDuration: 3000,
         effectDuration: 120000,
         effectDelay: 60000,
@@ -223,6 +224,7 @@ Module.register("MMM-DynamicWeather", {
     getDom: function () {
         var wrapper = document.createElement("div");
         wrapper.style.zIndex = this.config.zIndex;
+        wrapper.style.opacity = this.config.opacity;
         wrapper.className = "wrapper";
         try {
             //setup the fade-out animation
