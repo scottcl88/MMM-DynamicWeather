@@ -69,7 +69,7 @@ The following properties can be configured:
 
 |Option|Description|
 |---|---|
-|`alwaysDisplay`|Set this to always display the specified default effect, regardless of weather. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `snow`, `rain`, `cloudy`,`fog`, `lightning`, `rain-lightning` <br>**Type:** `string`<br>**Default value:** `null`|
+|`alwaysDisplay`|Set this to always display the specified default effect, regardless of weather. Does not work for custom effects; to always display custom effects leave out weatherCode, month, day and year.<br><br>**Options:** `cloudy`, `fog`, `lightning`, `rain-lightning`, `rain`, `sun`, `snow` <br>**Type:** `string`<br>**Default value:** `null`|
 |`api_key`|**Required** This is the API key you need to use to request weather data from the OpenWeatherMap site.  Details on how to request an API key can be found [here](https://home.openweathermap.org/users/sign_up)<br><br>**Type:** `string`<br>**Default value:** `null`|
 |`effectDuration`|The length, in milliseconds, to display the effect. <br><br>**Type:** `number`<br>**Default value:** `120000`|
 |`effectDelay`|The length, in milliseconds, to wait to restart the effect. <br><br>**Type:** `number`<br>**Default value:** `60000`|
@@ -89,6 +89,7 @@ The following properties can be configured:
 |`particleCount`|The number of particles to show for each effect. Higher counts may cause performance issues. This can be overriden in each effect. <br><br>**Type:** `integer`<br>**Default value:** `100`|
 |`realisticClouds`|If true, shows more realistic cloud effect. Uses the cloud pictures with varying size and amount based on current weather cloud density.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`sequential`|If set, will not display weather and a custom effect at the same time. It will run for effectDuration, wait for effectDelay, and then show the next. Repeats until either the weather changes and/or the effect date/holiday is no longer today. If not set, both weather and effect can be seen together. <br><br>`weather` to see weather first <br> `effect` to see effect first <br> `effect-one` to see effect first but only 1 effect at a time, going in order of the array. <br><br><br>**Options:**`weather`,`effect`,`effect-one`<br>**Type:** `string`<br>**Default value:** `null`|
+|`sunImage`|Determines which image to display when sunny.<br><br>**Options:**`sun_center`,`sun_large`,`sun_left`,`sun_right`<br>**Type:** `string`<br>**Default value:** `sun_right`|
 |`weatherInterval`|How often the weather is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
 |`zIndex`|Sets the z-index of the module's wrapper, in case of other elements being blocked.<br><br>**Type:** `number`<br>**Default value:** `99`|
 

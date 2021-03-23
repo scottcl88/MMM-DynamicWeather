@@ -96,6 +96,7 @@ Module.register("MMM-DynamicWeather", {
     effectDuration: 120000,
     effectDelay: 60000,
     realisticClouds: false,
+    hideSun: false,
     hideSnow: false,
     hideSnowman: true,
     hideRain: false,
@@ -106,6 +107,7 @@ Module.register("MMM-DynamicWeather", {
     lightning1Count: 2,
     lightning2Count: 3,
     sequential: "",
+    sunImage: "sun_right",
     effects: [] as Effect[],
   },
 
@@ -272,6 +274,10 @@ Module.register("MMM-DynamicWeather", {
             }
             break;
           }
+          case "sun": {
+            this.makeItSunny(wrapper);
+            break;
+          }
           case "rain": {
             this.makeItRain(wrapper);
             if (this.config.hideFlower === false || this.config.hideFlower === "false") {
@@ -398,6 +404,8 @@ Module.register("MMM-DynamicWeather", {
           }
         } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
           this.makeItFoggy(wrapper);
+        }else if (this.weatherCode == 800 && !this.config.hideSun) {
+          this.makeItSunny(wrapper);
         }
       }
 
@@ -566,6 +574,20 @@ Module.register("MMM-DynamicWeather", {
     lightningPlayer.appendChild(lightningImage2);
 
     wrapper.appendChild(lightningPlayer);
+  },
+
+  makeItSunny: function (wrapper) {
+    this.doShowEffects = false;
+
+    var sunImage = document.createElement("div");
+    sunImage.classList.add("sun");
+    sunImage.style.background = "url('./modules/MMM-DynamicWeather/images/" + this.config.sunImage + ".png')  center center/cover no-repeat transparent";
+
+    let sunPlayer = document.createElement("div");
+    sunPlayer.classList.add("sunPlayer");
+    sunPlayer.appendChild(sunImage);
+
+    wrapper.appendChild(sunPlayer);
   },
 
   makeItCloudy: function (wrapper) {
@@ -740,6 +762,7 @@ Module.register("MMM-DynamicWeather", {
           return;
         }
         let newCode = payload.result.weather[0].id;
+        
         let doUpdate = false;
 
         //check to see if the newCode is different than already displayed, and if so, is it going to show anything
@@ -757,6 +780,9 @@ Module.register("MMM-DynamicWeather", {
             doUpdate = true;
           }
           if (newCode >= 701 && newCode <= 781 && !this.config.hideFog) {
+            doUpdate = true;
+          }
+          if (newCode == 800 && !this.config.hideSun) {
             doUpdate = true;
           }
           (this.allEffects as Effect[]).forEach((effect) => {
