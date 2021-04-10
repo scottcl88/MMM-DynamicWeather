@@ -1,4 +1,5 @@
 # Module: MMM-DynamicWeather
+
 A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
 <br>
 <br>
@@ -15,11 +16,13 @@ Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow)
 ## Installation
 
 In your terminal, go to your MagicMirror's Module folder:
+
 ````
 cd ~/MagicMirror/modules
 ````
 
 Clone this repository:
+
 ````
 git clone https://github.com/scottcl88/MMM-DynamicWeather.git
 ````
@@ -29,37 +32,43 @@ Configure the module in your `config.js` file.
 **Note:** After starting the Mirror, it may take a few seconds to startup.
 
 ## Updating
+
 Go to the DynamicWeather module
+
 ````
 cd ~/MagicMirror/modules/MMM-DynamicWeather
 ````
+
 Pull latest
+
 ````
 git pull origin master --allow-unrelated-histories
 ````
+
 <br><br>
-You can also use the NPM package: https://www.npmjs.com/package/mmm-dynamicweather
+You can also use the NPM package: <https://www.npmjs.com/package/mmm-dynamicweather>
 
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
+
 ````javascript
 {
-	module: 'MMM-DynamicWeather',
-	position: 'fullscreen_above',
-	config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
-		api_key: "your_key",
-		locationID: "4140963",
-		effects: [
-			{
-				month: "2",
-				day: "14",
-				year: "2021",
-				images: ["heart1.png", "heart2.png"],
-				direction: "up"
-			}
-		],
-	}
+ module: 'MMM-DynamicWeather',
+ position: 'fullscreen_above',
+ config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
+  api_key: "your_key",
+  locationID: "4140963",
+  effects: [
+   {
+    month: "2",
+    day: "14",
+    year: "2021",
+    images: ["heart1.png", "heart2.png"],
+    direction: "up"
+   }
+  ],
+ }
 },
 ````
 
@@ -95,9 +104,10 @@ The following properties can be configured:
 |`opacity`|Sets the opacity of the module's wrapper. Use a value between `0.1` and `1`. <br><br>**Type:** `number`<br>**Default value:** `1`|
 
 ### Effect options
+
 |Option|Description|
 |---|---|
-|`direction`|How the effect moves across the screen.<br><br><br>**Options:** `up`, `down`, `right-left`, `left-right`<br>**Type:** `string`<br>**Default value:** `up`|
+|`direction`|How the effect moves across the screen.<br><br>**Options:** `up`, `down`, `right-left`, `left-right`<br>**Type:** `string`<br>**Default value:** `up`|
 |`month`|The month (1-12) of the date to display this effect on. Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`day`|The day of the month (1-31) of the date to display this effect on.  Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`year`|The year (4 digits) of the date to display this effect on. You can leave it out or set to zero to ignore the year and it will just check month and date. If you want to use dates, then you must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
@@ -108,7 +118,6 @@ The following properties can be configured:
 |`minSpeed`|The minimum speed, in seconds, for the effect's image to cross the screen. Closer to zero is faster. Each effect particle is randomized between maxSpeed and minSpeed.  <br><br>**Type:** `number`<br>**Default value:** `50`|
 |`recurrence`|Display the effect repeatedly.<br>Yearly - Not a recurrence option, just leave year unset or zero.<br><br>**Options:**`monthly`,`weekly`,`weekdays`,`weekends`<br>**Type:** `string`<br>**Default value:** `null`|
 |`size`|The size factor to display the image; larger the number the larger the picture.<br><br>**Type:** `number`<br>**Default value:** `1`|
-|`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless `hideSnow`, `hideRain` or `hideClouds` is turned on. <br><br>**Type:** `number`<br>**Default value:** `0`|
+|`weatherCode`|The effect will be displayed whenever the current weather matches this code. You can find all valid codes [here](https://openweathermap.org/weather-conditions)<br>This does not change the default weather effects, those will still be shown unless the specific weather condition is turned off. <br><br>**Type:** `number`<br>**Default value:** `0`|
 |`weatherCodeMin`|Similar to `weatherCode` but will show the effect if the current weather code is greater or equal to this value. <br><br>**Type:** `number`<br>**Default value:** `0`|
 |`weatherCodeMax`|Similar to `weatherCode` but will show the effect if the current weather code is less than or equal to this value. <br><br>**Type:** `number`<br>**Default value:** `0`|
-
