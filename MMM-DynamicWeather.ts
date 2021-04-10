@@ -769,6 +769,7 @@ Module.register("MMM-DynamicWeather", {
 
         //check to see if the newCode is different than already displayed, and if so, is it going to show anything
         if (newCode != this.weatherCode) {
+          this.weatherCode = newCode;
           if (newCode >= 600 && newCode <= 622 && !this.config.hideSnow) {
             doUpdate = true;
           }
@@ -798,7 +799,6 @@ Module.register("MMM-DynamicWeather", {
 
         //only update the dom if the weather is different (unless holiday or date effects exist and holiday has finished loading)
         if (doUpdate || (this.holidayLoaded && (this.hasDateEffectsToDisplay || this.hasHolidayEffectsToDisplay))) {
-          this.weatherCode = newCode;
           this.doShowEffects = true;
           clearTimeout(this.effectDurationTimeout);
           clearTimeout(this.effectDelayTimeout);
