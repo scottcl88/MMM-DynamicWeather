@@ -5,13 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.13.1] - 2021-04-10
+## [2.14.1] - 2021-04-10
 
 ### Fixed
 
 - Fixed issue #40 with weather animation not changing after API code is different
 
-## [2.13] - 2021-03-22
+## [2.14.0] - 2021-03-22
+
+### Added
+
+- Removed zIndex option and added opacity as a substitue.
+
+## [2.13.0] - 2021-03-22
 
 ### Added
 
