@@ -75,6 +75,7 @@ Module.register("MMM-DynamicWeather", {
         effectDelay: 60000,
         realisticClouds: false,
         hideSun: false,
+        hideMoon: false,
         hideSnow: false,
         hideSnowman: true,
         hideRain: false,
@@ -396,7 +397,7 @@ Module.register("MMM-DynamicWeather", {
                 else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now() / 1000) && this.sunrise < (Date.now() / 1000)) {
                     this.makeItSunny(wrapper);
                 }
-                else if (this.weatherCode == 800 && !this.config.hideSun) {
+                else if (this.weatherCode == 800 && !this.config.hideMoon) {
                     this.makeItMoon(wrapper);
                 }
             }
