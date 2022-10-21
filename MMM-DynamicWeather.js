@@ -75,7 +75,6 @@ Module.register("MMM-DynamicWeather", {
         effectDelay: 60000,
         realisticClouds: false,
         hideSun: false,
-	hideMoon: false,
         hideSnow: false,
         hideSnowman: true,
         hideRain: false,
@@ -121,7 +120,7 @@ Module.register("MMM-DynamicWeather", {
         this.realisticCloudsEffect.direction = "left-right";
         this.realisticCloudsEffect.images = ["cloud1.png", "cloud2.png"];
         this.weatherCode = 0;
-        this.sunrise = 0;	
+        this.sunrise = 0;
         this.sunset = 0;
         this.allHolidays = [];
         var count = 0;
@@ -256,7 +255,7 @@ Module.register("MMM-DynamicWeather", {
                         this.makeItSunny(wrapper);
                         break;
                     }
-	                case "moon": {
+                    case "moon": {
                         this.makeItMoon(wrapper);
                         break;
                     }
@@ -394,10 +393,10 @@ Module.register("MMM-DynamicWeather", {
                 else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
                     this.makeItFoggy(wrapper);
                 }
-                else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now()/1000) && this.sunrise < (Date.now()/1000) ) {
+                else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now() / 1000) && this.sunrise < (Date.now() / 1000)) {
                     this.makeItSunny(wrapper);
                 }
-		else if (this.weatherCode == 800 && !this.config.hideSun) {
+                else if (this.weatherCode == 800 && !this.config.hideSun) {
                     this.makeItMoon(wrapper);
                 }
             }
@@ -706,11 +705,9 @@ Module.register("MMM-DynamicWeather", {
                     return;
                 }
                 var newCode_1 = payload.result.weather[0].id;
-
                 //get the sunset and sunrise to switch between sun and moon when clear
                 this.sunrise = payload.result.sys.sunrise;
-                this.sunset = payload.result.sys.sunset;		
-
+                this.sunset = payload.result.sys.sunset;
                 var doUpdate_1 = false;
                 //check to see if the newCode is different than already displayed, and if so, is it going to show anything
                 if (newCode_1 != this.weatherCode) {
