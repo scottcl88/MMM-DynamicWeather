@@ -98,6 +98,7 @@ Module.register("MMM-DynamicWeather", {
     effectDelay: 60000,
     realisticClouds: false,
     hideSun: false,
+    hideMoon: false,
     hideSnow: false,
     hideSnowman: true,
     hideRain: false,
@@ -148,6 +149,10 @@ Module.register("MMM-DynamicWeather", {
     (this.realisticCloudsEffect as Effect).images = ["cloud1.png", "cloud2.png"];
 
     this.weatherCode = 0;
+
+    this.sunrise = 0;	
+
+    this.sunset = 0;
 
     this.allHolidays = [] as string[];
 
@@ -280,6 +285,10 @@ Module.register("MMM-DynamicWeather", {
             this.makeItSunny(wrapper);
             break;
           }
+          case "moon": {
+            this.makeItMoon(wrapper); 
+            break;
+          }
           case "rain": {
             this.makeItRain(wrapper);
             if (this.config.hideFlower === false || this.config.hideFlower === "false") {
@@ -406,8 +415,10 @@ Module.register("MMM-DynamicWeather", {
           }
         } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
           this.makeItFoggy(wrapper);
-        }else if (this.weatherCode == 800 && !this.config.hideSun) {
+        } else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now()/1000) && this.sunrise < (Date.now()/1000) ) {
           this.makeItSunny(wrapper);
+        } else if (this.weatherCode == 800 && !this.config.hideMoon) {
+          this.makeItMoon(wrapper);
         }
       }
 
@@ -592,6 +603,20 @@ Module.register("MMM-DynamicWeather", {
     wrapper.appendChild(sunPlayer);
   },
 
+  makeItMoon: function (wrapper) {
+    this.doShowEffects = false;
+    
+    var moonImage = document.createElement("div");
+    moonImage.classList.add("moon");
+    moonImage.style.background = "url('./modules/MMM-DynamicWeather/images/moon1.png')  center center/cover no-repeat transparent";
+    
+    let moonPlayer = document.createElement("div");
+    moonPlayer.classList.add("moonPlayer");
+    moonPlayer.appendChild(moonImage);
+    
+    wrapper.appendChild(moonPlayer);
+  	},
+
   makeItCloudy: function (wrapper) {
     this.doShowEffects = false;
     var increment = 0;
@@ -764,6 +789,10 @@ Module.register("MMM-DynamicWeather", {
           return;
         }
         let newCode = payload.result.weather[0].id;
+
+        //get the sunset and sunrise to switch between sun and moon when clear
+        this.sunrise = payload.result.sys.sunrise;
+        this.sunset = payload.result.sys.sunset;
         
         let doUpdate = false;
 

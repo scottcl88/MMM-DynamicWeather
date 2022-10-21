@@ -451,6 +451,23 @@ Sunny
 }
 
 /***************************
+Moon
+***************************/
+.MMM-DynamicWeather .moonPlayer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: block;
+  opacity: .6;
+}
+.MMM-DynamicWeather .moon {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  opacity: .6;
+}
+
+/***************************
 Snowman
 ***************************/
 .MMM-DynamicWeather .snowman {
