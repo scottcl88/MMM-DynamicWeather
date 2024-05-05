@@ -128,7 +128,7 @@ Module.register("MMM-DynamicWeather", {
     this.weatherTimeout = null;
     this.holidayTimeout = null;
     this.allEffects = [] as Effect[];
-    this.url = "https://api.openweathermap.org/data/3.0/weather?appid=" + this.config.api_key;
+    this.url = "https://api.openweathermap.org/data/2.5/weather?appid=" + this.config.api_key;
 
     if (this.config.lat && this.config.lon) {
       this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
