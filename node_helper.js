@@ -7,50 +7,75 @@
  * Extension helper module to call external resources
  */
 
-var NodeHelper = require("node_helper");
-var request = require("request");
+const NodeHelper = require("node_helper");
+const https = require('https');
 module.exports = NodeHelper.create({
-  start: function () {},
+  start: function () { },
 
   callApi: function (payload) {
-    var that = this;
+    let that = this;
     this.url = payload;
-    var success = false;
+    let success = false;
     console.info("[MMM-DynamicWeather] Getting Weather API data");
-    request({ url: this.url, method: "GET" }, function (error, response, body) {
-      var result = JSON.parse(body);
-      if (error || response.statusCode !== 200) {
-        console.error("[MMM-DynamicWeather] Failed getting api: ", error, response);
-      } else {
-        console.info("[MMM-DynamicWeather] Received successful Weather API data");
-        success = true;
-      }
 
-      that.sendSocketNotification("API-Received", {
-        url: that.url,
-        result: result,
-        success: success,
+    https.get(this.url, (res) => {
+      let body = '';
+
+      res.on('data', (chunk) => {
+        body += chunk;
       });
+
+      res.on('end', () => {
+        let result = JSON.parse(body);
+        if (res.statusCode !== 200) {
+          console.error("[MMM-DynamicWeather] Failed getting api: ", res.statusCode);
+        } else {
+          console.info("[MMM-DynamicWeather] Received successful Weather API data");
+          success = true;
+        }
+
+        that.sendSocketNotification("API-Received", {
+          url: that.url,
+          result: result,
+          success: success,
+        });
+      });
+
+    }).on('error', (error) => {
+      console.error("[MMM-DynamicWeather] Failed getting api: ", error);
     });
   },
 
   callHoliday: function () {
-    var that = this;
-    var success = false;
+    let that = this;
+    let success = false;
     console.info("[MMM-DynamicWeather] Getting Holiday data");
-    request({ url: "https://www.timeanddate.com/holidays/us/?hol=43122559", method: "GET" }, function (error, response, body) {
-      if (error || response.statusCode !== 200) {
-        console.error("[MMM-DynamicWeather] Failed getting holidays: ", error, response);
-      } else {
-        console.info("[MMM-DynamicWeather] Received successful Holiday data");
-        success = true;
-      }
-      var result = { holidayBody: body };
-      that.sendSocketNotification("Holiday-Received", {
-        url: that.url,
-        result: result,
-        success: success,
+
+    https.get("https://www.timeanddate.com/holidays/us/?hol=43122559", (res) => {
+      let body = '';
+
+      res.on('data', (chunk) => {
+        body += chunk;
       });
+
+      res.on('end', () => {
+        if (res.statusCode !== 200) {
+          console.error("[MMM-DynamicWeather] Failed getting holidays: ", res.statusCode);
+        } else {
+          console.info("[MMM-DynamicWeather] Received successful Holiday data");
+          success = true;
+        }
+
+        let result = { holidayBody: body };
+        that.sendSocketNotification("Holiday-Received", {
+          url: that.url,
+          result: result,
+          success: success,
+        });
+      });
+
+    }).on('error', (error) => {
+      console.error("[MMM-DynamicWeather] Failed getting holidays: ", error);
     });
   },
 
