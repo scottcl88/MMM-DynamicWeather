@@ -1,5 +1,12 @@
 # Module: MMM-DynamicWeather
 
+<p align="center">
+  <a href="https://github.com/scottcl88/MMM-DynamicWeather"><img src="https://img.shields.io/maintenance/yes/2024?style=flat-square" alt="Maintained"/></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://github.com/MagicMirrorOrg/MagicMirror"><img src="https://img.shields.io/badge/part%20of-Magic%20Mirror-%234f46e5?style=flat-square" alt="Part of Magic Mirror"/></a>
+  <a href="https://www.npmjs.com/package/mmm-dynamicweather"><img src="https://img.shields.io/npm/v/mmm-dynamicweather" alt="npm package mmm-dynamicweather"/></a>
+</p>
+
 A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
 <br>
 <br>
@@ -40,9 +47,6 @@ Pull latest
 git pull origin master --allow-unrelated-histories
 ````
 
-<br><br>
-You can also use the NPM package: <https://www.npmjs.com/package/mmm-dynamicweather>
-
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
@@ -67,6 +71,15 @@ To use this module, add it to the modules array in the `config/config.js` file:
 },
 ````
 
-## Configuration options
-### [Configuration Options](ConfigurationOptions.md)
+## Configuration
+See [Configuration Options](ConfigurationOptions.md)
 
+## Troubleshooting
+See [Troubleshooting Wiki](https://github.com/scottcl88/MMM-DynamicWeather/wiki/Troubleshooting)
+
+## Contributing
+See [Contribute Wiki](https://github.com/scottcl88/MMM-DynamicWeather/wiki/Contribute)
+
+## License
+
+See [LICENSE](./LICENSE).
