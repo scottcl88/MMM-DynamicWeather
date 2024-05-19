@@ -8,9 +8,6 @@
 </p>
 
 A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
-<br>
-<br>
-Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow)
 
 ## Features
 - Display clouds, rain, sun based on real-time weather in your city
@@ -39,9 +36,15 @@ git clone https://github.com/scottcl88/MMM-DynamicWeather.git
 
 To use this module, add it to the modules array in the `config/config.js` file.
 
-This module comes with many features that are heavily configurable. At it's core, it uses [OpenWeatherMap](https://openweathermap.org/)'s API to get your current weather data to display effects on the screen. You will need to sign up for free and obtain an API key from them [here](https://home.openweathermap.org/users/sign_up). Once you have an API Key, follow [these instructions](https://www.dmopress.com/openweathermap-howto/) to obtain the LocationID (City ID), which is used to display real-time weather effects for that area.
+This module comes with many features that are heavily configurable. At it's core, it uses [OpenWeatherMap](https://openweathermap.org/)'s API to get your current weather data to display effects on the screen.
 
-This is the basic starting template. For more examples, see [Example Configurations](ExampleConfigurations.md).
+You will need 2 things to get started:
+  1. A free API key from OpenWeatherMap - [Sign up here](https://home.openweathermap.org/users/sign_up)
+     -  You only need access to the [Current Weather Api](https://openweathermap.org/current)
+  3. The LocationID (City ID) - [follow these instructions ](https://www.dmopress.com/openweathermap-howto/)
+     - Optionally you can use `lat` (latitude) and `lon` (longitude) of the location you want
+
+This is the basic starting template, using Washington, D.C.'s location. For more examples, see [Example Configurations](ExampleConfigurations.md).
 
 ````javascript
 {
@@ -50,6 +53,18 @@ This is the basic starting template. For more examples, see [Example Configurati
  config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
   api_key: "your_key",
   locationID: "4140963"
+ }
+},
+````
+OR with `lat` and `lon`
+````javascript
+{
+ module: "MMM-DynamicWeather",
+ position: "fullscreen_above",
+ config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
+  api_key: "your_key",
+  lat: "38.89511000",
+  lon: "-77.03637000"
  }
 },
 ````
@@ -80,3 +95,7 @@ See [Contribute Wiki](https://github.com/scottcl88/MMM-DynamicWeather/wiki/Contr
 ## License
 
 See [LICENSE](./LICENSE)
+<br>
+<br>
+
+Inspired by [MichMich's Snow Plugin](https://github.com/MichMich/MMM-Snow)
