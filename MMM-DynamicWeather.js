@@ -221,7 +221,7 @@ Module.register("MMM-DynamicWeather", {
             });
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in checkDates: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in checkDates: ", error);
         }
     },
     getDom: function () {
@@ -405,7 +405,7 @@ Module.register("MMM-DynamicWeather", {
             this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in getDom: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in getDom: ", error);
         }
         return wrapper;
     },
@@ -618,7 +618,7 @@ Module.register("MMM-DynamicWeather", {
             }, delay, _this);
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in stopping effects: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in stopping effects: ", error);
         }
     },
     getWeather: function (_this) {
@@ -637,7 +637,7 @@ Module.register("MMM-DynamicWeather", {
             _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in getHolidays: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in getHolidays: ", error);
         }
     },
     resetHolidays: function (_this) {
@@ -655,7 +655,7 @@ Module.register("MMM-DynamicWeather", {
             _this.getHolidays(_this);
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in resetting holidays: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in resetting holidays: ", error);
         }
     },
     parseHolidays: function (body) {
@@ -692,7 +692,7 @@ Module.register("MMM-DynamicWeather", {
             }
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in parsing holidays: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in parsing holidays: ", error);
         }
         return todayHolidays;
     },
@@ -702,7 +702,7 @@ Module.register("MMM-DynamicWeather", {
             if (notification === "API-Received" && payload.url === this.url) {
                 this.weatherLoaded = true;
                 if (!payload.success) {
-                    console.error("[MMM-DynamicWeather] API-Receieved failure status");
+                    console.error("[MMM-DynamicWeather] API-Received failure status");
                     return;
                 }
                 var newCode_1 = payload.result.weather[0].id;
@@ -750,7 +750,7 @@ Module.register("MMM-DynamicWeather", {
             if (notification === "Holiday-Received") {
                 this.holidayLoaded = true;
                 if (!payload.success) {
-                    console.error("[MMM-DynamicWeather] Holiday-Receieved failure status");
+                    console.error("[MMM-DynamicWeather] Holiday-Received failure status");
                     return;
                 }
                 var doUpdate_2 = false;
@@ -776,7 +776,7 @@ Module.register("MMM-DynamicWeather", {
             }
         }
         catch (error) {
-            console.error("[MMM-DynamicWeather] Error occured in notification received: ", error);
+            console.error("[MMM-DynamicWeather] Error occurred in notification received: ", error);
         }
     },
 });

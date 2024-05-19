@@ -6,10 +6,9 @@
  *
  * A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
  */
-declare var Log: Console;
-declare var Module: any;
+declare const Log: Console;
+declare const Module: any;
 class Effect {
-  constructor() {}
   id: number; //an id made up to use for sequential logic
   month: number;
   day: number;
@@ -150,7 +149,7 @@ Module.register("MMM-DynamicWeather", {
 
     this.weatherCode = 0;
 
-    this.sunrise = 0;	
+    this.sunrise = 0;
 
     this.sunset = 0;
 
@@ -158,7 +157,7 @@ Module.register("MMM-DynamicWeather", {
 
     let count = 0;
     this.config.effects.forEach((configEffect) => {
-      var effect = new Effect();
+      let effect = new Effect();
       effect.clone(configEffect);
       effect.id = count;
       count++;
@@ -202,7 +201,7 @@ Module.register("MMM-DynamicWeather", {
   checkDates: function () {
     try {
       (this.allEffects as Effect[]).forEach((effect) => {
-        var effectMonth = effect.month - 1;
+        let effectMonth = effect.month - 1;
         if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
           //if there is weatherCode or holiday, dates are ignored
           if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
@@ -237,7 +236,7 @@ Module.register("MMM-DynamicWeather", {
                 effect.doDisplay = true;
               }
             } else if (effect.recurrence == "weekly") {
-              var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
+              let effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
               if (this.now.getDay() == effectDay.getDay()) {
                 this.hasDateEffectsToDisplay = true;
                 effect.doDisplay = true;
@@ -247,26 +246,26 @@ Module.register("MMM-DynamicWeather", {
         }
       });
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in checkDates: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in checkDates: ", error);
     }
   },
 
   getDom: function () {
-    var wrapper = document.createElement("div");
+    let wrapper = document.createElement("div");
     wrapper.style.zIndex = this.config.zIndex;
     wrapper.style.opacity = this.config.opacity;
     wrapper.className = "wrapper";
     try {
       //setup the fade-out animation
-      var fadeDuration = parseInt(this.config.fadeDuration);
-      var animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
-      var fadeCSS = document.createElement("style");
+      let fadeDuration = parseInt(this.config.fadeDuration);
+      let animationDelay = parseInt(this.config.effectDuration) - fadeDuration;
+      let fadeCSS = document.createElement("style");
       fadeCSS.innerHTML = ".fade-out {animation-name: fade; animation-duration: " + fadeDuration + "ms; animation-delay: " + animationDelay + "ms;}";
       wrapper.prepend(fadeCSS);
 
       wrapper.onanimationend = (e) => {
         //delay finished, elements faded out, now remove
-        var thisAnimation = e.animationName;
+        let thisAnimation = e.animationName;
         if (thisAnimation == "fade") {
           wrapper.remove();
         }
@@ -286,7 +285,7 @@ Module.register("MMM-DynamicWeather", {
             break;
           }
           case "moon": {
-            this.makeItMoon(wrapper); 
+            this.makeItMoon(wrapper);
             break;
           }
           case "rain": {
@@ -415,7 +414,7 @@ Module.register("MMM-DynamicWeather", {
           }
         } else if (this.weatherCode >= 701 && this.weatherCode <= 781 && !this.config.hideFog) {
           this.makeItFoggy(wrapper);
-        } else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now()/1000) && this.sunrise < (Date.now()/1000) ) {
+        } else if (this.weatherCode == 800 && !this.config.hideSun && this.sunset > (Date.now() / 1000) && this.sunrise < (Date.now() / 1000)) {
           this.makeItSunny(wrapper);
         } else if (this.weatherCode == 800 && !this.config.hideMoon) {
           this.makeItMoon(wrapper);
@@ -425,26 +424,26 @@ Module.register("MMM-DynamicWeather", {
       console.info("[MMM-DynamicWeather] Displaying effects for: ", this.config.effectDuration);
       this.effectDurationTimeout = setTimeout(this.stopEffect, this.config.effectDuration, this);
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in getDom: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in getDom: ", error);
     }
     return wrapper;
   },
 
   showCustomEffect: function (wrapper: HTMLDivElement, effect: Effect) {
     this.doShowEffects = false;
-    var flake, jiggle, size;
+    let flake, jiggle, size;
 
-    var particleCount = effect.getParticleCount();
+    let particleCount = effect.getParticleCount();
     if (particleCount < 0) {
       particleCount = this.config.particleCount;
     }
 
-    for (var i = 0; i < particleCount; i++) {
+    for (let i = 0; i < particleCount; i++) {
       size = effect.getSize(); // * (Math.random() * 0.75) + 0.25;
       let flakeImage = document.createElement("div");
 
       let maxNum = effect.images.length;
-      var picIndex = Math.floor(Math.random() * (maxNum - 0) + 0);
+      let picIndex = Math.floor(Math.random() * (maxNum - 0) + 0);
       flakeImage.style.backgroundImage = "url('./modules/MMM-DynamicWeather/images/" + effect.images[picIndex] + "')";
       flakeImage.style.transform = "scale(" + size + ", " + size + ")";
       flakeImage.style.opacity = size;
@@ -512,7 +511,7 @@ Module.register("MMM-DynamicWeather", {
   buildSnowman: function (wrapper) {
     this.doShowEffects = false;
 
-    var snowmanImage = document.createElement("div");
+    let snowmanImage = document.createElement("div");
     snowmanImage.classList.add("snowman");
     snowmanImage.style.animationDuration = this.config.effectDuration - 10000 + "ms"; //subtract for 10s delay
 
@@ -521,7 +520,7 @@ Module.register("MMM-DynamicWeather", {
 
   makeItRain: function (wrapper) {
     this.doShowEffects = false;
-    var increment = 0;
+    let increment = 0;
     while (increment < this.config.particleCount) {
       var randoHundo = Math.floor(Math.random() * (98 - 1 + 1) + 1); //random number between 98 and 1
       var randoFiver = Math.floor(Math.random() * (5 - 2 + 1) + 2);
@@ -563,7 +562,7 @@ Module.register("MMM-DynamicWeather", {
   buildFlower: function (wrapper) {
     this.doShowEffects = false;
 
-    var flowerImage = document.createElement("div");
+    let flowerImage = document.createElement("div");
     flowerImage.classList.add("flower");
     flowerImage.style.animationDuration = this.config.effectDuration - 10000 + "ms"; //subtract for 10s delay
 
@@ -573,11 +572,11 @@ Module.register("MMM-DynamicWeather", {
   makeItLightning: function (wrapper) {
     this.doShowEffects = false;
 
-    var lightningImage1 = document.createElement("div");
+    let lightningImage1 = document.createElement("div");
     lightningImage1.classList.add("lightning1");
     lightningImage1.style.animationIterationCount = this.config.lightning1Count;
 
-    var lightningImage2 = document.createElement("div");
+    let lightningImage2 = document.createElement("div");
     lightningImage2.classList.add("lightning2");
     lightningImage2.style.animationIterationCount = this.config.lightning2Count;
 
@@ -592,7 +591,7 @@ Module.register("MMM-DynamicWeather", {
   makeItSunny: function (wrapper) {
     this.doShowEffects = false;
 
-    var sunImage = document.createElement("div");
+    let sunImage = document.createElement("div");
     sunImage.classList.add("sun");
     sunImage.style.background = "url('./modules/MMM-DynamicWeather/images/" + this.config.sunImage + ".png')  center center/cover no-repeat transparent";
 
@@ -605,25 +604,25 @@ Module.register("MMM-DynamicWeather", {
 
   makeItMoon: function (wrapper) {
     this.doShowEffects = false;
-    
-    var moonImage = document.createElement("div");
+
+    let moonImage = document.createElement("div");
     moonImage.classList.add("moon");
     moonImage.style.background = "url('./modules/MMM-DynamicWeather/images/moon1.png')  center center/cover no-repeat transparent";
-    
+
     let moonPlayer = document.createElement("div");
     moonPlayer.classList.add("moonPlayer");
     moonPlayer.appendChild(moonImage);
-    
+
     wrapper.appendChild(moonPlayer);
-  	},
+  },
 
   makeItCloudy: function (wrapper) {
     this.doShowEffects = false;
-    var increment = 0;
+    let increment = 0;
     while (increment < this.config.particleCount) {
-      var randNum = Math.floor(Math.random() * (25 - 5 + 1) + 5); //random number between 25 and 5
-      var speed = Math.floor(Math.random() * (35 - 15 + 1) + 15);
-      var size = Math.floor(Math.random() * (60 - 3 + 1) + 3);
+      let randNum = Math.floor(Math.random() * (25 - 5 + 1) + 5); //random number between 25 and 5
+      let speed = Math.floor(Math.random() * (35 - 15 + 1) + 15);
+      let size = Math.floor(Math.random() * (60 - 3 + 1) + 3);
 
       increment += randNum;
 
@@ -642,10 +641,10 @@ Module.register("MMM-DynamicWeather", {
   makeItFoggy: function (wrapper) {
     this.doShowEffects = false;
 
-    var fogImage1 = document.createElement("div");
+    let fogImage1 = document.createElement("div");
     fogImage1.classList.add("image01");
 
-    var fogImage2 = document.createElement("div");
+    let fogImage2 = document.createElement("div");
     fogImage2.classList.add("image02");
 
     let fogPlayer1 = document.createElement("div");
@@ -699,7 +698,7 @@ Module.register("MMM-DynamicWeather", {
         _this
       );
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in stopping effects: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in stopping effects: ", error);
     }
   },
 
@@ -710,15 +709,15 @@ Module.register("MMM-DynamicWeather", {
   getHolidays: function (_this) {
     try {
       _this.sendSocketNotification("Holiday-Fetch", {});
-      var today = new Date();
-      var tomorrow = new Date();
+      let today = new Date();
+      let tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);
       tomorrow.setHours(0, 0, 0, 0);
-      var msTillMidnight = tomorrow.getTime() - today.getTime();
+      let msTillMidnight = tomorrow.getTime() - today.getTime();
       console.info("[MMM-DynamicWeather] Holidays have been fetched, waiting till midnight (" + msTillMidnight + " ms) to reset.");
       _this.holidayTimeout = setTimeout(_this.resetHolidays, msTillMidnight, _this);
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in getHolidays: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in getHolidays: ", error);
     }
   },
   resetHolidays: function (_this) {
@@ -735,7 +734,7 @@ Module.register("MMM-DynamicWeather", {
       console.info("[MMM-DynamicWeather] Holidays reset.");
       _this.getHolidays(_this);
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in resetting holidays: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in resetting holidays: ", error);
     }
   },
 
@@ -745,24 +744,24 @@ Module.register("MMM-DynamicWeather", {
     todayHolidays.push("test");
 
     try {
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(body, "text/html");
+      let parser = new DOMParser();
+      let doc = parser.parseFromString(body, "text/html");
 
-      var children = doc.getElementById("holidays-table").children[1].children;
-      for (var i = 0; i < children.length; i++) {
-        var child1 = children[i];
+      let children = doc.getElementById("holidays-table").children[1].children;
+      for (let i = 0; i < children.length; i++) {
+        let child1 = children[i];
         if (child1.hasAttribute("data-date")) {
-          var holidayDateStr = child1.getAttribute("data-date");
-          var child2 = child1.children;
-          for (var j = 0; j < child2.length; j++) {
-            var child3 = child2[j];
+          let holidayDateStr = child1.getAttribute("data-date");
+          let child2 = child1.children;
+          for (let j = 0; j < child2.length; j++) {
+            let child3 = child2[j];
             if (child3.hasChildNodes()) {
-              for (var k = 0; k < child3.children.length; k++) {
-                var child4 = child3.children[k];
-                for (var l = 0; l < this.allHolidays.length; l++) {
-                  var effectHoliday = this.allHolidays[l];
+              for (let k = 0; k < child3.children.length; k++) {
+                let child4 = child3.children[k];
+                for (let l = 0; l < this.allHolidays.length; l++) {
+                  let effectHoliday = this.allHolidays[l];
                   if (child4.textContent == effectHoliday) {
-                    var holidayDate = new Date(parseInt(holidayDateStr));
+                    let holidayDate = new Date(parseInt(holidayDateStr));
                     if (holidayDate.getUTCDate() == today.getDate() && holidayDate.getUTCMonth() == today.getMonth()) {
                       todayHolidays.push(effectHoliday);
                     }
@@ -774,7 +773,7 @@ Module.register("MMM-DynamicWeather", {
         }
       }
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in parsing holidays: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in parsing holidays: ", error);
     }
 
     return todayHolidays;
@@ -785,7 +784,7 @@ Module.register("MMM-DynamicWeather", {
       if (notification === "API-Received" && payload.url === this.url) {
         this.weatherLoaded = true;
         if (!payload.success) {
-          console.error("[MMM-DynamicWeather] API-Receieved failure status");
+          console.error("[MMM-DynamicWeather] API-Received failure status");
           return;
         }
         let newCode = payload.result.weather[0].id;
@@ -793,7 +792,7 @@ Module.register("MMM-DynamicWeather", {
         //get the sunset and sunrise to switch between sun and moon when clear
         this.sunrise = payload.result.sys.sunrise;
         this.sunset = payload.result.sys.sunset;
-        
+
         let doUpdate = false;
 
         //check to see if the newCode is different than already displayed, and if so, is it going to show anything
@@ -837,7 +836,7 @@ Module.register("MMM-DynamicWeather", {
       if (notification === "Holiday-Received") {
         this.holidayLoaded = true;
         if (!payload.success) {
-          console.error("[MMM-DynamicWeather] Holiday-Receieved failure status");
+          console.error("[MMM-DynamicWeather] Holiday-Received failure status");
           return;
         }
         let doUpdate = false;
@@ -864,7 +863,7 @@ Module.register("MMM-DynamicWeather", {
         }
       }
     } catch (error) {
-      console.error("[MMM-DynamicWeather] Error occured in notification received: ", error);
+      console.error("[MMM-DynamicWeather] Error occurred in notification received: ", error);
     }
   },
 });

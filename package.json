@@ -1,6 +1,6 @@
 {
   "name": "mmm-dynamicweather",
-  "version": "2.14.1",
+  "version": "2.15.0",
   "description": "A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.",
   "repository": {
     "type": "git",
@@ -17,14 +17,11 @@
     "url": "git+https://github.com/scottcl88/MMM-DynamicWeather/issues"
   },
   "homepage": "git+https://github.com/scottcl88/MMM-DynamicWeather#readme",
-  "main": "MMM-DynamicWeather.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "typescript": "^4.1.3"
-  },
+  "main": "src/MMM-DynamicWeather.js",
   "prettier": {
     "printWidth": 200
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
