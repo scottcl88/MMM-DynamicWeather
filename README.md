@@ -10,7 +10,7 @@
 A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.
 
 ## Features
-- Display clouds, rain, sun based on real-time weather in your city
+- Display clouds, rain, sun, fog, lightening, and more based on real-time weather in your city
 - Display custom images on specific days, such as hearts on Valentine's day
 - Plenty of customization options to weather and events
 
