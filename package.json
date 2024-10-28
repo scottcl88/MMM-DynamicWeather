@@ -1,13 +1,13 @@
 {
   "name": "mmm-dynamicweather",
-  "version": "2.15.0",
-  "description": "A heavily configurable MagicMirror Module to display different animations based on current weather and show customized event effects.",
+  "version": "3.0.0",
+  "description": "A heavily configurable module for MagicMirror² to display different animations based on current weather and show customized event effects.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scottcl88/MMM-DynamicWeather.git"
   },
   "keywords": [
-    "magic mirror",
+    "MagicMirror",
     "module",
     "weather"
   ],
@@ -17,11 +17,20 @@
     "url": "git+https://github.com/scottcl88/MMM-DynamicWeather/issues"
   },
   "homepage": "git+https://github.com/scottcl88/MMM-DynamicWeather#readme",
-  "main": "src/MMM-DynamicWeather.js",
-  "prettier": {
-    "printWidth": 200
-  },
+  "main": "MMM-DynamicWeather.js",
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "@eslint/js": "^9.13.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.13.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0"
+  },
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint --fix . && prettier --write .",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "npm run prettier && npm run lint"
   }
 }

@@ -311,7 +311,9 @@ https://codepen.io/Ravyre/pen/gXawyY
 .MMM-DynamicWeather #foglayer_01,
 .MMM-DynamicWeather #foglayer_02,
 .MMM-DynamicWeather #foglayer_03 {
-  animation: foglayer_01_opacity 10s linear infinite, foglayer_moveme 10s linear infinite;
+  animation:
+    foglayer_01_opacity 10s linear infinite,
+    foglayer_moveme 10s linear infinite;
 }
 
 .MMM-DynamicWeather #foglayer_01 .image01,
@@ -432,7 +434,6 @@ Lightning
   }
 }
 
-
 /***************************
 Sunny
 ***************************/
@@ -441,13 +442,13 @@ Sunny
   width: 100%;
   position: absolute;
   display: block;
-  opacity: .4;
+  opacity: 0.4;
 }
 .MMM-DynamicWeather .sun {
   height: 100%;
   width: 100%;
   position: absolute;
-  opacity: .4;
+  opacity: 0.4;
 }
 
 /***************************
@@ -458,13 +459,13 @@ Moon
   width: 100%;
   position: absolute;
   display: block;
-  opacity: .6;
+  opacity: 0.6;
 }
 .MMM-DynamicWeather .moon {
   height: 100%;
   width: 100%;
   position: absolute;
-  opacity: .6;
+  opacity: 0.6;
 }
 
 /***************************
@@ -546,7 +547,8 @@ Flower
   animation-delay: 10s;
 }
 @keyframes flowerBg {
-  0%, 10% {
+  0%,
+  10% {
     background-image: url("images/FLOWER_1.png");
     height: 250px;
   }
@@ -574,7 +576,8 @@ Flower
     background-image: url("images/FLOWER_7.png");
     height: 650px;
   }
-  80%, 100% {
+  80%,
+  100% {
     background-image: url("images/FLOWER_8.png");
     height: 650px;
   }
