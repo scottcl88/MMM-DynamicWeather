@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0] - 2024-10-28
+
+- Support OpenWeather One Call API 3.0
+  - Breaking change: `locationID` doesn't workmanymore
+
 ## [2.14.1] - 2021-04-10
 
 ### Fixed

@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 **Have you tried all steps under [Troublehsooting](https://github.com/scottcl88/MMM-DynamicWeather/wiki/Troubleshooting)?**
