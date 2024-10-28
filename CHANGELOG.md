@@ -2,13 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [3.0.0] - 2024-10-28
 
 - Support OpenWeather One Call API 3.0
   - Breaking change: `locationID` doesn't workmanymore
+- Add linting by ESLint
+- Add formating by prettier
+- Format files and handle linter issues
 
 ## [2.14.1] - 2021-04-10
 
