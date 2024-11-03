@@ -63,7 +63,6 @@ Module.register("MMM-DynamicWeather", {
     defaults: {
         particleCount: 100,
         api_key: "",
-        locationID: 0,
         lat: 0,
         lon: 0,
         weatherInterval: 600000,
@@ -108,9 +107,6 @@ Module.register("MMM-DynamicWeather", {
         this.url = "https://api.openweathermap.org/data/2.5/weather?appid=" + this.config.api_key;
         if (this.config.lat && this.config.lon) {
             this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
-        }
-        if (this.config.locationID) {
-            this.url += "&id=" + this.config.locationID;
         }
         this.snowEffect = new Effect();
         this.snowEffect.images = ["snow1.png", "snow2.png", "snow3.png"];
