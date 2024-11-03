@@ -17,7 +17,7 @@
     "url": "git+https://github.com/scottcl88/MMM-DynamicWeather/issues"
   },
   "homepage": "git+https://github.com/scottcl88/MMM-DynamicWeather#readme",
-  "main": "src/MMM-DynamicWeather.js",
+  "main": "MMM-DynamicWeather.js",
   "prettier": {
     "printWidth": 200
   },
