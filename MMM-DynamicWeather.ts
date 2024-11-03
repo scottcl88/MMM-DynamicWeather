@@ -85,7 +85,6 @@ Module.register("MMM-DynamicWeather", {
   defaults: {
     particleCount: 100,
     api_key: "",
-    locationID: 0,
     lat: 0,
     lon: 0,
     weatherInterval: 600000, // Every 10 minutes,
@@ -131,10 +130,6 @@ Module.register("MMM-DynamicWeather", {
 
     if (this.config.lat && this.config.lon) {
       this.url += "&lat=" + this.config.lat + "&lon=" + this.config.lon;
-    }
-
-    if (this.config.locationID) {
-      this.url += "&id=" + this.config.locationID;
     }
 
     this.snowEffect = new Effect();

@@ -41,10 +41,9 @@ This module comes with many features that are heavily configurable. At it's core
 
 You will need 2 things to get started:
 
-  1. A free API key from OpenWeatherMap - [Sign up here](https://home.openweathermap.org/users/sign_up)
+  1. An API key from OpenWeatherMap - [Sign up here](https://home.openweathermap.org/users/sign_up)
      - You only need access to the [Current Weather Api](https://openweathermap.org/current)
-  2. The LocationID (City ID) - [follow these instructions](https://www.dmopress.com/openweathermap-howto/)
-     - Optionally you can use `lat` (latitude) and `lon` (longitude) of the location you want
+  2. The `lat` (latitude) and `lon` (longitude) of the location you want. You can find these on [www.latlong.net](https://www.latlong.net/), for example.
 
 This is the basic starting template, using Washington, D.C.'s location. For more examples, see [Example Configurations](ExampleConfigurations.md).
 
@@ -54,21 +53,8 @@ This is the basic starting template, using Washington, D.C.'s location. For more
  position: "fullscreen_above",
  config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
   api_key: "your_key",
-  locationID: "4140963"
- }
-},
-```
-
-OR with `lat` and `lon`
-
-```javascript
-{
- module: "MMM-DynamicWeather",
- position: "fullscreen_above",
- config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
-  api_key: "your_key",
-  lat: "38.89511000",
-  lon: "-77.03637000"
+  lat: 38.895110,
+  lon: -77.036370
  }
 },
 ```
