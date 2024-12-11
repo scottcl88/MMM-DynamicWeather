@@ -36,6 +36,7 @@ The following properties can be configured:
 |Option|Description|
 |---|---|
 |`direction`|How the effect moves across the screen.<br><br>**Options:** `up`, `down`, `right-left`, `left-right`<br>**Type:** `string`<br>**Default value:** `up`|
+|`dateRange`|An array of date ranges in the format "YYYY-MM-DD to YYYY-MM-DD" (inclusive)<br><br>**Type:** `string[]`<br>**Default value:** `null`|
 |`month`|The month (1-12) of the date to display this effect on. Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`day`|The day of the month (1-31) of the date to display this effect on.  Must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
 |`year`|The year (4 digits) of the date to display this effect on. You can leave it out or set to zero to ignore the year and it will just check month and date. If you want to use dates, then you must not set weatherCode or holiday.<br><br>**Type:** `number`<br>**Default value:** `0`|
