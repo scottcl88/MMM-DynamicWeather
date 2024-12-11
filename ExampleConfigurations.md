@@ -54,7 +54,7 @@ Feel free to contribute to this list.
 },
 ````
 
-## Show a christmas tree from December 1, 2024 to December 25 (inclusive), 2024 + default real-time weather effects
+## Show a christmas tree from December 1, 2024 to December 25, 2024 (inclusive)+ default real-time weather effects
 
 ````javascript
 {
