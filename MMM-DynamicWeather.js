@@ -3,6 +3,9 @@ var Effect = /** @class */ (function () {
         this.year = 0;
         this.doDisplay = false;
     }
+    Effect.prototype.getDateRanges = function () {
+        return this.dateRanges ? this.dateRanges : [];
+    };
     Effect.prototype.getYear = function () {
         return this.year ? this.year : 0;
     };
@@ -41,6 +44,7 @@ var Effect = /** @class */ (function () {
     };
     Effect.prototype.clone = function (other) {
         this.id = other.id;
+        this.dateRanges = other.dateRanges;
         this.day = other.day;
         this.month = other.month;
         this.year = other.year;
@@ -166,55 +170,98 @@ Module.register("MMM-DynamicWeather", {
     getStyles: function () {
         return ["MMM-DynamicWeather.css"];
     },
+    /**
+     * Checks if today is within the provided date range.
+     *
+     * @param {string} dateRange - The date range in the format "YYYY-MM-DD to YYYY-MM-DD".
+     * @returns {boolean} - Returns true if today is within the date range, otherwise false.
+     */
+    isTodayInDateRange: function (dateRange) {
+        // Split the input string to extract the start and end dates.
+        var _a = dateRange.split(" to ").map(function (s) { return s.trim(); }), startDateStr = _a[0], endDateStr = _a[1];
+        // Validate the format of the start and end dates.
+        if (!startDateStr || !endDateStr || isNaN(Date.parse(startDateStr)) || isNaN(Date.parse(endDateStr))) {
+            console.error("Invalid date range format. Use 'YYYY-MM-DD to YYYY-MM-DD'.", dateRange);
+            throw new Error("Invalid date range format. Use 'YYYY-MM-DD to YYYY-MM-DD'.");
+        }
+        // Parse the dates into Date objects.
+        var startDate = new Date(startDateStr);
+        startDate.setHours(0, 0, 0, 0);
+        var endDate = new Date(endDateStr);
+        startDate.setHours(0, 0, 0, 0);
+        // Get today's date with time set to midnight for comparison.
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        // Check if today falls within the range.
+        return today >= startDate && today <= endDate;
+    },
+    /**
+     * Loops through an array of date ranges and returns true if today is within any of the ranges.
+     *
+     * @param {string[]} dateRanges - An array of date ranges in the format "YYYY-MM-DD to YYYY-MM-DD".
+     * @returns {boolean} - Returns true if today is within any date range, otherwise false.
+     */
+    isTodayInAnyDateRange: function (dateRanges) {
+        for (var _i = 0, dateRanges_1 = dateRanges; _i < dateRanges_1.length; _i++) {
+            var dateRange = dateRanges_1[_i];
+            if (this.isTodayInDateRange(dateRange)) {
+                return true;
+            }
+        }
+        return false;
+    },
     checkDates: function () {
         var _this_1 = this;
         try {
             this.allEffects.forEach(function (effect) {
-                var effectMonth = effect.month - 1;
-                if (!effect.hasWeatherCode() && !effect.hasHoliday()) {
+                var effectMonth = effect.getMonth() - 1;
+                if (effect.hasWeatherCode() || effect.hasHoliday()) {
                     //if there is weatherCode or holiday, dates are ignored
-                    if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
-                        //if no weatherCode, no holiday and no dates, then always display it
-                        if (effect.recurrence == "weekdays") {
-                            //if its not Sunday (0) and not Saturday (6)
-                            if (_this_1.now.getDay() !== 6 && _this_1.now.getDay() !== 0) {
-                                _this_1.hasDateEffectsToDisplay = true;
-                                effect.doDisplay = true;
-                            }
-                        }
-                        else if (effect.recurrence == "weekends") {
-                            //if its Sunday (0) or Saturday (6)
-                            if (_this_1.now.getDay() == 6 || _this_1.now.getDay() == 0) {
-                                _this_1.hasDateEffectsToDisplay = true;
-                                effect.doDisplay = true;
-                            }
-                        }
-                        else {
+                    console.log("Ignoring dates for effect due to weatherCode or holiday being set. Effect: ", effect);
+                    return;
+                }
+                if (_this_1.isTodayInAnyDateRange(effect.getDateRanges())) {
+                    _this_1.hasDateEffectsToDisplay = true;
+                    effect.doDisplay = true;
+                    return;
+                }
+                if (effect.getMonth() == 0 && effect.getDay() == 0 && effect.getYear() == 0) {
+                    //if no dates, then display it depending on recurrence or dateRange
+                    if (effect.recurrence == "weekdays") {
+                        //if its not Sunday (0) and not Saturday (6)
+                        if (_this_1.now.getDay() !== 6 && _this_1.now.getDay() !== 0) {
                             _this_1.hasDateEffectsToDisplay = true;
                             effect.doDisplay = true;
                         }
                     }
-                    else {
-                        //if the month and date match or the month, date and year match
-                        if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
-                            if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
-                                _this_1.hasDateEffectsToDisplay = true;
-                                effect.doDisplay = true;
-                            }
+                    else if (effect.recurrence == "weekends") {
+                        //if its Sunday (0) or Saturday (6)
+                        if (_this_1.now.getDay() == 6 || _this_1.now.getDay() == 0) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
                         }
-                        else if (effect.recurrence == "monthly") {
-                            //ignore everything but the day
-                            if (_this_1.now.getDate() == effect.getDay()) {
-                                _this_1.hasDateEffectsToDisplay = true;
-                                effect.doDisplay = true;
-                            }
+                    }
+                }
+                else {
+                    //if the month and date match or the month, date and year match
+                    if (_this_1.now.getMonth() == effectMonth && _this_1.now.getDate() == effect.day) {
+                        if (effect.getYear() == 0 || _this_1.now.getFullYear() == effect.getYear()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
                         }
-                        else if (effect.recurrence == "weekly") {
-                            var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
-                            if (_this_1.now.getDay() == effectDay.getDay()) {
-                                _this_1.hasDateEffectsToDisplay = true;
-                                effect.doDisplay = true;
-                            }
+                    }
+                    else if (effect.recurrence == "monthly") {
+                        //ignore everything but the day
+                        if (_this_1.now.getDate() == effect.getDay()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
+                        }
+                    }
+                    else if (effect.recurrence == "weekly") {
+                        var effectDay = new Date(effect.getYear(), effectMonth, effect.getDay());
+                        if (_this_1.now.getDay() == effectDay.getDay()) {
+                            _this_1.hasDateEffectsToDisplay = true;
+                            effect.doDisplay = true;
                         }
                     }
                 }

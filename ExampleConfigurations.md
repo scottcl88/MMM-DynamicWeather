@@ -53,3 +53,25 @@ Feel free to contribute to this list.
  }
 },
 ````
+
+## Show a christmas tree from December 1, 2024 to December 25 (inclusive), 2024 + default real-time weather effects
+
+````javascript
+{
+ module: "MMM-DynamicWeather",
+ position: "fullscreen_above",
+ config: { // See https://github.com/scottcl88/MMM-DynamicWeather for more information.
+  api_key: "your_key",
+  locationID: "4140963",
+  effects: [
+        {
+            dateRanges: ["2024-12-01 to 2024-12-25"],
+            images: ["ChristmasTree.png"],
+            direction: "up"
+        }
+    ]
+  ],
+ }
+},
+````
+
