@@ -106,4 +106,4 @@ This project was developed with the assistance of AI tools. AI-generated content
 
 ## License
 
-Copyright (c) 2026 scottcl88. All rights reserved. See [LICENSE](LICENSE) where present; no license is granted unless stated.
+See [LICENSE](LICENSE) for license terms.
